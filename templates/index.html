@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+<title>CannaGuia Pro</title>
+<link href='https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&display=swap' rel='stylesheet'>
+<style>
+:root {
+  --acc: #4ade80; --acc2: #86efac; --acc3: #16a34a;
+  --gold: #fbbf24; --sky: #38bdf8; --pur: #a78bfa; --red: #f87171;
+  --txt: #e8fce8; --mut: #7db87d;
+  --glass: rgba(255,255,255,0.05);
+  --gbor: rgba(255,255,255,0.12);
+  --blur: blur(20px);
+  --shadow: 0 8px 32px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.08) inset;
+  --r: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 10% 0%,   rgba(20,80,20,0.9)  0%, transparent 45%),
+    radial-gradient(ellipse at 90% 10%,  rgba(10,40,60,0.7)  0%, transparent 40%),
+    radial-gradient(ellipse at 20% 90%,  rgba(30,10,60,0.6)  0%, transparent 40%),
+    radial-gradient(ellipse at 80% 80%,  rgba(10,50,20,0.7)  0%, transparent 40%),
+    #060e06;
+  color: var(--txt);
+  font-family: 'Space Grotesk', sans-serif;
+  overflow-x: hidden;
+  padding-bottom: 80px;
+}
+body::before, body::after {
+  content: ''; position: fixed; border-radius: 50%;
+  filter: blur(70px); pointer-events: none; z-index: 0;
+  animation: orbflot 10s ease-in-out infinite;
+}
+body::before {
+  width: 320px; height: 320px; top: -100px; left: -100px;
+  background: radial-gradient(circle, rgba(74,222,128,0.13), transparent 70%);
+}
+body::after {
+  width: 260px; height: 260px; bottom: 80px; right: -80px;
+  background: radial-gradient(circle, rgba(56,189,248,0.09), transparent 70%);
+  animation-delay: 5s;
+}
+@keyframes orbflot { 0%,100%{transform:translate(0,0)} 50%{transform:translate(25px,35px)} }
+
+/* HEADER */
+.hdr {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,20,10,0.65);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  border-bottom: 1px solid var(--gbor);
+  padding: 11px 16px;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+}
+.hdr-logo { font-size: 26px; filter: drop-shadow(0 0 8px rgba(74,222,128,0.6)); }
+.hdr-title { font-family: 'Bebas Neue'; font-size: 22px; letter-spacing: 3px;
+  background: linear-gradient(135deg, var(--acc), var(--acc2), #fff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hdr-sub { font-size: 9px; color: var(--mut); letter-spacing: 2px; text-transform: uppercase; }
+
+/* NAV BOTTOM */
+.nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(6,14,6,0.75);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  border-top: 1px solid var(--gbor);
+  display: flex; overflow-x: auto;
+  padding: 5px 2px env(safe-area-inset-bottom);
+}
+.nav::-webkit-scrollbar { display: none; }
+.nb {
+  flex: 0 0 auto;
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  padding: 5px 11px;
+  background: none; border: none; color: var(--mut);
+  font-family: 'Space Grotesk'; font-size: 9px; letter-spacing: 0.5px;
+  cursor: pointer; transition: all 0.2s; border-radius: 10px;
+}
+.nb.activo { color: var(--acc); background: rgba(74,222,128,0.1);
+  text-shadow: 0 0 10px rgba(74,222,128,0.5); }
+.nb .ico { font-size: 20px; }
+
+/* SECCIONES */
+.sec { display: none; padding: 14px; position: relative; z-index: 1; }
+.sec.activo { display: block; }
+
+/* TARJETA GLASS */
+.card {
+  background: var(--glass);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--gbor);
+  border-radius: var(--r);
+  padding: 15px; margin-bottom: 13px;
+  box-shadow: var(--shadow);
+  position: relative; overflow: hidden;
+}
+.card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+}
+.card::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.025) 0%, transparent 60%);
+  pointer-events: none;
+}
+.ctit {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+  color: var(--acc); margin-bottom: 11px;
+  text-shadow: 0 0 12px rgba(74,222,128,0.4);
+}
+.stit {
+  font-family: 'Bebas Neue'; font-size: 30px; letter-spacing: 3px;
+  background: linear-gradient(135deg, var(--acc), var(--acc2), rgba(255,255,255,0.8));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 2px;
+  filter: drop-shadow(0 0 8px rgba(74,222,128,0.3));
+}
+.ssub { font-size: 11px; color: var(--mut); margin-bottom: 13px; letter-spacing: 1px; }
+
+/* LUNA */
+.luna-box { text-align: center; padding: 16px 0; }
+.luna-em {
+  font-size: 68px; line-height: 1; margin-bottom: 8px;
+  filter: drop-shadow(0 0 22px rgba(251,191,36,0.55));
+  animation: lunaglow 3s ease-in-out infinite;
+}
+@keyframes lunaglow {
+  0%,100%{ filter: drop-shadow(0 0 16px rgba(251,191,36,0.4)); }
+  50%{ filter: drop-shadow(0 0 34px rgba(251,191,36,0.9)); }
+}
+.luna-nom { font-family: 'Bebas Neue'; font-size: 26px; color: var(--gold);
+  text-shadow: 0 0 14px rgba(251,191,36,0.5); }
+.luna-pct { font-size: 12px; color: var(--mut); margin: 3px 0; }
+.luna-rec {
+  font-size: 12px; color: var(--acc2);
+  background: rgba(74,222,128,0.07); border: 1px solid rgba(74,222,128,0.2);
+  border-radius: 11px; padding: 9px 13px; margin-top: 10px;
+  text-align: left; line-height: 1.5;
+}
+.luna-fechas { display: flex; gap: 8px; margin-top: 10px; }
+.luna-fecha {
+  flex: 1; background: rgba(255,255,255,0.04);
+  border: 1px solid var(--gbor); border-radius: 11px;
+  padding: 8px; text-align: center;
+}
+.luna-fecha-label { font-size: 9px; color: var(--mut); }
+.luna-fecha-val { font-size: 12px; font-weight: 700; color: var(--gold); }
+
+/* GRILLA 2 */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.bloque {
+  background: rgba(255,255,255,0.04); border: 1px solid var(--gbor);
+  border-radius: 11px; padding: 10px;
+}
+.bloque h4 { font-size: 10px; color: var(--mut); text-transform: uppercase;
+  letter-spacing: 1px; margin-bottom: 5px; }
+.bloque p { font-size: 12px; line-height: 1.5; }
+
+/* ITEMS DE LISTA */
+.item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.item:last-child { border-bottom: none; }
+.item-ico { font-size: 26px; flex-shrink: 0; }
+.item-txt h4 { font-size: 12px; font-weight: 700; color: var(--acc); }
+.item-txt p { font-size: 11px; color: var(--mut); line-height: 1.4; margin-top: 2px; }
+.item-txt .trat { font-size: 11px; color: var(--acc2); margin-top: 4px; }
+.badge { display: inline-block; font-size: 10px; padding: 2px 7px;
+  border-radius: 10px; margin-top: 3px; font-weight: 700; }
+.badge-rojo { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.25); }
+.badge-amarillo { background: rgba(251,191,36,0.15); color: var(--gold); border: 1px solid rgba(251,191,36,0.25); }
+.badge-verde { background: rgba(74,222,128,0.15); color: var(--acc); border: 1px solid rgba(74,222,128,0.25); }
+
+/* PASOS */
+.paso { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.paso:last-child { border-bottom: none; }
+.paso-num {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--acc3), var(--acc));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #000;
+  box-shadow: 0 0 10px rgba(74,222,128,0.35);
+}
+.paso-tit { font-size: 12px; line-height: 1.4; font-weight: 600; }
+.paso-sub { font-size: 11px; color: var(--mut); margin-top: 2px; line-height: 1.4; }
+
+/* TABLA */
+.tabla { width: 100%; border-collapse: collapse; }
+.tabla th { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--mut);
+  padding: 7px 5px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.09); }
+.tabla td { font-size: 11px; padding: 7px 5px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+
+/* CAJAS DE METODO */
+.metodo {
+  background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.18);
+  border-radius: 11px; padding: 11px; margin-bottom: 8px;
+}
+.metodo h4 { color: var(--sky); font-size: 12px; font-weight: 700; margin-bottom: 4px;
+  text-shadow: 0 0 8px rgba(56,189,248,0.35); }
+.metodo p { font-size: 11px; color: var(--mut); line-height: 1.5; }
+
+/* NUTRICION */
+.nutri { border-left: 2px solid var(--acc); padding-left: 10px; margin-bottom: 10px; }
+.nutri h4 { font-size: 12px; font-weight: 700; color: var(--acc); margin-bottom: 3px; }
+.nutri p { font-size: 11px; color: var(--mut); line-height: 1.5; }
+
+/* ALERTA */
+.alerta {
+  background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.22);
+  border-radius: 10px; padding: 9px 12px;
+  font-size: 11px; color: #c4b5fd; margin-bottom: 9px; line-height: 1.5;
+}
+.alerta-gold {
+  background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.22);
+  border-radius: 10px; padding: 9px 12px;
+  font-size: 11px; color: #fde68a; margin-bottom: 9px; line-height: 1.5;
+}
+
+/* PILLS / ETIQUETAS */
+.pills { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.pill {
+  font-size: 10px; padding: 3px 10px; border-radius: 20px;
+  border: 1px solid var(--gbor); color: var(--acc2);
+  background: rgba(74,222,128,0.06); cursor: pointer; transition: all 0.2s;
+}
+.pill:active { background: rgba(74,222,128,0.18); }
+
+/* BARRAS DE LUZ */
+.barra-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.barra-label { font-size: 11px; min-width: 78px; }
+.barra-wrap { flex: 1; background: rgba(255,255,255,0.07); border-radius: 4px; height: 7px; }
+.barra { height: 7px; border-radius: 4px; }
+.barra-val { font-size: 11px; color: var(--mut); min-width: 28px; text-align: right; }
+
+/* SLIDER */
+.slider { -webkit-appearance: none; width: 100%; height: 4px;
+  background: rgba(255,255,255,0.1); border-radius: 2px; outline: none; margin: 8px 0; }
+.slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px;
+  background: linear-gradient(135deg, var(--acc3), var(--acc));
+  border-radius: 50%; cursor: pointer;
+  box-shadow: 0 0 10px rgba(74,222,128,0.5); }
+.slider-val { font-size: 22px; font-weight: 700; color: var(--acc);
+  text-shadow: 0 0 12px rgba(74,222,128,0.5); }
+
+/* CALENDARIO */
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin: 8px 0; }
+.cal-cab { font-size: 9px; text-align: center; color: var(--mut); padding: 3px; }
+.cal-dia {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  border-radius: 7px; font-size: 10px;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+}
+.cal-dia.hoy {
+  border-color: var(--acc); color: var(--acc); font-weight: 700;
+  background: rgba(74,222,128,0.1);
+  box-shadow: 0 0 10px rgba(74,222,128,0.2);
+}
+
+/* CAMARA / ANALISIS */
+.cam-zona {
+  background: rgba(255,255,255,0.03); border: 2px dashed rgba(74,222,128,0.3);
+  border-radius: var(--r); padding: 22px; text-align: center;
+  cursor: pointer; transition: all 0.2s; margin-bottom: 12px;
+}
+.cam-zona:active { border-color: var(--acc); background: rgba(74,222,128,0.07); }
+.cam-ico { font-size: 44px; margin-bottom: 6px; filter: drop-shadow(0 0 8px rgba(74,222,128,0.3)); }
+.cam-txt { font-size: 12px; color: var(--mut); }
+.cam-preview {
+  width: 100%; max-height: 260px; object-fit: cover;
+  border-radius: 12px; display: none; margin-bottom: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.resultado-analisis {
+  background: rgba(255,255,255,0.04); border: 1px solid var(--gbor);
+  border-radius: var(--r); padding: 14px; margin-top: 12px;
+  white-space: pre-wrap; font-size: 12px; line-height: 1.7;
+  display: none;
+}
+.cargando { display: none; text-align: center; padding: 18px; font-size: 12px; color: var(--mut); }
+
+/* CHAT */
+.chat-mensajes {
+  height: 310px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 8px; padding: 6px 0;
+}
+.chat-mensajes::-webkit-scrollbar { width: 2px; }
+.chat-mensajes::-webkit-scrollbar-thumb { background: var(--acc3); border-radius: 2px; }
+.msg { max-width: 84%; padding: 9px 13px; border-radius: 14px; font-size: 12px; line-height: 1.6; }
+.msg-bot {
+  align-self: flex-start;
+  background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.18);
+  border-bottom-left-radius: 3px;
+}
+.msg-user {
+  align-self: flex-end;
+  background: rgba(22,163,74,0.2); border: 1px solid rgba(74,222,128,0.25);
+  border-bottom-right-radius: 3px;
+}
+.chat-fila { display: flex; gap: 7px; margin-top: 9px; }
+.chat-input {
+  flex: 1; background: rgba(255,255,255,0.05);
+  border: 1px solid var(--gbor); border-radius: 12px;
+  padding: 9px 13px; color: var(--txt);
+  font-family: 'Space Grotesk'; font-size: 12px; outline: none;
+  transition: border-color 0.2s;
+}
+.chat-input::placeholder { color: var(--mut); }
+.chat-input:focus { border-color: rgba(74,222,128,0.4); }
+
+/* BOTONES */
+.btn {
+  background: linear-gradient(135deg, var(--acc3), var(--acc));
+  color: #000; border: none; border-radius: 11px;
+  padding: 9px 15px; font-family: 'Space Grotesk';
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(74,222,128,0.25);
+}
+.btn:active { transform: scale(0.95); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-completo { width: 100%; padding: 13px; border-radius: 13px; margin-top: 9px; font-size: 14px; }
+
+/* ANIMACIONES ENTRADA */
+@keyframes aparecer { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.sec.activo .card { animation: aparecer 0.28s ease forwards; }
+.sec.activo .card:nth-child(2) { animation-delay: 0.05s; }
+.sec.activo .card:nth-child(3) { animation-delay: 0.10s; }
+.sec.activo .card:nth-child(4) { animation-delay: 0.15s; }
+.sec.activo .card:nth-child(5) { animation-delay: 0.20s; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class='hdr'>
+  <div class='hdr-logo'>🌿</div>
+  <div>
+    <div class='hdr-title'>CannaGuia Pro</div>
+    <div class='hdr-sub'>Tu asistente de cultivo</div>
+  </div>
+</header>
+
+<!-- LUNA -->
+<section class='sec activo' id='sec-luna'>
+  <div class='stit'>LUNA</div>
+  <div class='ssub'>Calendario lunar y siembra</div>
+
+  <div class='card'>
+    <div class='ctit'>🌙 Fase Actual</div>
+    <div class='luna-box'>
+      <div class='luna-em' id='luna-emoji'>🌑</div>
+      <div class='luna-nom' id='luna-nombre'>Cargando...</div>
+      <div class='luna-pct' id='luna-pct'></div>
+      <div class='luna-rec' id='luna-rec'>Obteniendo datos lunares...</div>
+      <div class='luna-fechas'>
+        <div class='luna-fecha'>
+          <div class='luna-fecha-label'>🌑 Prox. Luna Nueva</div>
+          <div class='luna-fecha-val' id='luna-nueva'>-</div>
+        </div>
+        <div class='luna-fecha'>
+          <div class='luna-fecha-label'>🌕 Prox. Luna Llena</div>
+          <div class='luna-fecha-val' id='luna-llena'>-</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>📅 Calendario del Mes</div>
+    <div id='calendario'></div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>⚡ Que Hacer en Cada Fase</div>
+    <div class='item'><div class='item-ico'>🌑</div><div class='item-txt'><h4>Luna Nueva</h4><p>Siembra, trasplante y preparacion de sustratos. Energia concentrada en raices.</p><span class='badge badge-verde'>Siembra</span></div></div>
+    <div class='item'><div class='item-ico'>🌒</div><div class='item-txt'><h4>Luna Creciente</h4><p>Esquejes, poda de formacion, inicio de nutricion.</p><span class='badge badge-amarillo'>Esquejes</span></div></div>
+    <div class='item'><div class='item-ico'>🌕</div><div class='item-txt'><h4>Luna Llena</h4><p>Cosecha para mayor potencia. Maxima absorcion de agua y nutrientes.</p><span class='badge badge-rojo'>Cosecha</span></div></div>
+    <div class='item'><div class='item-ico'>🌘</div><div class='item-txt'><h4>Luna Menguante</h4><p>Poda, pesticidas organicos, compostaje. Energia en limpieza.</p><span class='badge badge-amarillo'>Poda</span></div></div>
+  </div>
+</section>
+
+<!-- LUZ -->
+<section class='sec' id='sec-luz'>
+  <div class='stit'>LUZ</div>
+  <div class='ssub'>Fotoperiodo y etapas de cultivo</div>
+
+  <div class='card'>
+    <div class='ctit'>🌱 Etapa Vegetativa</div>
+    <div class='alerta-gold'>💡 18 horas de luz / 6 horas de oscuridad</div>
+    <div class='barra-row'><div class='barra-label'>☀️ Luz</div><div class='barra-wrap'><div class='barra' style='width:75%;background:linear-gradient(90deg,#fbbf24,#f59e0b)'></div></div><div class='barra-val'>18h</div></div>
+    <div class='barra-row'><div class='barra-label'>🌑 Oscuridad</div><div class='barra-wrap'><div class='barra' style='width:25%;background:rgba(255,255,255,0.12)'></div></div><div class='barra-val'>6h</div></div>
+    <div class='g2' style='margin-top:10px'>
+      <div class='bloque'><h4>Temperatura</h4><p>22-28°C dia<br>18-22°C noche</p></div>
+      <div class='bloque'><h4>Humedad</h4><p>50-70% HR<br>Buena aireacion</p></div>
+      <div class='bloque'><h4>Nutrientes</h4><p>Nitrogeno alto<br>Fosforo y K medio</p></div>
+      <div class='bloque'><h4>Duracion</h4><p>4 a 12 semanas<br>Segun variedad</p></div>
+    </div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>🌸 Etapa de Floracion</div>
+    <div class='alerta'>💡 12 horas de luz / 12 horas de oscuridad</div>
+    <div class='barra-row'><div class='barra-label'>☀️ Luz</div><div class='barra-wrap'><div class='barra' style='width:50%;background:linear-gradient(90deg,#a78bfa,#8b5cf6)'></div></div><div class='barra-val'>12h</div></div>
+    <div class='barra-row'><div class='barra-label'>🌑 Oscuridad</div><div class='barra-wrap'><div class='barra' style='width:50%;background:rgba(255,255,255,0.09)'></div></div><div class='barra-val'>12h</div></div>
+    <div class='g2' style='margin-top:10px'>
+      <div class='bloque'><h4>Temperatura</h4><p>20-26°C dia<br>16-20°C noche</p></div>
+      <div class='bloque'><h4>Humedad</h4><p>40-50% HR<br>Bajar al final</p></div>
+      <div class='bloque'><h4>Nutrientes</h4><p>Nitrogeno bajo<br>Fosforo y K alto</p></div>
+      <div class='bloque'><h4>Duracion</h4><p>8 a 12 semanas<br>Segun cepa</p></div>
+    </div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>⚙️ Calculadora de Fotoperiodo</div>
+    <div style='font-size:11px;color:var(--mut);margin-bottom:4px'>Horas de luz actuales</div>
+    <input type='range' class='slider' id='slider-luz' min='12' max='24' value='18'>
+    <div style='display:flex;justify-content:space-between;align-items:center'>
+      <div><span class='slider-val' id='val-luz'>18</span><span style='color:var(--mut);font-size:12px'> h de luz</span></div>
+      <div style='font-size:11px;color:var(--mut)'><span id='val-oscuridad'>6</span>h de oscuridad</div>
+    </div>
+    <div id='rec-luz' class='luna-rec' style='margin-top:10px;font-size:11px'></div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>🌿 Variedades Auto-Florecientes</div>
+    <p style='font-size:12px;color:var(--mut);line-height:1.6'>Las variedades <strong style='color:var(--acc)'>ruderalis</strong> y sus hibridos auto-flowering florecen segun su edad, no por fotoperiodo. Cosecha en 70 a 90 dias desde la germinacion.</p>
+    <div class='pills'>
+      <span class='pill'>No depende de 12/12</span>
+      <span class='pill'>18/6 todo el ciclo</span>
+      <span class='pill'>~90 dias totales</span>
+      <span class='pill'>Ideal para exterior</span>
+    </div>
+  </div>
+</section>
+
+<!-- INDOOR -->
+<section class='sec' id='sec-indoor'>
+  <div class='stit'>INDOOR</div>
+  <div class='ssub'>Cultivo en interior</div>
+
+  <div class='card'>
+    <div class='ctit'>🏠 Setup Basico Indoor</div>
+    <div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Carpa o cuarto de cultivo</div><div class='paso-sub'>80x80 o 100x100 cm con Mylar reflectante. Oscuridad total durante la floracion.</div></div></div>
+    <div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Iluminacion LED o HPS</div><div class='paso-sub'>LED Full Spectrum 50-75W/m2. HPS 400W cubre hasta 0.6m2.</div></div></div>
+    <div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Extractor con filtro de carbon</div><div class='paso-sub'>1 renovacion de aire cada 1 a 3 minutos. Ventilador interno para circulacion.</div></div></div>
+    <div class='paso'><div class='paso-num'>4</div><div><div class='paso-tit'>Control de temperatura y humedad</div><div class='paso-sub'>Termohigrometro digital. Evitar mas de 30°C. Humidificador si es necesario.</div></div></div>
+    <div class='paso'><div class='paso-num'>5</div><div><div class='paso-tit'>Temporizador de luz</div><div class='paso-sub'>Programar 18/6 para vegetativo o 12/12 para floracion. Mecanico o digital.</div></div></div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>💡 Tipos de Luces</div>
+    <div class='metodo'><h4>🔵 LED Full Spectrum</h4><p>Bajo consumo electrico y poco calor. Espectro completo. Las Quantum Boards (QB) son la mejor opcion del mercado actual.</p></div>
+    <div class='metodo' style='background:rgba(251,191,36,0.06);border-color:rgba(251,191,36,0.2)'><h4 style='color:var(--gold)'>🟡 HPS Sodio de Alta Presion</h4><p>Muy alta produccion historicamente probada. Mayor calor y consumo. Disponible en 400W, 600W y 1000W.</p></div>
+    <div class='metodo' style='background:rgba(168,85,247,0.06);border-color:rgba(168,85,247,0.2)'><h4 style='color:var(--pur)'>🟣 CMH / LEC 315W</h4><p>Excelente espectro de luz. Buena penetracion del dosel. Menos calor que HPS. Muy buena relacion watts/gramos.</p></div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>🌡️ Parametros Ideales Indoor</div>
+    <div class='g2'>
+      <div class='bloque'><h4>Vegetativo</h4><p>22-28°C<br>50-70% HR<br>CO2: 400-700ppm</p></div>
+      <div class='bloque'><h4>Floracion</h4><p>20-26°C<br>40-50% HR<br>CO2: 700-1500ppm</p></div>
+      <div class='bloque'><h4>pH del Agua</h4><p>Tierra: 6.0-7.0<br>Hidro: 5.5-6.5</p></div>
+      <div class='bloque'><h4>EC del Agua</h4><p>Veg: 0.8-1.5<br>Flora: 1.5-2.5</p></div>
+    </div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>✂️ Tecnicas de Poda Indoor</div>
+    <div class='item'><div class='item-ico'>✂️</div><div class='item-txt'><h4>Topping</h4><p>Cortar el meristemo apical para generar dos colas principales. Se hace en el nudo 4 al 6 durante vegetativo.</p><span class='badge badge-verde'>Recomendado</span></div></div>
+    <div class='item'><div class='item-ico'>🌿</div><div class='item-txt'><h4>LST (Low Stress Training)</h4><p>Doblar ramas con hilo para crear un dosel plano. Sin cortes, menos estres para la planta.</p><span class='badge badge-verde'>Facil</span></div></div>
+    <div class='item'><div class='item-ico'>🕸️</div><div class='item-txt'><h4>SCROG (Screen of Green)</h4><p>Red horizontal para maximizar el uso de la luz. Ideal para indoor. Mucha produccion por m2.</p><span class='badge badge-amarillo'>Intermedio</span></div></div>
+    <div class='item'><div class='item-ico'>🍃</div><div class='item-txt'><h4>Defoliacion</h4><p>Quitar hojas grandes que bloquean la luz. En semana 3 y 6 de floracion. No exagerar.</p><span class='badge badge-amarillo'>Cuidado</span></div></div>
+  </div>
+</section>
+
+<!-- OUTDOOR -->
+<section class='sec' id='sec-outdoor'>
+  <div class='stit'>OUTDOOR</div>
+  <div class='ssub'>Cultivo exterior - Hemisferio Sur</div>
+
+  <div class='card'>
+    <div class='ctit'>☀️ Temporada Anual</div>
+    <div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>🌱 Septiembre - Germinacion</div><div class='paso-sub'>Iniciar en interior bajo luz artificial. Trasplantar al exterior cuando no haya riesgo de heladas.</div></div></div>
+    <div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>🌿 Octubre a Diciembre - Vegetativo</div><div class='paso-sub'>Los dias largos activan el crecimiento. Nutricion alta en nitrogeno. Poda y formacion de estructura.</div></div></div>
+    <div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>🌸 Enero a Marzo - Floracion</div><div class='paso-sub'>Los dias se acortan despues del 21 de diciembre. Cambiar a fertilizantes de floracion. Vigilar plagas y humedad.</div></div></div>
+    <div class='paso'><div class='paso-num'>4</div><div><div class='paso-tit'>✂️ Marzo a Abril - Cosecha</div><div class='paso-sub'>Observar tricomas con lupa 60x. 30% ambar para efecto mas calmante. Hacer flush 1 a 2 semanas antes.</div></div></div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>🌍 Eleccion del Lugar</div>
+    <div class='item'><div class='item-ico'>☀️</div><div class='item-txt'><h4>Luz Solar Directa</h4><p>Minimo 6 a 8 horas de sol directo por dia. Orientar hacia el norte en el hemisferio sur. Evitar sombras de arboles o edificios.</p></div></div>
+    <div class='item'><div class='item-ico'>💨</div><div class='item-txt'><h4>Circulacion de Aire</h4><p>Una brisa suave fortalece los tallos. El exceso de viento estresa la planta. Usar setos o mallas como barrera.</p></div></div>
+    <div class='item'><div class='item-ico'>🪣</div><div class='item-txt'><h4>Buen Drenaje</h4><p>Suelo o maceta con drenaje correcto. Evitar zonas encharcadas. Macetas con muchas perforaciones en la base.</p></div></div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>🧪 Mezcla de Sustrato para Exterior</div>
+    <table class='tabla'>
+      <tr><th>Componente</th><th>Porcentaje</th><th>Funcion</th></tr>
+      <tr><td><span class='dot' style='background:#8B4513'></span>Tierra de jardin</td><td>40%</td><td>Base nutritiva</td></tr>
+      <tr><td><span class='dot' style='background:#228B22'></span>Compost maduro</td><td>20%</td><td>Nutrientes organicos</td></tr>
+      <tr><td><span class='dot' style='background:#e0e0e0'></span>Perlita</td><td>20%</td><td>Drenaje y aireacion</td></tr>
+      <tr><td><span class='dot' style='background:#8FBC8F'></span>Lombricompuesto</td><td>10%</td><td>Microbioma activo</td></tr>
+      <tr><td><span class='dot' style='background:#D2691E'></span>Fibra de coco</td><td>10%</td><td>Retencion de humedad</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- PLAGAS -->
+<section class='sec' id='sec-plagas'>
+  <div class='stit'>PLAGAS</div>
+  <div class='ssub'>Identificacion y tratamientos</div>
+
+  <div class='card'>
+    <div class='ctit'>🦟 Insectos y Acariosis</div>
+    <div class='item'><div class='item-ico'>🕷️</div><div class='item-txt'><h4>Arana Roja (Tetranychus urticae)</h4><p>Puntos amarillos en hojas y telaranas finas en el enves. Aparece con calor y ambiente seco.</p><span class='badge badge-rojo'>Alta Prioridad</span><p class='trat'>Tratamiento: Aceite de Neem 3ml/L, aumentar humedad relativa, predadores naturales (Phytoseiidae).</p></div></div>
+    <div class='item'><div class='item-ico'>🦗</div><div class='item-txt'><h4>Mosquito Fungus (Bradysia spp.)</h4><p>Las larvas viven en el sustrato y danan las raices. Los adultos vuelan cerca del suelo.</p><span class='badge badge-amarillo'>Media Prioridad</span><p class='trat'>Tratamiento: Dejar secar bien el sustrato. Bacillus thuringiensis israelensis (BTi). Tierra de diatomeas en la capa superior.</p></div></div>
+    <div class='item'><div class='item-ico'>🐛</div><div class='item-txt'><h4>Trips (Frankliniella spp.)</h4><p>Manchas plateadas en las hojas. Insectos muy pequenos de forma alargada. Transmiten virus.</p><span class='badge badge-rojo'>Alta Prioridad</span><p class='trat'>Tratamiento: Spinosad, Azadiractina, trampas azules pegajosas. Neem como preventivo.</p></div></div>
+    <div class='item'><div class='item-ico'>🐜</div><div class='item-txt'><h4>Pulgones (Aphididae)</h4><p>Colonias en brotes tiernos. Dejan una melaza pegajosa. Transmiten enfermedades.</p><span class='badge badge-amarillo'>Media Prioridad</span><p class='trat'>Tratamiento: Jabon potasico 5ml/L, Neem, mariquitas como predadores naturales.</p></div></div>
+    <div class='item'><div class='item-ico'>🦎</div><div class='item-txt'><h4>Orugas y Caterpillars</h4><p>Agujeros en hojas y cogollos. Se detectan por excremento oscuro visible.</p><span class='badge badge-rojo'>Alta Prioridad</span><p class='trat'>Tratamiento: Bacillus thuringiensis kurstaki, retirar manualmente, red anti-insectos.</p></div></div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>🍄 Hongos y Enfermedades</div>
+    <div class='item'><div class='item-ico'>⬜</div><div class='item-txt'><h4>Oidio (Oidium / Powdery Mildew)</h4><p>Polvo blanco sobre las hojas. Se desarrolla con alta humedad y poca ventilacion. Se expande muy rapido.</p><span class='badge badge-rojo'>Urgente</span><p class='trat'>Tratamiento: Bicarbonato de sodio 5g/L mas jabon, azufre mojable, silicato de potasio. Bajar HR por debajo del 50%.</p></div></div>
+    <div class='item'><div class='item-ico'>🟫</div><div class='item-txt'><h4>Botritis (Bud Rot / Moho Gris)</h4><p>Moho gris que se forma dentro de los cogollos. Destruye la cosecha entera. HR mayor al 70% con poco aireo.</p><span class='badge badge-rojo'>Critico</span><p class='trat'>Tratamiento: Retirar cogollos afectados INMEDIATAMENTE. Bajar HR. Aireacion continua 24/7.</p></div></div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>🌿 Deficiencias Nutricionales</div>
+    <table class='tabla'>
+      <tr><th>Deficiencia</th><th>Sintoma Principal</th><th>Solucion</th></tr>
+      <tr><td>🟡 Nitrogeno (N)</td><td>Hojas viejas amarillas de abajo hacia arriba</td><td>Guano o nitrato de calcio</td></tr>
+      <tr><td>🟠 Fosforo (P)</td><td>Tallos y nervios violaceos, hojas oscuras</td><td>Harina de hueso o fosfato</td></tr>
+      <tr><td>🔵 Magnesio (Mg)</td><td>Clorosis internervial en hojas del medio</td><td>Sulfato de magnesio (sal Epsom) 2g/L</td></tr>
+      <tr><td>⚪ Calcio (Ca)</td><td>Bordes marrones en hojas nuevas</td><td>Cal dolomita o nitrato de calcio</td></tr>
+      <tr><td>🟤 Hierro (Fe)</td><td>Clorosis internervial en hojas nuevas</td><td>Quelatado de hierro, bajar pH</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ESQUEJES -->
+<section class='sec' id='sec-esquejes'>
+  <div class='stit'>ESQUEJES</div>
+  <div class='ssub'>Clonacion y propagacion</div>
+
+  <div class='card'>
+    <div class='ctit'>✂️ Proceso de Clonacion Paso a Paso</div>
+    <div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Elegir la planta madre donadora</div><div class='paso-sub'>Planta sana, en etapa vegetativa, sin plagas ni deficiencias. La ultima semana sin fertilizacion alta en nitrogeno.</div></div></div>
+    <div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Preparar herramientas y sustrato</div><div class='paso-sub'>Bisturi o tijera bien afilada y esterilizada con alcohol. Gel enraizante (Clonex o Rhizotonic). Sustrato: 50% perlita + 50% coco.</div></div></div>
+    <div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Realizar el corte</div><div class='paso-sub'>Corte diagonal de 45 grados en ramas de 8 a 15cm con al menos 2 nudos. Sumergir el tallo en agua inmediatamente para evitar que entre aire.</div></div></div>
+    <div class='paso'><div class='paso-num'>4</div><div><div class='paso-tit'>Aplicar gel o polvo enraizante</div><div class='paso-sub'>Cubrir los 2cm inferiores del tallo. Introducir en el sustrato pre-humedecido con cuidado.</div></div></div>
+    <div class='paso'><div class='paso-num'>5</div><div><div class='paso-tit'>Condiciones bajo el domo</div><div class='paso-sub'>22 a 26°C, 80 a 90% de HR. 18 horas de luz tenue (T5 o LED de poca potencia). Rociar las hojas 2 veces por dia.</div></div></div>
+    <div class='paso'><div class='paso-num'>6</div><div><div class='paso-tit'>Trasplante (10 a 14 dias)</div><div class='paso-sub'>Cuando las raices asoman por el sustrato. Trasplantar a la maceta definitiva sin romper el cepallon.</div></div></div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>📊 Medios de Enraizamiento Comparados</div>
+    <div class='metodo'><h4>🪨 Lana de Roca</h4><p>Alta tasa de exito. Ajustar pH a 5.5 antes de usar. Ideal para sistemas hidroponicos. Muy buena retencion de humedad.</p></div>
+    <div class='metodo' style='background:rgba(74,222,128,0.06);border-color:rgba(74,222,128,0.2)'><h4 style='color:var(--acc)'>🌴 Coco + Perlita 50/50</h4><p>Economico y efectivo. Humedecer con agua + Rhizotonic. Tasa de exito del 85% o mas.</p></div>
+    <div class='metodo' style='background:rgba(251,191,36,0.06);border-color:rgba(251,191,36,0.2)'><h4 style='color:var(--gold)'>💧 Clonador Aeroponico</h4><p>Raices visibles en 5 a 7 dias. Tasa de exito superior al 95%. Mayor inversion inicial pero resultados rapidos.</p></div>
+    <div class='metodo' style='background:rgba(168,85,247,0.06);border-color:rgba(168,85,247,0.2)'><h4 style='color:var(--pur)'>🫧 Cubos Oasis / Foam</h4><p>Practicos y limpios. Buen drenaje. Facil transicion tanto a tierra como a sistemas hidro.</p></div>
+  </div>
+</section>
+
+<!-- SUSTRATOS -->
+<section class='sec' id='sec-sustratos'>
+  <div class='stit'>SUSTRATOS</div>
+  <div class='ssub'>Tierra, coco, perlita y mezclas</div>
+
+  <div class='card'>
+    <div class='ctit'>🧱 Componentes Principales</div>
+    <table class='tabla'>
+      <tr><th>Componente</th><th>Caracteristica</th><th>Uso</th></tr>
+      <tr><td>🌍 Tierra Premium</td><td>Nutricion completa, pH 6.0-6.5</td><td>Base universal</td></tr>
+      <tr><td>🥥 Fibra de Coco</td><td>pH neutro, inerte, buena retencion</td><td>Hidro y mezclas</td></tr>
+      <tr><td>⚪ Perlita</td><td>Drenaje y aireacion, completamente inerte</td><td>20 a 30% en mezclas</td></tr>
+      <tr><td>🌱 Lombricompuesto</td><td>Microbioma activo, 100% organico</td><td>10 a 15% en mezclas</td></tr>
+      <tr><td>🍄 Micorrizas</td><td>Hongo simbiotico, mejora absorcion de raices</td><td>Solo en trasplante</td></tr>
+    </table>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>🧪 Mezclas Recomendadas</div>
+    <div class='nutri'><h4>Mezcla Estandar (Indoor y Outdoor)</h4><p>60% tierra premium + 20% perlita + 10% coco + 10% lombricompuesto. pH objetivo 6.0 a 6.5. EC de inicio 0.8 a 1.2.</p></div>
+    <div class='nutri'><h4>Super Soil Organico Autofertiizante</h4><p>Tierra + compost + harina de hueso + harina de plumas + roca fosforica + guano de murcielago + kelp + enmiendas minerales. Se autofertiliza durante 90 dias.</p></div>
+    <div class='nutri'><h4>Mezcla Liviana para Esquejes</h4><p>50% perlita + 50% coco. Sin nutrientes agregados. pH 5.8 a 6.2. Esterilizar siempre antes de usar.</p></div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>📏 pH y EC - Tabla de Referencia</div>
+    <div class='g2'>
+      <div class='bloque'><h4>pH en Tierra</h4><p>Rango: 6.0 - 7.0<br>Optimo: 6.2 - 6.8</p></div>
+      <div class='bloque'><h4>pH en Hidro</h4><p>Rango: 5.5 - 6.5<br>Optimo: 5.8 - 6.2</p></div>
+      <div class='bloque'><h4>EC Vegetativo</h4><p>0.8 - 1.5 mS/cm<br>400 a 750 ppm</p></div>
+      <div class='bloque'><h4>EC Floracion</h4><p>1.5 - 2.5 mS/cm<br>750 a 1250 ppm</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HIDRO -->
+<section class='sec' id='sec-hidro'>
+  <div class='stit'>HIDRO</div>
+  <div class='ssub'>Cultivo hidroponico completo</div>
+
+  <div class='card'>
+    <div class='ctit'>💧 Sistemas Hidroponicos</div>
+    <div class='metodo'><h4>🌊 DWC - Deep Water Culture</h4><p>Las raices quedan suspendidas en solucion nutritiva con oxigenacion constante. Sistema simple y economico. Crecimiento muy rapido. Requiere bomba de aire 24/7 y temperatura del agua entre 18 y 22°C.</p></div>
+    <div class='metodo'><h4>🔄 NFT - Nutrient Film Technique</h4><p>Una pelicula fina de solucion nutritiva fluye continuamente sobre las raices en canales inclinados. Excelente oxigenacion. Muy usado en cultivos comerciales.</p></div>
+    <div class='metodo'><h4>💦 Sistema de Goteo</h4><p>Solucion nutritiva goteando sobre sustrato inerte como coco o lana de roca. El sistema mas usado en cultivo indoor profesional. Facil de manejar para principiantes.</p></div>
+    <div class='metodo'><h4>🌫️ Aeroponia</h4><p>Las raices cuelgan en el aire y se nebuliza la solucion sobre ellas. Maxima oxigenacion posible. Crecimiento ultrarapido. Mayor inversion. Para cultivadores avanzados.</p></div>
+    <div class='metodo'><h4>🪣 Ebb and Flow - Inundacion y Drenaje</h4><p>La bandeja se inunda periodicamente con solucion y drena por gravedad. Sistema simple, confiable y completamente programable con timer.</p></div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>🧫 Solucion Nutritiva por Etapa</div>
+    <div class='nutri'><h4>Vegetativo (semana 1 a 4)</h4><p>EC: 0.8-1.5 | pH: 5.8-6.2 | Ratio N-P-K alto en N (3-1-2). Agregar microelementos: Ca, Mg, Fe. Temperatura del agua: 18 a 22°C.</p></div>
+    <div class='nutri'><h4>Floracion (semana 1 a 6)</h4><p>EC: 1.5-2.2 | pH: 5.8-6.2 | Ratio bajo en N y alto en P-K (1-3-3). Reforzar Ca-Mg en la semana 3.</p></div>
+    <div class='nutri'><h4>Maduracion (ultimas 2 a 3 semanas)</h4><p>EC: 0.8-1.2 con flush progresivo. Solo agua limpia durante la ultima semana para mejorar el sabor final.</p></div>
+    <div class='alerta'>⚠️ Cambiar la solucion completa cada 7 a 10 dias. Revisar pH y EC cada 2 a 3 dias. Limpiar el sistema entre ciclos con agua oxigenada diluida.</div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>📦 Sustratos Inertes para Hidro</div>
+    <div class='pills'>
+      <span class='pill'>🪨 Lana de Roca</span>
+      <span class='pill'>🌴 Fibra de Coco</span>
+      <span class='pill'>⚫ Hidroton (arcilla)</span>
+      <span class='pill'>⚪ Perlita</span>
+      <span class='pill'>🪨 Grava</span>
+      <span class='pill'>🫧 Cubos Oasis</span>
+    </div>
+  </div>
+</section>
+
+<!-- ANALISIS IA -->
+<section class='sec' id='sec-camara'>
+  <div class='stit'>ANALISIS IA</div>
+  <div class='ssub'>FotografiÃ¡ tu planta para un diagnostico con IA</div>
+
+  <div class='card'>
+    <div class='ctit'>📸 Foto de tu Planta</div>
+    <div class='cam-zona' id='zona-camara' onclick="document.getElementById('input-foto').click()">
+      <div class='cam-ico'>📷</div>
+      <div class='cam-txt'>Toca aqui para abrir la camara o galeria</div>
+      <div style='font-size:10px;color:var(--mut);margin-top:4px'>Formatos: JPG, PNG, WEBP</div>
+    </div>
+    <img class='cam-preview' id='preview-foto' alt='Vista previa de la foto'>
+    <input type='file' id='input-foto' accept='image/*' capture='environment' style='display:none'>
+    <button class='btn btn-completo' id='btn-analizar' onclick='analizarFoto()' disabled>🔬 Analizar Planta con Claude IA</button>
+    <div class='cargando' id='cargando-analisis'>🌿 Analizando tu planta con inteligencia artificial... puede tardar unos segundos</div>
+    <div class='resultado-analisis' id='resultado-analisis'></div>
+  </div>
+
+  <div class='card'>
+    <div class='ctit'>💡 Consejos para una Buena Foto</div>
+    <div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Buena iluminacion</div><div class='paso-sub'>Usar luz natural o LED blanca neutra. Evitar el flash directo ya que tapa los colores reales de la planta.</div></div></div>
+    <div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Enfocarse en el problema</div><div class='paso-sub'>Acercar la camara a las hojas o zonas afectadas. Fotografiar tambien el enves si hay manchas.</div></div></div>
+    <div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Incluir una foto general</div><div class='paso-sub'>Una imagen de la planta entera ayuda al diagnostico para ver el estado global.</div></div></div>
+  </div>
+</section>
+
+<!-- CANNABOT -->
+<section class='sec' id='sec-bot'>
+  <div class='stit'>CANNABOT</div>
+  <div class='ssub'>Tu experto cultivador con inteligencia artificial</div>
+
+  <div class='card'>
+    <div class='ctit'>🤖 Chat con CannaBot</div>
+    <div class='chat-mensajes' id='chat-mensajes'>
+      <div class='msg msg-bot'>¡Hola! Soy <strong>CannaBot</strong> 🌿, tu experto cultivador con inteligencia artificial. Preguntame sobre sustratos, plagas, esquejes, hidroponia, fotoperiodo... ¡lo que necesites!</div>
+    </div>
+    <div class='chat-fila'>
+      <input type='text' class='chat-input' id='chat-input' placeholder='Escribi tu pregunta...' onkeydown="if(event.key==='Enter')enviarMensaje()">
+      <button class='btn' onclick='enviarMensaje()' id='btn-enviar'>➤</button>
+    </div>
+    <div class='pills' style='margin-top:9px'>
+      <span class='pill' onclick='preguntaRapida(this)'>Arana roja</span>
+      <span class='pill' onclick='preguntaRapida(this)'>Falta de magnesio</span>
+      <span class='pill' onclick='preguntaRapida(this)'>Como hacer esquejes</span>
+      <span class='pill' onclick='preguntaRapida(this)'>pH en sistema hidro</span>
+      <span class='pill' onclick='preguntaRapida(this)'>Tengo oidio</span>
+      <span class='pill' onclick='preguntaRapida(this)'>Cuando cosechar</span>
+      <span class='pill' onclick='preguntaRapida(this)'>DWC vs NFT</span>
+    </div>
+  </div>
+</section>
+
+<!-- NAV INFERIOR -->
+<nav class='nav'>
+  <button class='nb activo' onclick="cambiarTab('luna',this)"><span class='ico'>🌙</span>Luna</button>
+  <button class='nb' onclick="cambiarTab('luz',this)"><span class='ico'>💡</span>Luz</button>
+  <button class='nb' onclick="cambiarTab('indoor',this)"><span class='ico'>🏠</span>Indoor</button>
+  <button class='nb' onclick="cambiarTab('outdoor',this)"><span class='ico'>☀️</span>Outdoor</button>
+  <button class='nb' onclick="cambiarTab('plagas',this)"><span class='ico'>🦟</span>Plagas</button>
+  <button class='nb' onclick="cambiarTab('esquejes',this)"><span class='ico'>✂️</span>Esquejes</button>
+  <button class='nb' onclick="cambiarTab('sustratos',this)"><span class='ico'>🌍</span>Sustratos</button>
+  <button class='nb' onclick="cambiarTab('hidro',this)"><span class='ico'>💧</span>Hidro</button>
+  <button class='nb' onclick="cambiarTab('camara',this)"><span class='ico'>📸</span>IA Foto</button>
+  <button class='nb' onclick="cambiarTab('bot',this)"><span class='ico'>🤖</span>CannaBot</button>
+</nav>
+
+<script>
+// ---- CAMBIO DE TABS ----
+function cambiarTab(nombre, boton) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('activo'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('activo'));
+  document.getElementById('sec-' + nombre).classList.add('activo');
+  boton.classList.add('activo');
+}
+
+// ---- DATOS DE LUNA ----
+async function cargarLuna() {
+  try {
+    const resp = await fetch('/api/moon');
+    const datos = await resp.json();
+    document.getElementById('luna-emoji').textContent = datos.emoji;
+    document.getElementById('luna-nombre').textContent = datos.name;
+    document.getElementById('luna-pct').textContent = 'Iluminacion: ' + datos.phase_pct + '%';
+    document.getElementById('luna-rec').textContent = datos.rec;
+    document.getElementById('luna-nueva').textContent = datos.next_new;
+    document.getElementById('luna-llena').textContent = datos.next_full;
+  } catch(err) {
+    document.getElementById('luna-rec').textContent = 'No se pudo conectar con el servidor.';
+  }
+}
+cargarLuna();
+
+// ---- CALENDARIO ----
+function construirCalendario() {
+  const hoy = new Date();
+  const anio = hoy.getFullYear();
+  const mes = hoy.getMonth();
+  const primerDia = new Date(anio, mes, 1).getDay();
+  const totalDias = new Date(anio, mes + 1, 0).getDate();
+  const diaHoy = hoy.getDate();
+  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const cabeceras = ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'];
+  let html = '<div style="text-align:center;font-family:Bebas Neue,cursive;font-size:17px;color:var(--acc);margin-bottom:7px;letter-spacing:2px;filter:drop-shadow(0 0 8px rgba(74,222,128,0.4))">' + meses[mes] + ' ' + anio + '</div>';
+  html += '<div class="cal-grid">';
+  cabeceras.forEach(function(c) { html += '<div class="cal-cab">' + c + '</div>'; });
+  for (let i = 0; i < primerDia; i++) html += '<div class="cal-dia"></div>';
+  for (let d = 1; d <= totalDias; d++) {
+    const clase = d === diaHoy ? 'cal-dia hoy' : 'cal-dia';
+    html += '<div class="' + clase + '">' + d + '</div>';
+  }
+  html += '</div>';
+  document.getElementById('calendario').innerHTML = html;
+}
+construirCalendario();
+
+// ---- CALCULADORA DE LUZ ----
+function actualizarLuz() {
+  const slider = document.getElementById('slider-luz');
+  if (!slider) return;
+  const horas = parseInt(slider.value);
+  document.getElementById('val-luz').textContent = horas;
+  document.getElementById('val-oscuridad').textContent = 24 - horas;
+  const recLuz = document.getElementById('rec-luz');
+  if (horas >= 18) {
+    recLuz.textContent = 'Vegetativo activo. Las plantas crecen y se ramifican al maximo.';
+  } else if (horas >= 14) {
+    recLuz.textContent = 'Zona gris. Algunas variedades sensibles pueden comenzar a pre-florecer.';
+  } else if (horas >= 12) {
+    recLuz.textContent = 'Floracion activa. Los cogollos estan en pleno desarrollo.';
+  } else {
+    recLuz.textContent = 'Fotoperiodo extremo. Solo usar en casos muy especificos.';
+  }
+}
+document.addEventListener('DOMContentLoaded', function() {
+  const sliderLuz = document.getElementById('slider-luz');
+  if (sliderLuz) {
+    sliderLuz.addEventListener('input', actualizarLuz);
+    actualizarLuz();
+  }
+});
+
+// ---- CHAT CANNABOT ----
+let historialChat = [];
+
+async function enviarMensaje() {
+  const input = document.getElementById('chat-input');
+  const mensaje = input.value.trim();
+  if (!mensaje) return;
+  input.value = '';
+  agregarMensaje(mensaje, 'user');
+  historialChat.push({ role: 'user', content: mensaje });
+  const btnEnviar = document.getElementById('btn-enviar');
+  btnEnviar.disabled = true;
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: historialChat })
+    });
+    const datos = await resp.json();
+    if (datos.reply) {
+      agregarMensaje(datos.reply, 'bot');
+      historialChat.push({ role: 'assistant', content: datos.reply });
+    } else {
+      agregarMensaje('Hubo un error al obtener la respuesta. Intentalo de nuevo.', 'bot');
+    }
+  } catch(err) {
+    agregarMensaje('Error de conexion. Verificar que la API key este configurada en Render.', 'bot');
+  }
+  btnEnviar.disabled = false;
+  input.focus();
+}
+
+function agregarMensaje(texto, quien) {
+  const div = document.createElement('div');
+  div.className = quien === 'bot' ? 'msg msg-bot' : 'msg msg-user';
+  div.textContent = texto;
+  const contenedor = document.getElementById('chat-mensajes');
+  contenedor.appendChild(div);
+  contenedor.scrollTop = contenedor.scrollHeight;
+}
+
+function preguntaRapida(elemento) {
+  document.getElementById('chat-input').value = elemento.textContent;
+  enviarMensaje();
+}
+
+// ---- CAMARA Y ANALISIS IA ----
+let imagenBase64 = null;
+let tipoImagen = 'image/jpeg';
+
+document.getElementById('input-foto').addEventListener('change', function(e) {
+  const archivo = e.target.files[0];
+  if (!archivo) return;
+  tipoImagen = archivo.type || 'image/jpeg';
+  const lector = new FileReader();
+  lector.onload = function(ev) {
+    const resultado = ev.target.result;
+    imagenBase64 = resultado.split(',')[1];
+    const preview = document.getElementById('preview-foto');
+    preview.src = resultado;
+    preview.style.display = 'block';
+    document.getElementById('zona-camara').style.display = 'none';
+    document.getElementById('btn-analizar').disabled = false;
+    document.getElementById('resultado-analisis').style.display = 'none';
+    document.getElementById('resultado-analisis').textContent = '';
+  };
+  lector.readAsDataURL(archivo);
+});
+
+async function analizarFoto() {
+  if (!imagenBase64) return;
+  const btnAnalizar = document.getElementById('btn-analizar');
+  const cargando = document.getElementById('cargando-analisis');
+  const resultado = document.getElementById('resultado-analisis');
+  btnAnalizar.disabled = true;
+  cargando.style.display = 'block';
+  resultado.style.display = 'none';
+  try {
+    const resp = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: imagenBase64, media_type: tipoImagen })
+    });
+    const datos = await resp.json();
+    if (datos.analysis) {
+      resultado.textContent = datos.analysis;
+      resultado.style.display = 'block';
+    } else {
+      resultado.textContent = 'No se pudo obtener el analisis. Intentalo de nuevo.';
+      resultado.style.display = 'block';
+    }
+  } catch(err) {
+    resultado.textContent = 'Error al analizar la foto. Verificar que la API key este configurada correctamente en Render.';
+    resultado.style.display = 'block';
+  }
+  cargando.style.display = 'none';
+  btnAnalizar.disabled = false;
+}
+</script>
+</body>
+</html>
