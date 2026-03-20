@@ -1131,8 +1131,7 @@ function renderResultado(texto) {
     'CARENCIAS NUTRICIONALES':'🟡','EXCESOS':'🔴',
     'TRATAMIENTO PASO A PASO':'💊','MEZCLA DE ABONO RECOMENDADA':'🧪'};
   secs.forEach(function(s){
-    var t = '<span style='display:block;font-weight:700;color:var(--acc);font-size:.78rem;' +
-      'text-transform:uppercase;letter-spacing:.08em;margin-top:12px;margin-bottom:4px'>' +
+    var t = '<span style="display:block;font-weight:700;color:var(--acc);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;margin-top:12px;margin-bottom:4px">' + (icos[s]||'') + ' ' + s + '</span>';
       (icos[s]||'') + ' ' + s + '</span>';
     texto = texto.replace(s+':', t);
   });
