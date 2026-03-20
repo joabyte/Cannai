@@ -699,40 +699,49 @@ body::after{width:260px;height:260px;bottom:80px;right:-80px;background:radial-g
 <tr><td>🟣 Medicinal</td><td>50mg+</td><td>Solo uso terapeutico supervisado</td></tr></table>
 <div class='alerta' style='margin-top:10px'>⏰ Tiempo de inicio: 30 a 90 minutos. Pico: 2 a 3 horas. Duracion total: 4 a 8 horas. Mucho mas prolongado que inhalacion.</div></div></section>
 <section class='sec' id='sec-camara'>
-<div class='stit'>IA SCAN</div><div class='ssub'>Diagnostico completo de tu planta</div>
+<div class='stit'>IA SCAN</div>
+<div class='ssub'>EscaneÃ¡ tu planta para diagnÃ³stico completo</div>
 <div class='card'>
-<div class='ctit'>🔍 Escanear Planta</div>
-<input type='file' id='inp-cam' accept='image/*' capture='environment' style='display:none'>
-<input type='file' id='inp-gal' accept='image/*' style='display:none'>
-<div id='zona-ini' style='text-align:center;padding:10px 0'>
-<div style='font-size:64px;margin-bottom:12px;filter:drop-shadow(0 0 10px rgba(74,222,128,.4))'>📷</div>
-<div style='font-size:14px;font-weight:600;color:var(--txt);margin-bottom:6px'>FotografiÃ¡ tu planta</div>
-<div style='font-size:11px;color:var(--mut);margin-bottom:18px'>La IA detecta plagas, carencias, excesos y da el tratamiento completo</div>
-<button class='btn btn-completo' id='btn-cam' style='margin-bottom:10px;font-size:15px;letter-spacing:.5px'>📷  Abrir Camara</button>
-<button class='btn btn-completo' id='btn-gal' style='background:rgba(255,255,255,.07);color:var(--txt);border:1px solid var(--gbor);box-shadow:none;font-size:15px'>🖼️  Elegir de Galeria</button>
+<div class='ctit'>📷 Escanear Planta</div>
+<input type='file' id='fotoInput' accept='image/*' style='display:none'>
+<div id='estadoInicial'>
+  <div style='text-align:center;padding:18px 0 14px'>
+    <div style='font-size:70px;margin-bottom:10px'>🌿</div>
+    <p style='font-size:13px;color:var(--mut);line-height:1.5'>TomÃ¡ una foto de tu planta y la IA la analiza detectando plagas, carencias, excesos y te da el tratamiento</p>
+  </div>
+  <div style='display:flex;gap:10px;margin-top:4px'>
+    <button id='btnCamara' style='flex:1;padding:14px 8px;border-radius:14px;border:none;background:linear-gradient(135deg,#16a34a,#4ade80);color:#000;font-family:Space Grotesk;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(74,222,128,.3)'>
+      📷 CÃ¡mara
+    </button>
+    <button id='btnGaleria' style='flex:1;padding:14px 8px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#e8fce8;font-family:Space Grotesk;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px'>
+      🖼️ GalerÃ­a
+    </button>
+  </div>
 </div>
-<div id='zona-prev' style='display:none'>
-<img id='prev-img' style='width:100%;max-height:320px;object-fit:cover;border-radius:14px;display:block;margin-bottom:12px' alt=''>
-<button class='btn btn-completo' id='btn-analizar' style='margin-bottom:8px;font-size:15px'>🧬 Analizar con IA</button>
-<button class='btn btn-completo' id='btn-reset' style='background:rgba(255,255,255,.07);color:var(--txt);border:1px solid var(--gbor);box-shadow:none;font-size:13px'>🔄 Nueva Foto</button>
+<div id='estadoFoto' style='display:none'>
+  <img id='fotoPreview' alt='' style='width:100%;max-height:300px;object-fit:cover;border-radius:14px;display:block;margin-bottom:12px;box-shadow:0 6px 24px rgba(0,0,0,.5)'>
+  <div style='display:flex;gap:10px'>
+    <button id='btnAnalizar' style='flex:2;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,#16a34a,#4ade80);color:#000;font-family:Space Grotesk;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(74,222,128,.3)'>
+    🧬 Analizar con IA
+    </button>
+    <button id='btnNueva' style='flex:1;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#e8fce8;font-family:Space Grotesk;font-size:13px;font-weight:600;cursor:pointer'>
+    🔄 Nueva
+    </button>
+  </div>
 </div>
-<div id='zona-scan' style='display:none;margin-top:14px'>
-<div style='display:flex;justify-content:space-between;font-size:11px;color:var(--mut);margin-bottom:5px'><span id='scan-txt'>Iniciando...</span><span id='scan-num'>0%</span></div>
-<div style='width:100%;background:rgba(255,255,255,.07);border-radius:4px;height:5px;margin-bottom:12px'><div id='scan-bar' style='width:0%;height:5px;background:linear-gradient(90deg,var(--acc3),var(--acc));border-radius:4px;transition:width .4s'></div></div>
-<div style='text-align:center;padding:8px 0;font-size:12px;color:var(--mut)'>🌿 Analizando con IA... puede tardar unos segundos</div>
+<div id='estadoCargando' style='display:none;padding:20px 0;text-align:center'>
+  <div style='font-size:13px;color:var(--mut);margin-bottom:12px' id='textoScan'>🌿 Analizando tu planta...</div>
+  <div style='width:100%;background:rgba(255,255,255,.07);border-radius:4px;height:6px'>
+    <div id='barraScan' style='width:0%;height:6px;background:linear-gradient(90deg,#16a34a,#4ade80);border-radius:4px;transition:width .5s'></div>
+  </div>
 </div>
-<div id='zona-resultado' style='display:none;margin-top:12px;background:rgba(255,255,255,.04);border:1px solid var(--gbor);border-radius:var(--r);padding:14px;font-size:12px;line-height:1.8'></div>
+<div id='estadoResultado' style='display:none;margin-top:14px;padding:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;font-size:12px;line-height:1.8;white-space:pre-wrap'></div>
 </div>
-<div class='card'><div class='ctit'>💡 Que Detecta el Analisis</div>
-<div class='g2'>
-<div class='bloque'><h4>🦟 Plagas</h4><p>Insectos, acariosis y enfermedades visibles en la foto</p></div>
-<div class='bloque'><h4>🟡 Carencias</h4><p>Falta de N, P, K, Ca, Mg, Fe y otros nutrientes</p></div>
-<div class='bloque'><h4>🔴 Excesos</h4><p>Sobre-fertilizacion y toxicidades detectables</p></div>
-<div class='bloque'><h4>🧪 Tratamiento</h4><p>Plan de accion y mezcla de abono recomendada</p></div>
-</div>
-<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Buena iluminacion</div><div class='paso-sub'>Luz natural o LED blanca. El flash tapa los colores reales de la planta.</div></div></div>
-<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Enfocar el problema</div><div class='paso-sub'>Acercar a hojas afectadas. Fotografiar tambien el enves si hay manchas o puntos.</div></div></div>
-<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Foto general tambien</div><div class='paso-sub'>Una imagen de la planta entera ayuda a ver si el problema es generalizado.</div></div></div>
+<div class='card'>
+<div class='ctit'>💡 Consejos para mejor diagnÃ³stico</div>
+<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Buena iluminaciÃ³n</div><div class='paso-sub'>Luz natural o LED blanca neutra. El flash directo tapa los colores reales.</div></div></div>
+<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Enfocar el problema</div><div class='paso-sub'>Acercate a las hojas afectadas. FotografiÃ¡ tambiÃ©n el envÃ©s si hay manchas.</div></div></div>
+<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Foto general de la planta</div><div class='paso-sub'>Ayuda a ver si el problema es generalizado o localizado en una zona.</div></div></div>
 </div></section>
 <section class='sec' id='sec-bot'>
 <div class='stit'>CANNABOT</div><div class='ssub'>Tu experto cultivador con IA</div>
@@ -935,39 +944,114 @@ function calcularConsumo(){
   res.style.display='block';
 }
 
-// CAMARA - BIOHUERTA STYLE
-var imgB64=null,imgMime='image/jpeg';
+// === CAMARA BIOHUERTA STYLE ===
+var fotoB64 = null;
+var fotoMime = 'image/jpeg';
 
-function cargarFoto(file){
-  if(!file)return;
-  imgMime=file.type||'image/jpeg';
-  var rd=new FileReader();
-  rd.onload=function(e){
-    imgB64=e.target.result.split(',')[1];
-    document.getElementById('prev-img').src=e.target.result;
-    document.getElementById('zona-ini').style.display='none';
-    document.getElementById('zona-prev').style.display='block';
-    document.getElementById('zona-resultado').style.display='none';
-    document.getElementById('zona-resultado').innerHTML='';
-    document.getElementById('zona-scan').style.display='none';
-  };
-  rd.readAsDataURL(file);
-}
-
-document.getElementById('btn-cam').addEventListener('click',function(){document.getElementById('inp-cam').click();});
-document.getElementById('btn-gal').addEventListener('click',function(){document.getElementById('inp-gal').click();});
-document.getElementById('inp-cam').addEventListener('change',function(){cargarFoto(this.files[0]);this.value='';});
-document.getElementById('inp-gal').addEventListener('change',function(){cargarFoto(this.files[0]);this.value='';});
-document.getElementById('btn-reset').addEventListener('click',function(){
-  imgB64=null;
-  document.getElementById('zona-prev').style.display='none';
-  document.getElementById('zona-ini').style.display='block';
-  document.getElementById('zona-resultado').style.display='none';
-  document.getElementById('zona-resultado').innerHTML='';
-  document.getElementById('zona-scan').style.display='none';
+document.getElementById('btnCamara').addEventListener('click', function() {
+  var inp = document.getElementById('fotoInput');
+  inp.setAttribute('capture', 'environment');
+  inp.click();
 });
 
-document.getElementById('btn-analizar').addEventListener('click',function(){analizarFoto();});
+document.getElementById('btnGaleria').addEventListener('click', function() {
+  var inp = document.getElementById('fotoInput');
+  inp.removeAttribute('capture');
+  inp.click();
+});
+
+document.getElementById('fotoInput').addEventListener('change', function(e) {
+  var archivo = e.target.files[0];
+  if (!archivo) return;
+  fotoMime = archivo.type || 'image/jpeg';
+  var lector = new FileReader();
+  lector.onload = function(ev) {
+    fotoB64 = ev.target.result.split(',')[1];
+    document.getElementById('fotoPreview').src = ev.target.result;
+    document.getElementById('estadoInicial').style.display = 'none';
+    document.getElementById('estadoFoto').style.display = 'block';
+    document.getElementById('estadoResultado').style.display = 'none';
+    document.getElementById('estadoResultado').innerHTML = '';
+    document.getElementById('estadoCargando').style.display = 'none';
+  };
+  lector.readAsDataURL(archivo);
+  this.value = '';
+});
+
+document.getElementById('btnNueva').addEventListener('click', function() {
+  fotoB64 = null;
+  document.getElementById('estadoFoto').style.display = 'none';
+  document.getElementById('estadoInicial').style.display = 'block';
+  document.getElementById('estadoResultado').style.display = 'none';
+  document.getElementById('estadoResultado').innerHTML = '';
+  document.getElementById('estadoCargando').style.display = 'none';
+});
+
+document.getElementById('btnAnalizar').addEventListener('click', function() {
+  if (!fotoB64) return;
+  var pasos = [
+    {p:15, t:'🔍 Analizando estructura de la planta...'},
+    {p:35, t:'🟡 Evaluando coloracion y patron de hojas...'},
+    {p:55, t:'🦟 Buscando plagas y enfermedades...'},
+    {p:75, t:'🧪 Evaluando estado nutricional...'},
+    {p:90, t:'📝 Generando diagnostico y tratamiento...'}
+  ];
+  document.getElementById('estadoFoto').style.display = 'none';
+  document.getElementById('estadoCargando').style.display = 'block';
+  document.getElementById('estadoResultado').style.display = 'none';
+  var idx = 0;
+  var timer = setInterval(function() {
+    if (idx < pasos.length) {
+      document.getElementById('textoScan').textContent = pasos[idx].t;
+      document.getElementById('barraScan').style.width = pasos[idx].p + '%';
+      idx++;
+    }
+  }, 1200);
+  fetch('/api/analyze', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({image: fotoB64, media_type: fotoMime})
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(datos) {
+    clearInterval(timer);
+    document.getElementById('barraScan').style.width = '100%';
+    document.getElementById('textoScan').textContent = '✅ Analisis completado';
+    setTimeout(function() {
+      document.getElementById('estadoCargando').style.display = 'none';
+      var res = document.getElementById('estadoResultado');
+      res.innerHTML = formatearAnalisis(datos.analysis || 'No se pudo obtener el analisis.');
+      res.style.display = 'block';
+      document.getElementById('estadoFoto').style.display = 'block';
+    }, 600);
+  })
+  .catch(function() {
+    clearInterval(timer);
+    document.getElementById('estadoCargando').style.display = 'none';
+    document.getElementById('estadoFoto').style.display = 'block';
+    var res = document.getElementById('estadoResultado');
+    res.textContent = 'Error al analizar. Verificar la API key en Render.';
+    res.style.display = 'block';
+  });
+});
+
+function formatearAnalisis(texto) {
+  var secciones = ['ESTADO GENERAL','PROBLEMAS DETECTADOS','DIAGNOSTICO',
+    'PLAGAS O ENFERMEDADES','CARENCIAS NUTRICIONALES','EXCESOS',
+    'TRATAMIENTO PASO A PASO','MEZCLA DE ABONO RECOMENDADA'];
+  var iconos = {
+    'ESTADO GENERAL':'🌱','PROBLEMAS DETECTADOS':'🔍',
+    'DIAGNOSTICO':'🧬','PLAGAS O ENFERMEDADES':'🦟',
+    'CARENCIAS NUTRICIONALES':'🟡','EXCESOS':'🔴',
+    'TRATAMIENTO PASO A PASO':'💊','MEZCLA DE ABONO RECOMENDADA':'🧪'
+  };
+  secciones.forEach(function(s) {
+    var ico = iconos[s] || '';
+    var titulo = '<span style="display:block;font-weight:700;color:#4ade80;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-top:12px;margin-bottom:4px">' + ico + ' ' + s + '</span>';
+    texto = texto.replace(s + ':', titulo);
+  });
+  return texto;
+}
 
 async function analizarFoto(){
   if(!imgB64)return;
