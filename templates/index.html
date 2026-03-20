@@ -466,32 +466,30 @@ body::after{width:260px;height:260px;bottom:80px;right:-80px;background:radial-g
 <div class='alerta' style='margin-top:10px'>⏰ Tiempo de inicio: 30 a 90 minutos. Pico: 2 a 3 horas. Duracion total: 4 a 8 horas. Mucho mas prolongado que inhalacion.</div></div></section>
 <section class='sec' id='sec-camara'>
 <div class='stit'>IA SCAN</div><div class='ssub'>Diagnostico completo de tu planta</div>
-<div class='card'><div class='ctit'>🔍 Escanear Planta</div>
-<div class='btn-fila'>
-<button class='btn' onclick='abrirCamara()'>📷 Camara</button>
-<button class='btn btn-secundario' onclick='abrirGaleria()'>🖼️ Galeria</button>
+<div class='card'>
+<div class='ctit'>🔍 Escanear Planta</div>
+<div id='estado-permiso' style='display:none;margin-bottom:10px;padding:10px 12px;border-radius:10px;font-size:12px;line-height:1.5'></div>
+<div id='zona-inicial'>
+<button class='btn btn-completo' id='btn-abrir-camara' onclick='pedirPermisoCamara()' style='margin-bottom:10px;font-size:15px'>📷 Abrir Camara</button>
+<button class='btn btn-completo btn-secundario' onclick='abrirGaleria()' style='font-size:15px'>🖼️ Elegir de Galeria</button>
 </div>
-<div class='cam-container'>
-<div class='cam-zona' id='zona-camara'>
-<div class='cam-ico'>🔍</div>
-<div class='cam-txt'>Toca Camara o Galeria</div>
-<div class='cam-subtxt'>La IA detecta plagas, carencias, excesos y da tratamiento</div>
+<div id='zona-video' style='display:none;margin-top:10px'>
+<video id='cam-video' autoplay playsinline style='width:100%;max-height:300px;border-radius:12px;object-fit:cover;display:block'></video>
+<button class='btn btn-completo' onclick='capturarFoto()' style='margin-top:10px;font-size:15px'>📸 Sacar Foto Ahora</button>
+<button class='btn btn-completo btn-secundario' onclick='cancelarCamara()' style='margin-top:8px'>Cancelar</button>
 </div>
-<video class='cam-video' id='cam-video' autoplay playsinline></video>
-<img class='cam-preview' id='preview-foto' alt='Vista previa'>
+<div id='zona-preview' style='display:none;margin-top:10px'>
+<img id='preview-foto' alt='Vista previa' style='width:100%;max-height:300px;object-fit:cover;border-radius:12px;display:block'>
+<button class='btn btn-completo' id='btn-analizar' onclick='analizarFoto()' style='margin-top:10px;font-size:15px'>🧬 Analizar con IA</button>
+<button class='btn btn-completo btn-secundario' onclick='resetCamara()' style='margin-top:8px'>Nueva Foto</button>
 </div>
-<div id='cam-controles' style='display:none;margin-bottom:10px'>
-<button class='btn btn-completo' onclick='capturarFoto()' style='margin-bottom:8px'>📸 Sacar Foto</button>
-<button class='btn btn-completo btn-secundario' onclick='cancelarCamara()'>Cancelar</button>
-</div>
-<input type='file' id='input-galeria' accept='image/*' style='display:none'>
 <canvas id='canvas-foto' style='display:none'></canvas>
-<div id='scan-info' style='display:none;margin-bottom:10px'>
+<input type='file' id='input-galeria' accept='image/*' style='display:none'>
+<div id='scan-info' style='display:none;margin-top:12px'>
 <div style='display:flex;justify-content:space-between;font-size:11px;color:var(--mut);margin-bottom:4px'><span id='scan-estado'>Preparando...</span><span id='scan-pct'>0%</span></div>
 <div style='width:100%;background:rgba(255,255,255,.07);border-radius:3px;height:4px'><div id='scan-barra' style='width:0%;height:4px;background:linear-gradient(90deg,var(--acc3),var(--acc));border-radius:3px;transition:width .4s'></div></div>
+<div class='cargando' id='cargando-analisis' style='display:block;padding:12px 0'>🌿 Analizando con IA...<br><span style='font-size:10px;color:var(--mut)'>Detectando plagas, carencias y excesos</span></div>
 </div>
-<button class='btn btn-completo' id='btn-analizar' onclick='analizarFoto()' style='display:none'>🧬 Analizar con IA</button>
-<div class='cargando' id='cargando-analisis'>🌿 Analizando con IA...<br><span style='font-size:10px;color:var(--mut)'>Detectando plagas, carencias y excesos</span></div>
 <div class='resultado-analisis' id='resultado-analisis'></div>
 </div>
 <div class='card'><div class='ctit'>💡 Que Detecta el Analisis</div>
@@ -677,65 +675,88 @@ document.querySelectorAll('.nb').forEach(function(btn){
 // TABS SUSTRATOS
 function sustTab(btn,id){document.querySelectorAll('.stab').forEach(function(b){b.classList.remove('on');});document.querySelectorAll('.sust-panel').forEach(function(p){p.classList.remove('on');});btn.classList.add('on');document.getElementById('sp-'+id).classList.add('on');}
 
-// CAMARA MEJORADA
+// CAMARA CON PERMISOS
 var imagenB64=null;
 var tipoImg='image/jpeg';
 var streamCam=null;
 
-function abrirCamara(){
-  var zona=document.getElementById('zona-camara');
-  var video=document.getElementById('cam-video');
-  var controles=document.getElementById('cam-controles');
-  var btnAnalizar=document.getElementById('btn-analizar');
-  zona.style.display='none';
-  btnAnalizar.style.display='none';
-  document.getElementById('preview-foto').style.display='none';
-  document.getElementById('resultado-analisis').style.display='none';
-  if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
-    navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}})
-    .then(function(stream){
-      streamCam=stream;
-      video.srcObject=stream;
-      video.style.display='block';
-      controles.style.display='block';
-    })
-    .catch(function(err){
-      console.log('Error camara:',err);
-      abrirGaleria();
-    });
-  }else{
-    abrirGaleria();
+function mostrarEstado(msg,tipo){
+  var el=document.getElementById('estado-permiso');
+  el.textContent=msg;
+  el.style.display='block';
+  if(tipo==='ok'){el.style.background='rgba(74,222,128,.1)';el.style.color='var(--acc2)';el.style.border='1px solid rgba(74,222,128,.25)';}
+  else if(tipo==='error'){el.style.background='rgba(248,113,113,.1)';el.style.color='var(--red)';el.style.border='1px solid rgba(248,113,113,.25)';}
+  else{el.style.background='rgba(251,191,36,.1)';el.style.color='#fde68a';el.style.border='1px solid rgba(251,191,36,.25)';}
+}
+
+function pedirPermisoCamara(){
+  mostrarEstado('Solicitando permiso para usar la camara...','info');
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    mostrarEstado('Tu navegador no soporta acceso a camara. Usa la opcion Galeria.','error');
+    return;
   }
+  navigator.mediaDevices.getUserMedia({
+    video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}}
+  })
+  .then(function(stream){
+    streamCam=stream;
+    var video=document.getElementById('cam-video');
+    video.srcObject=stream;
+    document.getElementById('zona-inicial').style.display='none';
+    document.getElementById('zona-video').style.display='block';
+    document.getElementById('zona-preview').style.display='none';
+    document.getElementById('estado-permiso').style.display='none';
+  })
+  .catch(function(err){
+    console.log('Error permiso camara:',err.name,err.message);
+    if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError'){
+      mostrarEstado('Permiso de camara denegado. Ve a Configuracion del navegador y permite el acceso a la camara para este sitio. O usa la opcion Galeria.','error');
+    }else if(err.name==='NotFoundError'){
+      mostrarEstado('No se encontro camara en tu dispositivo. Usa la opcion Galeria.','error');
+    }else{
+      mostrarEstado('No se pudo acceder a la camara: '+err.message+'. Intenta con Galeria.','error');
+    }
+  });
 }
 
 function capturarFoto(){
   var video=document.getElementById('cam-video');
   var canvas=document.getElementById('canvas-foto');
-  var preview=document.getElementById('preview-foto');
-  var controles=document.getElementById('cam-controles');
-  var btnAnalizar=document.getElementById('btn-analizar');
+  if(!video.videoWidth||!video.videoHeight){
+    mostrarEstado('La camara todavia no esta lista. Espera un segundo y vuelve a intentar.','info');
+    return;
+  }
   canvas.width=video.videoWidth;
   canvas.height=video.videoHeight;
   canvas.getContext('2d').drawImage(video,0,0);
   var dataUrl=canvas.toDataURL('image/jpeg',0.9);
   imagenB64=dataUrl.split(',')[1];
   tipoImg='image/jpeg';
-  preview.src=dataUrl;
-  preview.style.display='block';
-  video.style.display='none';
-  controles.style.display='none';
-  if(streamCam){streamCam.getTracks().forEach(function(t){t.stop();});streamCam=null;}
-  btnAnalizar.style.display='block';
+  var prev=document.getElementById('preview-foto');
+  prev.src=dataUrl;
+  cancelarCamara();
+  document.getElementById('zona-preview').style.display='block';
+  document.getElementById('resultado-analisis').style.display='none';
+  document.getElementById('resultado-analisis').innerHTML='';
+  document.getElementById('scan-info').style.display='none';
 }
 
 function cancelarCamara(){
-  var video=document.getElementById('cam-video');
-  var zona=document.getElementById('zona-camara');
-  var controles=document.getElementById('cam-controles');
-  video.style.display='none';
-  controles.style.display='none';
-  zona.style.display='block';
   if(streamCam){streamCam.getTracks().forEach(function(t){t.stop();});streamCam=null;}
+  var video=document.getElementById('cam-video');
+  video.srcObject=null;
+  document.getElementById('zona-video').style.display='none';
+  if(!imagenB64)document.getElementById('zona-inicial').style.display='block';
+}
+
+function resetCamara(){
+  imagenB64=null;tipoImg='image/jpeg';
+  document.getElementById('zona-preview').style.display='none';
+  document.getElementById('zona-inicial').style.display='block';
+  document.getElementById('resultado-analisis').style.display='none';
+  document.getElementById('resultado-analisis').innerHTML='';
+  document.getElementById('scan-info').style.display='none';
+  document.getElementById('estado-permiso').style.display='none';
 }
 
 function abrirGaleria(){
@@ -750,11 +771,13 @@ document.getElementById('input-galeria').addEventListener('change',function(e){
   r.onload=function(ev){
     var res=ev.target.result;
     imagenB64=res.split(',')[1];
-    var prev=document.getElementById('preview-foto');
-    prev.src=res;prev.style.display='block';
-    document.getElementById('zona-camara').style.display='none';
-    document.getElementById('btn-analizar').style.display='block';
+    document.getElementById('preview-foto').src=res;
+    document.getElementById('zona-inicial').style.display='none';
+    document.getElementById('zona-preview').style.display='block';
     document.getElementById('resultado-analisis').style.display='none';
+    document.getElementById('resultado-analisis').innerHTML='';
+    document.getElementById('scan-info').style.display='none';
+    document.getElementById('estado-permiso').style.display='none';
   };
   r.readAsDataURL(f);
 });
