@@ -121,6 +121,18 @@ body::after{width:260px;height:260px;bottom:80px;right:-80px;background:radial-g
 .concentrado-card h4{color:var(--pur);font-size:13px;font-weight:700;margin-bottom:6px;text-shadow:0 0 8px rgba(167,139,250,.4)}
 .concentrado-card p{font-size:11px;color:var(--mut);line-height:1.5}
 .concentrado-card .proc{font-size:11px;color:var(--acc2);background:rgba(74,222,128,.06);border-radius:7px;padding:7px 9px;margin-top:6px;line-height:1.6}
+/* CAMARA */
+.cam-container{position:relative;margin-bottom:12px}
+.cam-preview{width:100%;max-height:280px;object-fit:cover;border-radius:12px;display:none;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.cam-video{width:100%;max-height:280px;object-fit:cover;border-radius:12px;display:none;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.cam-zona{background:rgba(255,255,255,.03);border:2px dashed rgba(74,222,128,.3);border-radius:var(--r);padding:24px;text-align:center;cursor:pointer;transition:all .2s}
+.cam-zona:active{border-color:var(--acc);background:rgba(74,222,128,.07)}
+.cam-ico{font-size:48px;margin-bottom:8px;filter:drop-shadow(0 0 8px rgba(74,222,128,.3))}
+.cam-txt{font-size:13px;color:var(--txt);font-weight:600;margin-bottom:4px}
+.cam-subtxt{font-size:11px;color:var(--mut)}
+.resultado-analisis{background:rgba(255,255,255,.04);border:1px solid var(--gbor);border-radius:var(--r);padding:14px;margin-top:12px;font-size:12px;line-height:1.8;display:none}
+.resultado-analisis .stit-r{font-weight:700;color:var(--acc);font-size:11px;margin-top:10px;margin-bottom:3px;text-transform:uppercase;letter-spacing:1px;display:block}
+.cargando{display:none;text-align:center;padding:18px;font-size:12px;color:var(--mut)}
 .chat-mensajes{height:310px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:6px 0}
 .chat-mensajes::-webkit-scrollbar{width:2px}
 .chat-mensajes::-webkit-scrollbar-thumb{background:var(--acc3);border-radius:2px}
@@ -195,215 +207,538 @@ body::after{width:260px;height:260px;bottom:80px;right:-80px;background:radial-g
 <div class='pills'><span class='pill'>No depende de 12/12</span><span class='pill'>18/6 todo el ciclo</span><span class='pill'>~90 dias totales</span><span class='pill'>Ideal exterior</span></div></div></section>
 <section class='sec' id='sec-indoor'>
 <div class='stit'>INDOOR</div><div class='ssub'>Cultivo profesional en interior</div>
-<div class='card'><div class='ctit'>🏠 Setup Indoor Completo</div>
-<div class='sust-tabs'><button class='stab on' onclick='indoorTab(this,"basico")'>Basico</button><button class='stab' onclick='indoorTab(this,"intermedio")'>Intermedio</button><button class='stab' onclick='indoorTab(this,"avanzado")'>Avanzado</button></div>
-<div class='sust-panel on' id='ip-basico'><div class='alerta-verde'>💰 Inversion estimada: USD 150-300 | Produccion: 30-80g por ciclo</div>
-<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Carpa 60x60 o 80x80 cm</div><div class='paso-sub'>Lona reflectante interior (Mylar). Acceso con cremallera. Oscuridad total en floracion.</div></div></div>
-<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>LED de 100-200W</div><div class='paso-sub'>Full spectrum QB (Quantum Board). Minimo 50W por m2 real.</div></div></div>
-<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Extractor + filtro de carbon 4 pulgadas</div><div class='paso-sub'>1 renovacion cada 1-3 minutos. Ventilador interno 15cm.</div></div></div>
-<div class='paso'><div class='paso-num'>4</div><div><div class='paso-tit'>Termohigrometro digital</div><div class='paso-sub'>Control de temperatura y humedad en tiempo real.</div></div></div>
-<div class='paso'><div class='paso-num'>5</div><div><div class='paso-tit'>Timer / Temporizador</div><div class='paso-sub'>Programar 18/6 en veg y 12/12 en flora. Mecanico es el mas confiable.</div></div></div></div>
-<div class='sust-panel' id='ip-intermedio'><div class='alerta-gold'>💰 Inversion estimada: USD 400-800 | Produccion: 100-250g por ciclo</div>
-<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Carpa 100x100 o 120x120 cm</div><div class='paso-sub'>Calidad premium con zip reforzado. Techo de al menos 2m.</div></div></div>
-<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>LED 200-400W QB o COB</div><div class='paso-sub'>Quantum Board Samsung LM301B. Dimmer para controlar intensidad.</div></div></div>
-<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Sistema de extraccion + inyeccion</div><div class='paso-sub'>Extractor 200m3/h + filtro carbon 6 pulgadas. Presion negativa.</div></div></div>
-<div class='paso'><div class='paso-num'>4</div><div><div class='paso-tit'>Controlador de ambiente</div><div class='paso-sub'>Inkbird para automatizar extractor. Humidificador ultrasonico.</div></div></div>
-<div class='paso'><div class='paso-num'>5</div><div><div class='paso-tit'>pH y EC metros digitales</div><div class='paso-sub'>pH ideal 6.0-6.5 en tierra. Calibrar cada 15 dias.</div></div></div></div>
-<div class='sust-panel' id='ip-avanzado'><div class='alerta' style='background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.3);color:#c4b5fd'>💰 Inversion estimada: USD 1500+ | Produccion: 300-600g+ por ciclo</div>
-<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Cuarto dedicado o carpa 1.2x2.4m+</div><div class='paso-sub'>Doble camara de acceso para evitar fugas de luz y olor.</div></div></div>
-<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>LED 600W-1200W o HPS 600W</div><div class='paso-sub'>Sistemas LED de alta eficiencia mayor a 2.7 umol/J.</div></div></div>
-<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Climatizacion dedicada</div><div class='paso-sub'>Mini split inverter. Dehumidificador alta capacidad. CO2 1000-1500ppm.</div></div></div>
-<div class='paso'><div class='paso-num'>4</div><div><div class='paso-tit'>Hidroponia o coco automatizado</div><div class='paso-sub'>DWC, NFT o goteo. EC y pH en tiempo real con sensores.</div></div></div>
-<div class='paso'><div class='paso-num'>5</div><div><div class='paso-tit'>Monitorizacion remota</div><div class='paso-sub'>Sensores WiFi con app. Alertas automaticas ante anomalias.</div></div></div></div></div>
-<div class='card'><div class='ctit'>🌡️ Parametros por Etapa</div>
-<table class='tabla'><tr><th>Parametro</th><th>🌱 Veg</th><th>🌸 Flora</th><th>✂️ Maduracion</th></tr>
-<tr><td>Temp dia</td><td>22-28°C</td><td>20-26°C</td><td>18-24°C</td></tr>
-<tr><td>Temp noche</td><td>18-22°C</td><td>16-20°C</td><td>15-18°C</td></tr>
-<tr><td>Humedad HR</td><td>50-70%</td><td>40-50%</td><td>30-40%</td></tr>
-<tr><td>pH agua</td><td>6.0-6.5</td><td>6.2-6.8</td><td>6.0-6.5</td></tr>
-<tr><td>EC agua</td><td>0.8-1.5</td><td>1.5-2.5</td><td>0.4-0.8</td></tr>
-<tr><td>Luz dia</td><td>18h</td><td>12h</td><td>12h</td></tr></table></div>
-<div class='card'><div class='ctit'>🔌 Calculadora de Consumo</div>
+<div class='card'>
+<div class='ctit'>🏠 Setup Indoor Completo</div>
+<div class='sust-tabs'>
+<button class='stab on' onclick='indoorTab(this,"basico")'>Basico</button>
+<button class='stab' onclick='indoorTab(this,"intermedio")'>Intermedio</button>
+<button class='stab' onclick='indoorTab(this,"avanzado")'>Avanzado</button>
+</div>
+<div class='sust-panel on' id='ip-basico'>
+<div class='alerta-verde'>💰 Inversion estimada: USD 150-300 | Produccion: 30-80g por ciclo</div>
+<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Carpa 60x60 o 80x80 cm</div><div class='paso-sub'>Lona reflectante interior (Mylar). Acceso con cremallera. Oscuridad total en floracion. Colgar en closet o rincon.</div></div></div>
+<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>LED de 100-200W</div><div class='paso-sub'>Full spectrum con blurple o white light. QB (Quantum Board) son las mejores opciones actuales. Minimo 50W por m2 real.</div></div></div>
+<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Extractor + filtro de carbon 4 pulgadas</div><div class='paso-sub'>1 renovacion de aire cada 1-3 minutos. Conectar al filtro de carbon para eliminar olor. Ventilador interno de 15cm para circulacion.</div></div></div>
+<div class='paso'><div class='paso-num'>4</div><div><div class='paso-tit'>Termohigrometro digital</div><div class='paso-sub'>Control de temperatura y humedad en tiempo real. Los que tienen memoria maxima/minima son ideales para detectar picos nocturnos.</div></div></div>
+<div class='paso'><div class='paso-num'>5</div><div><div class='paso-tit'>Timer / Temporizador</div><div class='paso-sub'>Programar 18/6 en veg y 12/12 en flora. Mecanico analogico son los mas confiables. Digital con bateria de respaldo para cortes de luz.</div></div></div>
+</div>
+<div class='sust-panel' id='ip-intermedio'>
+<div class='alerta-gold'>💰 Inversion estimada: USD 400-800 | Produccion: 100-250g por ciclo</div>
+<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Carpa 100x100 o 120x120 cm</div><div class='paso-sub'>Calidad premium con zip reforzado. Techo de al menos 2m para luces y plantas. Bandejas de contencion anti-derrames.</div></div></div>
+<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>LED 200-400W QB o COB</div><div class='paso-sub'>Quantum Board Samsung LM301B o equivalente. Espectro completo con UV e IR. Dimmer para controlar intensidad segun etapa.</div></div></div>
+<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Sistema de extraccion + inyeccion</div><div class='paso-sub'>Extractor 200m3/h + filtro carbon 6 pulgadas. Inyeccion de aire fresco desde exterior. Presion negativa para contener olores.</div></div></div>
+<div class='paso'><div class='paso-num'>4</div><div><div class='paso-tit'>Controlador de ambiente</div><div class='paso-sub'>Inkbird o similar para automatizar extractor segun temperatura y HR. Humidificador ultrasónico para dias secos.</div></div></div>
+<div class='paso'><div class='paso-num'>5</div><div><div class='paso-tit'>pH y EC metros digitales</div><div class='paso-sub'>Control preciso del agua de riego. pH ideal 6.0-6.5 en tierra. EC segun etapa. Calibrar cada 15 dias con soluciones de referencia.</div></div></div>
+<div class='paso'><div class='paso-num'>6</div><div><div class='paso-tit'>Sistema de riego semi-automatico</div><div class='paso-sub'>Temporizador de riego con goteros. Reduce trabajo y estres de sobre/bajo riego. Clave en variedades exigentes.</div></div></div>
+</div>
+<div class='sust-panel' id='ip-avanzado'>
+<div class='alerta' style='background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.3);color:#c4b5fd'>💰 Inversion estimada: USD 1500+ | Produccion: 300-600g+ por ciclo</div>
+<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Cuarto dedicado o carpa 1.2x2.4m+</div><div class='paso-sub'>Cuarto separado con aislamiento termico. Puerta sellada. Doble camara con pre-camara de acceso para evitar fugas de luz y olor.</div></div></div>
+<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>LED 600W-1200W o HPS 600W</div><div class='paso-sub'>Sistemas LED de alta eficiencia >2.7 umol/J. HPS 600W con reflector mantis o cool tube para mejor distribucion de luz.</div></div></div>
+<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Climatizacion dedicada</div><div class='paso-sub'>Mini split inverter para control exacto de temperatura. Dehumidificador de alta capacidad en floracion avanzada. CO2 suplementario 1000-1500ppm.</div></div></div>
+<div class='paso'><div class='paso-num'>4</div><div><div class='paso-tit'>Hidroponía o coco automatizado</div><div class='paso-sub'>Sistema DWC, NFT o goteo automatizado. Control de EC y pH en tiempo real con sensores. Reservorios de 100-200L con bomba y aireacion.</div></div></div>
+<div class='paso'><div class='paso-num'>5</div><div><div class='paso-tit'>Monitorizacion remota</div><div class='paso-sub'>Sensores WiFi de temperatura, HR, CO2 y luz con app en el celular. Alertas automaticas por WhatsApp o email ante anomalias.</div></div></div>
+</div></div>
+<div class='card'>
+<div class='ctit'>💡 Guia Completa de Iluminacion</div>
+<div class='metodo'><h4>🔵 LED Quantum Board (QB) — Mejor opcion actual</h4><p>Chips Samsung LM301B o Epistar. Alta eficiencia 2.7-3.0 umol/J. Temperatura maxima 35°C. Vida util 50.000h. Espectro completo ideal para todas las etapas.</p><div style='font-size:11px;color:var(--acc2);margin-top:5px;background:rgba(74,222,128,.06);padding:6px 8px;border-radius:7px'>Cobertura: 60x60 = 100W | 80x80 = 150W | 100x100 = 200-250W | 120x120 = 300-400W</div></div>
+<div class='metodo'><h4>🔵 LED COB — Alta penetracion</h4><p>Un solo punto de luz muy intenso. Excelente penetracion del dosel en plantas altas. Mas calor que QB. Ideal con SCROG para distribucion uniforme.</p></div>
+<div class='metodo' style='background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.2)'><h4 style='color:var(--gold)'>🟡 HPS 400W / 600W — Clasico probado</h4><p>Mayor calor (+5-8°C en el cuarto). Consume mas electricidad. Rendimiento comprobado historicamente. 600W cubre 1.2x1.2m. Requiere balasto y reflector. Cambiar lampara cada 2 ciclos.</p></div>
+<div class='metodo' style='background:rgba(167,139,250,.06);border-color:rgba(167,139,250,.2)'><h4 style='color:var(--pur)'>🟣 CMH / LEC 315W — Espectro premium</h4><p>El espectro mas cercano al sol. Excelente produccion de terpenos y resinas. Temperatura media. Muy buena relacion watts/gramos. Ideal para calidad maxima sobre cantidad.</p></div>
+<div class='metodo' style='background:rgba(56,189,248,.06);border-color:rgba(56,189,248,.2)'><h4 style='color:var(--sky)'>🔵 T5 / CFL — Para plantulas y esquejes</h4><p>Bajo consumo y poco calor. Perfecto para la etapa de germinacion, esquejes y plantulas. No suficiente para flora. Mantener a 5-10cm de las plantas.</p></div>
+</div>
+<div class='card'>
+<div class='ctit'>🌡️ Parametros por Etapa</div>
+<table class='tabla'>
+<tr><th>Parametro</th><th>🌱 Vegetativo</th><th>🌸 Floracion</th><th>✂️ Maduracion</th></tr>
+<tr><td>🌡️ Temp dia</td><td>22-28°C</td><td>20-26°C</td><td>18-24°C</td></tr>
+<tr><td>🌙 Temp noche</td><td>18-22°C</td><td>16-20°C</td><td>15-18°C</td></tr>
+<tr><td>💧 Humedad HR</td><td>50-70%</td><td>40-50%</td><td>30-40%</td></tr>
+<tr><td>💨 CO2</td><td>400-700 ppm</td><td>700-1500 ppm</td><td>400-600 ppm</td></tr>
+<tr><td>🧪 pH agua</td><td>6.0-6.5</td><td>6.2-6.8</td><td>6.0-6.5</td></tr>
+<tr><td>🔌 EC agua</td><td>0.8-1.5 mS</td><td>1.5-2.5 mS</td><td>0.4-0.8 mS</td></tr>
+<tr><td>💡 Luz dia</td><td>18h</td><td>12h</td><td>12h</td></tr>
+<tr><td>🌑 Oscuridad</td><td>6h</td><td>12h</td><td>12h</td></tr>
+</table></div>
+<div class='card'>
+<div class='ctit'>💨 VPD - El Secreto del Crecimiento</div>
+<div class='alerta-verde'>💡 VPD (Deficit de Presion de Vapor) es la relacion entre temperatura y humedad. Optimizarlo maximiza la transpiracion y absorcion de nutrientes.</div>
+<table class='tabla'>
+<tr><th>Etapa</th><th>VPD Ideal</th><th>Temperatura</th><th>HR</th></tr>
+<tr><td>🌱 Plantulas</td><td>0.4-0.8 kPa</td><td>22-25°C</td><td>65-75%</td></tr>
+<tr><td>🌿 Vegetativo</td><td>0.8-1.2 kPa</td><td>24-26°C</td><td>55-65%</td></tr>
+<tr><td>🌸 Floracion</td><td>1.0-1.5 kPa</td><td>23-26°C</td><td>40-55%</td></tr>
+<tr><td>✂️ Maduracion</td><td>1.5-2.0 kPa</td><td>20-24°C</td><td>30-40%</td></tr>
+</table></div>
+<div class='card'>
+<div class='ctit'>✂️ Tecnicas de Poda y Entrenamiento</div>
+<div class='item'><div class='item-ico'>✂️</div><div class='item-txt'><h4>Topping</h4><p>Cortar el meristemo apical en nudo 4-6. Genera 2 colas principales. Repetir en cada cola para multiplicar (FIM es una variante que genera 3-4 colas nuevas).</p><span class='badge bv'>Recomendado</span></div></div>
+<div class='item'><div class='item-ico'>🌿</div><div class='item-txt'><h4>LST - Low Stress Training</h4><p>Doblar ramas laterales con hilo o alambre para crear dosel plano. Sin cortes. Combinar con topping para mejores resultados. Empezar desde nudo 3-4.</p><span class='badge bv'>Sin estres</span></div></div>
+<div class='item'><div class='item-ico'>🕸️</div><div class='item-txt'><h4>SCROG - Screen of Green</h4><p>Red horizontal a 30-40cm de las plantas. Pasar las ramas por la malla para crear dosel uniforme. Maximo aprovechamiento de luz. Llenar el 70% de la red antes de cambiar a 12/12.</p><span class='badge ba'>Intermedio</span></div></div>
+<div class='item'><div class='item-ico'>🌱</div><div class='item-txt'><h4>SOG - Sea of Green</h4><p>Muchas plantas pequenas en poco espacio (9-16 plantas/m2). Sin poda o minima. Ciclo mas corto. Ideal para esquejes identicos. Permite hasta 6 cosechas al anio.</p><span class='badge bp'>Alta rotacion</span></div></div>
+<div class='item'><div class='item-ico'>🍃</div><div class='item-txt'><h4>Defoliacion Estrategica</h4><p>Semana 3 de floracion: quitar hojas que bloquean cogollos. Semana 6: segunda pasada. NO defoliar en maduracion. Maxima 30% del follaje en cada sesion.</p><span class='badge ba'>Con cuidado</span></div></div>
+<div class='item'><div class='item-ico'>🧵</div><div class='item-txt'><h4>Lollipop</h4><p>Quitar todas las ramas y hojas del tercio inferior de la planta. Concentra la energia en los cogollos superiores. Hacer al inicio de la floracion.</p><span class='badge bv'>Recomendado</span></div></div>
+</div>
+<div class='card'>
+<div class='ctit'>🚨 Problemas de Ambiente y Soluciones</div>
+<div class='item'><div class='item-ico'>🔥</div><div class='item-txt'><h4>Temperatura mayor a 30°C</h4><p>Hojas que se curvan hacia arriba (tacoing). Crecimiento lento, quemaduras por luz. Soluciones: mas extraccion, cambiar luces a LED, enfriar el aire de entrada, cambiar horario de luces a nocturno.</p><span class='badge br'>Urgente</span></div></div>
+<div class='item'><div class='item-ico'>💧</div><div class='item-txt'><h4>Humedad mayor al 70% en floracion</h4><p>Riesgo critico de botritis y oidio. Aumentar extraccion al maximo. Agregar dehumidificador. No regar por las noches. Asegurar circulacion de aire entre cogollos.</p><span class='badge br'>Critico</span></div></div>
+<div class='item'><div class='item-ico'>🌙</div><div class='item-txt'><h4>Fuga de luz en floracion</h4><p>Cualquier luz durante el periodo oscuro puede revegetar o hermafroditar la planta. Revisar cremalleras, timers defectuosos y luces de controladores. Oscuridad total obligatoria.</p><span class='badge br'>Critico</span></div></div>
+<div class='item'><div class='item-ico'>💨</div><div class='item-txt'><h4>Falta de ventilacion</h4><p>Plantas sin movimiento de aire tienen tallos debiles y mayor riesgo de hongos. El viento suave fortalece tallos (thigmotropismo). Mover las plantas con la mano si no hay ventilador.</p><span class='badge ba'>Importante</span></div></div>
+</div>
+<div class='card'>
+<div class='ctit'>🔌 Calculadora de Consumo Electrico</div>
+<div style='font-size:11px;color:var(--mut);margin-bottom:12px;line-height:1.5'>Estimacion de costo mensual de electricidad para tu cultivo indoor</div>
 <div style='display:flex;flex-direction:column;gap:8px;margin-bottom:12px'>
-<div style='display:flex;align-items:center;gap:10px'><div style='font-size:12px;min-width:90px'>Watts luz</div><input type='number' id='calc-watts' value='200' style='flex:1;background:rgba(255,255,255,.06);border:1px solid var(--gbor);border-radius:8px;padding:7px 10px;color:var(--txt);font-family:Space Grotesk;font-size:12px;outline:none'></div>
-<div style='display:flex;align-items:center;gap:10px'><div style='font-size:12px;min-width:90px'>Horas/dia</div><input type='number' id='calc-horas' value='18' min='1' max='24' style='flex:1;background:rgba(255,255,255,.06);border:1px solid var(--gbor);border-radius:8px;padding:7px 10px;color:var(--txt);font-family:Space Grotesk;font-size:12px;outline:none'></div>
-<div style='display:flex;align-items:center;gap:10px'><div style='font-size:12px;min-width:90px'>Tarifa kWh</div><input type='number' id='calc-tarifa' value='120' style='flex:1;background:rgba(255,255,255,.06);border:1px solid var(--gbor);border-radius:8px;padding:7px 10px;color:var(--txt);font-family:Space Grotesk;font-size:12px;outline:none' placeholder='Pesos por kWh'></div>
-</div><button class='btn btn-completo' onclick='calcularConsumo()'>📊 Calcular Costo</button>
-<div id='calc-resultado' style='display:none;margin-top:12px;background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.2);border-radius:10px;padding:12px'></div></div>
+<div style='display:flex;align-items:center;gap:10px'>
+<div style='font-size:12px;color:var(--txt);min-width:90px'>Watts luz</div>
+<input type='number' id='calc-watts' value='200' style='flex:1;background:rgba(255,255,255,.06);border:1px solid var(--gbor);border-radius:8px;padding:7px 10px;color:var(--txt);font-family:Space Grotesk;font-size:12px;outline:none'>
+</div>
+<div style='display:flex;align-items:center;gap:10px'>
+<div style='font-size:12px;color:var(--txt);min-width:90px'>Horas/dia</div>
+<input type='number' id='calc-horas' value='18' min='1' max='24' style='flex:1;background:rgba(255,255,255,.06);border:1px solid var(--gbor);border-radius:8px;padding:7px 10px;color:var(--txt);font-family:Space Grotesk;font-size:12px;outline:none'>
+</div>
+<div style='display:flex;align-items:center;gap:10px'>
+<div style='font-size:12px;color:var(--txt);min-width:90px'>Tarifa kWh</div>
+<input type='number' id='calc-tarifa' value='120' style='flex:1;background:rgba(255,255,255,.06);border:1px solid var(--gbor);border-radius:8px;padding:7px 10px;color:var(--txt);font-family:Space Grotesk;font-size:12px;outline:none' placeholder='Pesos por kWh'>
+</div>
+</div>
+<button class='btn btn-completo' onclick='calcularConsumo()'>📊 Calcular Costo</button>
+<div id='calc-resultado' style='display:none;margin-top:12px;background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.2);border-radius:10px;padding:12px'></div>
+</div>
 </section>
 <section class='sec' id='sec-outdoor'>
 <div class='stit'>OUTDOOR</div><div class='ssub'>Cultivo exterior - Hemisferio Sur</div>
-<div class='card'><div class='ctit'>📅 Calendario Anual Completo</div>
+<div class='card'>
+<div class='ctit'>📅 Calendario Anual Completo</div>
 <div style='position:relative;padding-left:20px'>
 <div style='position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--acc3),var(--acc),var(--gold),var(--pur),var(--red));border-radius:2px'></div>
-<div style='margin-bottom:14px;position:relative'><div style='position:absolute;left:-16px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px rgba(74,222,128,.7)'></div>
-<div style='background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.22);border-radius:11px;padding:11px 13px'><div style='font-weight:700;font-size:13px;color:var(--acc);margin-bottom:5px'>🌱 Agosto-Septiembre - Preparacion</div><div style='font-size:11px;color:var(--mut);line-height:1.5'>Germinar en interior bajo 18/6. Esperar minimo nocturno estable sobre 10C.</div></div></div>
-<div style='margin-bottom:14px;position:relative'><div style='position:absolute;left:-16px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(251,191,36,.7)'></div>
-<div style='background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.22);border-radius:11px;padding:11px 13px'><div style='font-weight:700;font-size:13px;color:var(--gold);margin-bottom:5px'>🌞 Octubre-Diciembre - Vegetativo</div><div style='font-size:11px;color:var(--mut);line-height:1.5'>Trasplante a maceta definitiva. Crecimiento explosivo. Topping y LST.</div></div></div>
-<div style='margin-bottom:14px;position:relative'><div style='position:absolute;left:-16px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--pur);box-shadow:0 0 8px rgba(167,139,250,.7)'></div>
-<div style='background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.22);border-radius:11px;padding:11px 13px'><div style='font-weight:700;font-size:13px;color:var(--pur);margin-bottom:5px'>🌸 Enero-Febrero - Floracion</div><div style='font-size:11px;color:var(--mut);line-height:1.5'>P y K altos, N bajo. Vigilar humedad para evitar botritis.</div></div></div>
-<div style='position:relative'><div style='position:absolute;left:-16px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 8px rgba(248,113,113,.7)'></div>
-<div style='background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.22);border-radius:11px;padding:11px 13px'><div style='font-weight:700;font-size:13px;color:var(--red);margin-bottom:5px'>✂️ Marzo-Abril - Cosecha</div><div style='font-size:11px;color:var(--mut);line-height:1.5'>Ver tricomas con lupa. Flush final. Cosechar en luna llena.</div></div></div>
+<div style='margin-bottom:14px;position:relative'>
+<div style='position:absolute;left:-16px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px rgba(74,222,128,.7)'></div>
+<div style='background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.22);border-radius:11px;padding:11px 13px'>
+<div style='font-weight:700;font-size:13px;color:var(--acc);margin-bottom:5px'>🌱 Agosto-Septiembre &mdash; Preparacion</div>
+<div style='font-size:11px;color:var(--mut);line-height:1.5'>Germinar en interior bajo 18/6. Preparar macetas y sustratos. Esperar minimo nocturno estable sobre 10°C para trasplantar al exterior. Ultimas heladas en Buenos Aires tipicamente en agosto.</div>
+<div class='pills' style='margin-top:6px'><span class='pill'>Germinar semillas</span><span class='pill'>Preparar sustrato</span><span class='pill'>Esquejes de madre</span></div>
 </div></div>
-<div class='card'><div class='ctit'>📦 Tamano de Macetas</div>
-<table class='tabla'><tr><th>Tamano</th><th>Produccion</th><th>Tipo</th></tr>
-<tr><td>🟢 15-20L</td><td>30-80g</td><td>Mediana, auto</td></tr>
-<tr><td>🟡 30-40L</td><td>80-200g</td><td>Grande, indica</td></tr>
-<tr><td>🟠 50-70L</td><td>200-500g</td><td>Arbol 1.5-2m</td></tr>
-<tr><td>🔴 100L+</td><td>500g-1kg+</td><td>Arbol gigante</td></tr>
-<tr><td>🟣 Tierra directa</td><td>1kg+</td><td>Maximo potencial</td></tr></table></div>
+<div style='margin-bottom:14px;position:relative'>
+<div style='position:absolute;left:-16px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--acc);box-shadow:0 0 8px rgba(74,222,128,.7)'></div>
+<div style='background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.22);border-radius:11px;padding:11px 13px'>
+<div style='font-weight:700;font-size:13px;color:var(--acc);margin-bottom:5px'>🌿 Octubre-Noviembre &mdash; Vegetativo Temprano</div>
+<div style='font-size:11px;color:var(--mut);line-height:1.5'>Trasplante a maceta definitiva (minimo 50L para arboles grandes). Crecimiento explosivo con dias largos. N alto. Topping, LST y formacion de estructura.</div>
+<div class='pills' style='margin-top:6px'><span class='pill'>Trasplante final</span><span class='pill'>Topping y LST</span><span class='pill'>N alto</span></div>
+</div></div>
+<div style='margin-bottom:14px;position:relative'>
+<div style='position:absolute;left:-16px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(251,191,36,.7)'></div>
+<div style='background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.22);border-radius:11px;padding:11px 13px'>
+<div style='font-weight:700;font-size:13px;color:var(--gold);margin-bottom:5px'>🌞 Diciembre &mdash; Vegetativo Pleno / Pre-Floracion</div>
+<div style='font-size:11px;color:var(--mut);line-height:1.5'>Dias mas largos del anio (solsticio 21/12). Pico de crecimiento. Algunas variedades sensibles muestran pre-flores. Cambiar a fertilizantes de floracion la ultima semana de diciembre.</div>
+<div class='pills' style='margin-top:6px'><span class='pill'>Pico crecimiento</span><span class='pill'>Cambiar a flora</span><span class='pill'>Colocar tutores</span></div>
+</div></div>
+<div style='margin-bottom:14px;position:relative'>
+<div style='position:absolute;left:-16px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--pur);box-shadow:0 0 8px rgba(167,139,250,.7)'></div>
+<div style='background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.22);border-radius:11px;padding:11px 13px'>
+<div style='font-weight:700;font-size:13px;color:var(--pur);margin-bottom:5px'>🌸 Enero-Febrero &mdash; Floracion Activa</div>
+<div style='font-size:11px;color:var(--mut);line-height:1.5'>Los dias se acortan desde el 21/12. Formacion de cogollos. P y K altos, N bajo. Vigilar humedad nocturna para evitar botritis. Tutores para ramas cargadas de cogollo.</div>
+<div class='pills' style='margin-top:6px'><span class='pill'>P y K altos</span><span class='pill'>N bajo</span><span class='pill'>Vigilar botritis</span></div>
+</div></div>
+<div style='margin-bottom:6px;position:relative'>
+<div style='position:absolute;left:-16px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 8px rgba(248,113,113,.7)'></div>
+<div style='background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.22);border-radius:11px;padding:11px 13px'>
+<div style='font-weight:700;font-size:13px;color:var(--red);margin-bottom:5px'>✂️ Marzo-Abril &mdash; Maduracion y Cosecha</div>
+<div style='font-size:11px;color:var(--mut);line-height:1.5'>Cogollos en punto maximo. Observar tricomas con lupa 60x. Flush 1-2 semanas con agua pura. Cosechar en luna llena o gibosa creciente. En abril empiezan lluvias frias en Buenos Aires.</div>
+<div class='pills' style='margin-top:6px'><span class='pill'>Ver tricomas</span><span class='pill'>Flush final</span><span class='pill'>Cosechar</span></div>
+</div></div>
+</div></div>
+<div class='card'>
+<div class='ctit'>🌡️ Clima por Zona Argentina</div>
+<div style='display:flex;flex-direction:column;gap:8px'>
+<div class='metodo'><h4>🏙️ Buenos Aires / GBA / La Plata</h4><p>Templado humedo. Germinar desde agosto. Cosecha marzo-abril. Cuidado con lluvias de verano y botritis en febrero. Buena zona para Indica e hibridos.</p></div>
+<div class='metodo'><h4>🌴 Cordoba / Mendoza / San Luis</h4><p>Clima seco y soleado. La mejor zona del pais para cannabis. Menor riesgo de hongos. Germinar desde septiembre. Riego mas frecuente por baja humedad relativa.</p></div>
+<div class='metodo'><h4>🌺 Misiones / Corrientes / Entre Rios</h4><p>Subtropical humedo. Temporada muy larga pero alto riesgo de hongos y plagas. Variedades resistentes. Germinar agosto. Mucho aireado y control de HR necesario.</p></div>
+<div class='metodo'><h4>🏔️ Patagonia (Neuquen, Rio Negro, Chubut)</h4><p>Temporada corta. Germinar en octubre. Solo auto-florecientes o cepas tempranas. Cosecha febrero-marzo. Riesgo de heladas tempranas en abril.</p></div>
+</div></div>
+<div class='card'>
+<div class='ctit'>📦 Tamano de Macetas</div>
+<table class='tabla'>
+<tr><th>Tamano</th><th>Produccion</th><th>Tipo de Planta</th></tr>
+<tr><td>🟢 15-20L</td><td>30-80g</td><td>Mediana, auto o espacio reducido</td></tr>
+<tr><td>🟡 30-40L</td><td>80-200g</td><td>Grande, indica o hibrido</td></tr>
+<tr><td>🟠 50-70L</td><td>200-500g</td><td>Arbol 1.5-2m, sativa o hibrido</td></tr>
+<tr><td>🔴 100L+</td><td>500g-1kg+</td><td>Arbol gigante, sativa pura</td></tr>
+<tr><td>🟣 Tierra directa</td><td>1kg+</td><td>Sin limite, maximo potencial</td></tr>
+</table>
+<div class='alerta-verde' style='margin-top:10px'>💡 Maceta mas grande = planta mas grande. Una planta en tierra directa puede triplicar la produccion de una en maceta de 20L.</div>
+</div>
+<div class='card'>
+<div class='ctit'>🧪 Nutricion Outdoor Organica</div>
+<div class='nutri'><h4>🌿 Vegetativo (Oct-Dic)</h4><p>Guano de gallina 5g/L de agua o te de lombricompuesto. Nitrato de calcio 1g/L cada 15 dias. Kelp foliar 1ml/L semanal. Sal Epsom 1g/L si hay clorosis.</p></div>
+<div class='nutri'><h4>🌸 Floracion (Ene-Mar)</h4><p>Harina de hueso y ceniza de madera como top dressing mensual. Guano de murcielago 3g/L. Fosfato monopotasico 0.5g/L. Microelementos quelatados cada 3 semanas.</p></div>
+<div class='nutri'><h4>✂️ Maduracion (ultimas 2 semanas)</h4><p>Solo agua de lluvia o agua reposada. Lavar con 3 veces el volumen de la maceta en agua pura. Limpia sales y mejora sabor y aroma del producto final.</p></div>
+<div class='alerta'>⚠️ Con buen Super Soil se puede cultivar sin fertilizantes todo el ciclo. El suelo vivo y los microorganismos alimentan la planta solos.</div>
+</div>
+<div class='card'>
+<div class='ctit'>💧 Riego en Exterior</div>
+<div class='g2'>
+<div class='bloque'><h4>🌱 Vegetativo</h4><p>Cada 2-3 dias en verano. Regar cuando los primeros 3cm de sustrato esten secos al tacto.</p></div>
+<div class='bloque'><h4>🌸 Floracion</h4><p>Cada 3-4 dias. Reducir hacia el final. Algo de estres hidrico en maduracion concentra resinas.</p></div>
+<div class='bloque'><h4>🌅 Momento</h4><p>Siempre al atardecer o madugada. Nunca al mediodia: quema raices y hojas con sol fuerte.</p></div>
+<div class='bloque'><h4>💧 Calidad</h4><p>pH 6.0-6.8. Agua de lluvia es ideal. Dejar reposar agua de canilla 24h para evaporar cloro.</p></div>
+</div></div>
 </section>
 <section class='sec' id='sec-cosecha'>
 <div class='stit'>COSECHA</div><div class='ssub'>Cosechar, curar, secar y conservar</div>
-<div class='card'><div class='ctit'>🔬 Cuando Cosechar</div>
-<div class='alerta-gold'>🔍 Observar tricomas con lupa de 60x o microscopio.</div>
-<div class='item'><div class='item-ico'>⚪</div><div class='item-txt'><h4>Tricomas Transparentes</h4><p>Planta inmadura. Esperar mas.</p><span class='badge ba'>Esperar</span></div></div>
-<div class='item'><div class='item-ico'>🟡</div><div class='item-txt'><h4>Tricomas Lechosos</h4><p>THC maximo. Efecto cerebral.</p><span class='badge bv'>Listo para Sativa</span></div></div>
-<div class='item'><div class='item-ico'>🟠</div><div class='item-txt'><h4>30% Tricomas Ambar</h4><p>Efecto mas corporal. Ideal indica.</p><span class='badge bv'>Listo para Indica</span></div></div>
-<div class='item'><div class='item-ico'>🟤</div><div class='item-txt'><h4>Mas del 50% Ambar</h4><p>Sobremadurez. Efecto narcotico.</p><span class='badge br'>Tarde</span></div></div></div>
+<div class='card'><div class='ctit'>🔬 Como Saber Cuando Cosechar</div>
+<div class='alerta-gold'>🔍 El mejor indicador es observar los tricomas con lupa de 60x o microscopio. Los tricomas son las cristales que cubren los cogollos.</div>
+<div class='item'><div class='item-ico'>⚪</div><div class='item-txt'><h4>Tricomas Transparentes / Blancos</h4><p>Planta inmadura. Todavia le falta tiempo. THC en desarrollo, efecto muy leve.</p><span class='badge ba'>Esperar</span></div></div>
+<div class='item'><div class='item-ico'>🟡</div><div class='item-txt'><h4>Tricomas Opacos / Lechosos</h4><p>THC en su punto maximo. Efecto cerebral y energizante. Momento ideal para quien busca ese perfil.</p><span class='badge bv'>Listo para Sativa</span></div></div>
+<div class='item'><div class='item-ico'>🟠</div><div class='item-txt'><h4>30% Tricomas Ambar</h4><p>THC convirtiendo en CBN. Efecto mas relajante y corporal. Ideal para indica y uso nocturno.</p><span class='badge bv'>Listo para Indica</span></div></div>
+<div class='item'><div class='item-ico'>🟤</div><div class='item-txt'><h4>Mas del 50% Ambar</h4><p>Sobremadurez. Mucho THC se degradado. Efecto muy sedante y narcotico.</p><span class='badge br'>Tarde</span></div></div></div>
 <div class='card'><div class='ctit'>✂️ Proceso de Cosecha</div>
-<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Flush final 1-2 semanas antes</div><div class='paso-sub'>Solo agua pH 6.2. Limpia sales.</div></div></div>
-<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Cortar al amanecer o en oscuridad</div><div class='paso-sub'>Mayor contenido de terpenos y cannabinoides.</div></div></div>
-<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Secar 10-14 dias</div><div class='paso-sub'>18-22C, 50-60% HR, oscuridad total. Tallos que crujen = listo.</div></div></div>
-<div class='paso'><div class='paso-num'>4</div><div><div class='paso-tit'>Curado en frascos</div><div class='paso-sub'>Llenar 75% frascos hermeticos. Abrir 2x al dia primera semana. Listo en 4 semanas.</div></div></div></div>
-</section>
+<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Flush final 1 a 2 semanas antes</div><div class='paso-sub'>Regar solo con agua pH 6.2 sin nutrientes para limpiar sales acumuladas. Mejora el sabor final.</div></div></div>
+<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Cortar en oscuridad o madugada</div><div class='paso-sub'>Cortar la planta cuando las luces se apagan o al amanecer. En ese momento el contenido de terpenos y cannabinoides es maximo.</div></div></div>
+<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Deshojar antes del colgado</div><div class='paso-sub'>Quitar todas las hojas grandes. Se pueden dejar las hojas pequenas del cogollo para secado mas lento (mejor calidad).</div></div></div>
+<div class='paso'><div class='paso-num'>4</div><div><div class='paso-tit'>Colgar boca abajo</div><div class='paso-sub'>Colgar las ramas enteras o cogollos en sala oscura, fresca y ventilada. 18-22°C, 50-60% HR, oscuridad total.</div></div></div>
+<div class='paso'><div class='paso-num'>5</div><div><div class='paso-tit'>Secado 10 a 14 dias</div><div class='paso-sub'>Listo cuando los tallos delgados crujen al doblarlos. Los tallos gruesos todavia deben tener algo de flexibilidad.</div></div></div></div>
+<div class='card'><div class='ctit'>🛹 Proceso de Curado</div>
+<div class='alerta-verde'>💡 El curado es lo que diferencia un producto mediocre de uno excelente. Mejora el sabor, aroma y suavidad del humo notablemente.</div>
+<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Recortar y limpiar los cogollos</div><div class='paso-sub'>Con tijeras de podar limpias, recortar el material vegetal sobrante dejando los cogollos bien formados.</div></div></div>
+<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Llenar frascos de vidrio al 75%</div><div class='paso-sub'>Usar frascos de tapa hermetica (Mason Jar). Llenar hasta 3/4 de su capacidad para que haya circulacion de aire.</div></div></div>
+<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Primer semana: burping 2 veces al dia</div><div class='paso-sub'>Abrir los frascos 15 minutos dos veces al dia para eliminar humedad excesiva. Controlar que no huela a amonaco (botritis).</div></div></div>
+<div class='paso'><div class='paso-num'>4</div><div><div class='paso-tit'>Segunda y tercera semana: burping 1 vez al dia</div><div class='paso-sub'>Reducir a una apertura diaria de 10 minutos. El aroma empieza a desarrollarse.</div></div></div>
+<div class='paso'><div class='paso-num'>5</div><div><div class='paso-tit'>Semana 4 en adelante: listo para consumo</div><div class='paso-sub'>A las 4 semanas esta excelente. A las 8 semanas es premium. A los 6 meses es extraordinario.</div></div></div></div>
+<div class='card'><div class='ctit'>📦 Conservacion a Largo Plazo</div>
+<div class='g2'>
+<div class='bloque'><h4>🌡️ Temperatura</h4><p>Guardar en lugar fresco. Ideal 15-21°C. Evitar cambios bruscos.</p></div>
+<div class='bloque'><h4>💧 Humedad</h4><p>Humedad relativa 55-65% dentro del frasco. Usar Boveda 62% para control exacto.</p></div>
+<div class='bloque'><h4>🔆 Luz</h4><p>Oscuridad total. La luz UV degrada el THC rapidamente. Usar frascos opacos o cajas.</p></div>
+<div class='bloque'><h4>🧪 Vida Util</h4><p>Bien conservado: 1-2 anos con calidad premium. Hasta 5 anos manteniendo potencia basica.</p></div>
+</div>
+<div class='alerta' style='margin-top:10px'>⚠️ Nunca guardar en bolsas de plastico. El plastico carga electricidad estatica que arranca tricomas. Siempre usar vidrio.</div></div></section>
 <section class='sec' id='sec-plagas'>
-<div class='stit'>PLAGAS</div><div class='ssub'>Identificacion, tratamientos y remedios</div>
-<div class='card'><div class='ctit'>🦟 Insectos</div>
-<div class='item'><div class='item-ico'>🕷️</div><div class='item-txt'><h4>Arana Roja</h4><p>Puntos amarillos y telaranas. Ambiente seco.</p><span class='badge br'>Alta Prioridad</span><p class='trat'>🌿 Natural: Neem 3ml/L + jabon potasico. Predadores Phytoseiulus. Aumentar HR.</p></div></div>
-<div class='item'><div class='item-ico'>🦗</div><div class='item-txt'><h4>Mosquito Fungus</h4><p>Larvas en sustrato danan raices.</p><span class='badge ba'>Media</span><p class='trat'>🌿 Natural: BTi, tierra de diatomeas, trampas amarillas, nematodos.</p></div></div>
-<div class='item'><div class='item-ico'>🐛</div><div class='item-txt'><h4>Trips</h4><p>Manchas plateadas. Transmiten virus.</p><span class='badge br'>Alta Prioridad</span><p class='trat'>🌿 Natural: Neem + piretro natural, trampas azules, Amblyseius cucumeris.</p></div></div></div>
-<div class='card'><div class='ctit'>🍄 Hongos</div>
-<div class='item'><div class='item-ico'>⬜</div><div class='item-txt'><h4>Oidio</h4><p>Polvo blanco sobre hojas.</p><span class='badge br'>Urgente</span><p class='trat'>🌿 Natural: Bicarbonato 5g/L + jabon + neem. Leche 1:9. Bajar HR bajo 50%.</p></div></div>
-<div class='item'><div class='item-ico'>🟫</div><div class='item-txt'><h4>Botritis</h4><p>Moho gris en cogollos. HR mayor 70%.</p><span class='badge br'>Critico</span><p class='trat'>Retirar cogollos inmediatamente. Trichoderma preventivo. Aireo 24/7.</p></div></div></div>
-<div class='card'><div class='ctit'>🌿 Deficiencias</div>
+<div class='stit'>PLAGAS</div><div class='ssub'>Identificacion, tratamientos y remedios naturales</div>
+<div class='card'><div class='ctit'>🦟 Insectos y Acariosis</div>
+<div class='item'><div class='item-ico'>🕷️</div><div class='item-txt'><h4>Arana Roja</h4><p>Puntos amarillos y telaranas finas en el enves. Ambiente seco.</p><span class='badge br'>Alta Prioridad</span><p class='trat'>🧪 Quimico: Abamectina, Bifenazato.<br>🌿 Natural: Neem 3ml/L + jabon potasico. Extracto de ajo. Aumentar HR. Predadores (Phytoseiulus).</p></div></div>
+<div class='item'><div class='item-ico'>🦗</div><div class='item-txt'><h4>Mosquito Fungus</h4><p>Larvas en sustrato danan raices.</p><span class='badge ba'>Media</span><p class='trat'>🧪 Quimico: Imidacloprid drenche.<br>🌿 Natural: BTi, tierra de diatomeas en superficie, trampas amarillas, nematodos Steinernema.</p></div></div>
+<div class='item'><div class='item-ico'>🐛</div><div class='item-txt'><h4>Trips</h4><p>Manchas plateadas. Transmiten virus.</p><span class='badge br'>Alta Prioridad</span><p class='trat'>🧪 Quimico: Spinosad, Abamectina.<br>🌿 Natural: Neem + piretro natural, trampas azules, Amblyseius cucumeris, infusion de cola de caballo.</p></div></div>
+<div class='item'><div class='item-ico'>🐜</div><div class='item-txt'><h4>Pulgones</h4><p>Colonias en brotes tiernos.</p><span class='badge ba'>Media</span><p class='trat'>🧪 Quimico: Pirimicarb.<br>🌿 Natural: Jabon potasico 5ml/L, spray de ajo y cayena, mariquitas, purin de ortiga.</p></div></div></div>
+<div class='card'><div class='ctit'>🍄 Hongos y Enfermedades</div>
+<div class='item'><div class='item-ico'>⬜</div><div class='item-txt'><h4>Oidio</h4><p>Polvo blanco sobre hojas. HR alta y poca ventilacion.</p><span class='badge br'>Urgente</span><p class='trat'>🌿 Natural: Bicarbonato 5g/L + jabon + neem. Leche diluida 1:9. Cola de caballo. Bajar HR bajo 50%.</p></div></div>
+<div class='item'><div class='item-ico'>🟫</div><div class='item-txt'><h4>Botritis (Bud Rot)</h4><p>Moho gris en cogollos. HR mayor 70%.</p><span class='badge br'>Critico</span><p class='trat'>Retirar cogollos INMEDIATAMENTE. Trichoderma preventivo. Aireo 24/7. Bajar HR.</p></div></div></div>
+<div class='card'><div class='ctit'>🌿 Remedios Naturales - Recetas</div>
+<div class='remedio'><h4>🧄 Spray de Ajo Universal</h4><p>Contra pulgones, trips, arana roja y como preventivo.</p><div class='receta'>10 dientes de ajo + 1L agua. Licuar, colar, agregar 5ml jabon potasico. Aplicar al atardecer en enves cada 3 dias.</div></div>
+<div class='remedio'><h4>🌿 Purin de Ortiga</h4><p>Refuerza defensas y repele plagas.</p><div class='receta'>1kg ortiga fresca + 10L agua. Fermentar 15 dias tapado. Colar y diluir 1:10. Aplicar foliar o en riego.</div></div>
+<div class='remedio'><h4>🧈 Aceite de Neem + Jabon</h4><p>Insecticida, fungicida y repelente completo.</p><div class='receta'>3ml neem puro + 2ml jabon potasico + 1L agua tibia. Emulsionar. Aplicar en enves al atardecer cada 5 dias.</div></div>
+<div class='remedio'><h4>🥛 Leche contra Oidio</h4><p>El peroxido inhibe el hongo del oidio.</p><div class='receta'>100ml leche entera + 900ml agua. Aplicar al sol 2 veces por semana. Muy efectivo preventivo.</div></div>
+<div class='remedio'><h4>🧂 Bicarbonato Anti-Hongo</h4><p>Modifica pH superficial de la hoja. Elimina oidio.</p><div class='receta'>5g bicarbonato + 5ml neem + 2ml jabon + 1L agua. Aplicar al atardecer cada 3 dias.</div></div></div>
+<div class='card'><div class='ctit'>🌿 Deficiencias Nutricionales</div>
 <table class='tabla'><tr><th>Carencia</th><th>Sintoma</th><th>Solucion</th></tr>
-<tr><td>🟡 Nitrogeno</td><td>Hojas viejas amarillas</td><td>Guano ave, nitrato calcio</td></tr>
+<tr><td>🟡 Nitrogeno</td><td>Hojas viejas amarillas de abajo</td><td>Guano ave, nitrato calcio</td></tr>
+<tr><td>🟠 Fosforo</td><td>Tallos violaceos</td><td>Harina de hueso, guano murcielago</td></tr>
 <tr><td>🔵 Magnesio</td><td>Clorosis internervial</td><td>Sal Epsom 2g/L</td></tr>
-<tr><td>⚪ Calcio</td><td>Bordes marrones hojas nuevas</td><td>Cal dolomita</td></tr>
-<tr><td>🟤 Hierro</td><td>Clorosis hojas nuevas</td><td>Quelatado hierro, bajar pH</td></tr></table></div>
-</section>
+<tr><td>⚪ Calcio</td><td>Bordes marrones en hojas nuevas</td><td>Cal dolomita, nitrato calcio</td></tr>
+<tr><td>🟤 Hierro</td><td>Clorosis en hojas nuevas</td><td>Quelatado hierro, bajar pH</td></tr></table></div></section>
 <section class='sec' id='sec-sustratos'>
 <div class='stit'>SUSTRATOS</div><div class='ssub'>Mezclas completas por etapa</div>
+<div class='card'><div class='ctit'>🧱 Todos los Componentes</div>
+<table class='tabla'><tr><th>Componente</th><th>Funcion</th><th>%</th></tr>
+<tr><td>🌍 Tierra Premium</td><td>Base nutritiva pH 6.0-6.5</td><td>40-60%</td></tr>
+<tr><td>🥥 Fibra Coco</td><td>Retencion de agua, pH neutro</td><td>15-30%</td></tr>
+<tr><td>⚪ Perlita</td><td>Drenaje y aireacion de raices</td><td>15-30%</td></tr>
+<tr><td>🪨 Vermiculita</td><td>Retencion humedad y nutrientes</td><td>5-10%</td></tr>
+<tr><td>🌱 Lombricompuesto</td><td>Microbioma activo, organico</td><td>10-20%</td></tr>
+<tr><td>🟤 Turba (Peat Moss)</td><td>Acidifica, retiene agua, liviana</td><td>10-20%</td></tr>
+<tr><td>🍄 Trichoderma</td><td>Hongo benefico, protege raices</td><td>Inoculante</td></tr>
+<tr><td>🧫 Micorrizas</td><td>Simbiosis raices, absorcion x10</td><td>Inoculante</td></tr>
+<tr><td>🦴 Harina de Hueso</td><td>Fosforo lento, calcio</td><td>1-3%</td></tr>
+<tr><td>🦇 Guano Murcielago</td><td>N-P-K completo, asimilable</td><td>1-2%</td></tr>
+<tr><td>🌊 Kelp (Alga Marina)</td><td>Hormonas crecimiento, micros</td><td>0.5-1%</td></tr>
+<tr><td>🧐 Biochar</td><td>Estructura, retiene nutrientes</td><td>5-10%</td></tr></table></div>
 <div class='card'><div class='ctit'>🧪 Mezclas por Etapa</div>
 <div class='sust-tabs'><button class='stab on' onclick='sustTab(this,"germinacion")'>Germinacion</button><button class='stab' onclick='sustTab(this,"vegetacion")'>Vegetacion</button><button class='stab' onclick='sustTab(this,"floracion")'>Floracion</button><button class='stab' onclick='sustTab(this,"supersoil")'>Super Soil</button></div>
-<div class='sust-panel on' id='sp-germinacion'><div class='alerta-verde'>🌱 Sin nutrientes. Para germinar y arraigar esquejes.</div><div class='nutri'><h4>Mezcla Germinacion</h4><p>50% coco + 30% perlita + 20% vermiculita. pH 5.8-6.2. Agregar Trichoderma al plantar.</p></div></div>
-<div class='sust-panel' id='sp-vegetacion'><div class='alerta-verde'>🌿 Sustrato nutritivo con buen drenaje.</div><div class='nutri'><h4>Mezcla Vegetacion</h4><p>40% tierra + 20% coco + 20% perlita + 10% lombricompuesto + 5% turba + 5% vermiculita. Trichoderma 3g/10L. Micorrizas 5g/10L.</p></div></div>
-<div class='sust-panel' id='sp-floracion'><div class='alerta-verde'>🌸 Mayor drenaje, mas P y K disponibles.</div><div class='nutri'><h4>Mezcla Floracion</h4><p>35% tierra + 25% perlita + 20% coco + 10% lombricompuesto + 5% turba + 5% biochar. Top dressing: harina hueso 2%, ceniza madera 1%.</p></div></div>
-<div class='sust-panel' id='sp-supersoil'><div class='nutri'><h4>Super Soil (100L)</h4><p>50L tierra + 15L lombricompuesto + 10L coco + 10L perlita + 5L compost + 2L biochar + 500g harina hueso + 300g guano murcielago + 200g kelp + 100g ceniza + Trichoderma y Micorrizas. Mezclar y reposar 30 dias tapado.</p></div></div></div>
-</section>
+<div class='sust-panel on' id='sp-germinacion'><div class='alerta-verde'>🌱 Sin nutrientes. Para germinar y arraigar esquejes.</div><div class='nutri'><h4>Mezcla Germinacion</h4><p>50% coco + 30% perlita + 20% vermiculita<br>pH 5.8-6.2 | Esterilizar antes | Agregar Trichoderma al plantar</p></div></div>
+<div class='sust-panel' id='sp-vegetacion'><div class='alerta-verde'>🌿 Sustrato nutritivo con buen drenaje.</div><div class='nutri'><h4>Mezcla Vegetacion</h4><p>40% tierra + 20% coco + 20% perlita + 10% lombricompuesto + 5% turba + 5% vermiculita<br>pH 6.0-6.5 | Trichoderma 3g/10L | Micorrizas 5g/10L | Harina hueso 1% | Kelp 0.5%</p></div></div>
+<div class='sust-panel' id='sp-floracion'><div class='alerta-verde'>🌸 Mayor drenaje, mas P y K disponibles.</div><div class='nutri'><h4>Mezcla Floracion</h4><p>35% tierra + 25% perlita + 20% coco + 10% lombricompuesto + 5% turba + 5% biochar<br>Top dressing: harina hueso 2%, ceniza madera 1%, guano murcielago 1%</p></div></div>
+<div class='sust-panel' id='sp-supersoil'><div class='nutri'><h4>Super Soil (100 litros)</h4><p>50L tierra base + 15L lombricompuesto + 10L coco + 10L perlita + 5L compost + 2L biochar + 500g harina hueso + 300g guano murcielago + 200g harina plumas + 200g roca fosforica + 100g kelp + 100g ceniza + 50g azufre + 50g dolomitica + Trichoderma y Micorrizas al plantar<br><br>Mezclar, humedecer y reposar 30 dias tapado. Autofertilizante 90 dias.</p></div></div></div></section>
 <section class='sec' id='sec-hidro'>
 <div class='stit'>HIDRO</div><div class='ssub'>Cultivo hidroponico completo</div>
 <div class='card'><div class='ctit'>💧 Sistemas</div>
-<div class='metodo'><h4>🌊 DWC</h4><p>Raices en solucion oxigenada. Simple y economico. Bomba 24/7. Agua 18-22C.</p></div>
-<div class='metodo'><h4>🔄 NFT</h4><p>Pelicula fina sobre raices. Excelente oxigenacion.</p></div>
-<div class='metodo'><h4>💦 Goteo sobre Coco</h4><p>El mas usado en indoor profesional. Control preciso.</p></div>
-<div class='metodo'><h4>🌫️ Aeroponia</h4><p>Raices nebulizadas. Maximo crecimiento. Para avanzados.</p></div></div>
+<div class='metodo'><h4>🌊 DWC</h4><p>Raices en solucion oxigenada. Simple y economico. Bomba 24/7. Agua 18-22°C.</p></div>
+<div class='metodo'><h4>🔄 NFT</h4><p>Pelicula fina sobre raices. Excelente oxigenacion. Cultivos comerciales.</p></div>
+<div class='metodo'><h4>💦 Goteo</h4><p>Sobre coco o lana de roca. El mas usado en indoor profesional.</p></div>
+<div class='metodo'><h4>🌫️ Aeroponia</h4><p>Raices nebulizadas. Maximo crecimiento. Para avanzados.</p></div>
+<div class='metodo'><h4>🪣 Ebb and Flow</h4><p>Inundacion periodica con drenaje por gravedad. Simple y programable.</p></div></div>
 <div class='card'><div class='ctit'>🧫 Solucion Nutritiva</div>
-<div class='nutri'><h4>Vegetativo</h4><p>EC 0.8-1.5 | pH 5.8-6.2 | Alto N. Ca, Mg, Fe. Agua 18-22C.</p></div>
-<div class='nutri'><h4>Floracion</h4><p>EC 1.5-2.2 | pH 5.8-6.2 | Bajo N, alto PK.</p></div>
-<div class='nutri'><h4>Maduracion</h4><p>EC 0.8-1.2 flush. Solo agua ultima semana.</p></div></div>
-</section>
+<div class='nutri'><h4>Vegetativo</h4><p>EC 0.8-1.5 | pH 5.8-6.2 | Alto N. Ca, Mg, Fe. Agua 18-22°C.</p></div>
+<div class='nutri'><h4>Floracion</h4><p>EC 1.5-2.2 | pH 5.8-6.2 | Bajo N, alto PK. Boost Ca-Mg semana 3.</p></div>
+<div class='nutri'><h4>Maduracion</h4><p>EC 0.8-1.2 flush. Solo agua ultima semana.</p></div>
+<div class='alerta'>⚠️ Cambiar solucion cada 7-10 dias. Revisar pH y EC cada 2-3 dias.</div></div></section>
 <section class='sec' id='sec-esquejes'>
-<div class='stit'>ESQUEJES</div><div class='ssub'>Clonacion y propagacion</div>
-<div class='card'><div class='ctit'>✂️ Proceso Completo</div>
-<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Esterilizar herramientas</div><div class='paso-sub'>Bisturi con alcohol 70. Tener gel enraizante y sustrato 50/50 perlita-coco listo.</div></div></div>
-<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Corte en bisel 45 grados</div><div class='paso-sub'>Justo bajo un nudo. Sumergir en agua inmediatamente.</div></div></div>
-<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Aplicar gel enraizante</div><div class='paso-sub'>Cubrir 2-3cm inferiores. Insertar con palillo para no limpiar el gel.</div></div></div>
-<div class='paso'><div class='paso-num'>4</div><div><div class='paso-tit'>Domo o bolsa plastica</div><div class='paso-sub'>22-26C, 80-90% HR. Luz tenue 18h. Rociar hojas 2 veces al dia.</div></div></div>
-<div class='paso'><div class='paso-num'>5</div><div><div class='paso-tit'>Trasplantar en dia 10-14</div><div class='paso-sub'>Cuando raices asoman por el sustrato. Primer riego con Rhizotonic 1ml/L.</div></div></div></div>
+<div class='stit'>ESQUEJES</div><div class='ssub'>Clonacion, propagacion y cuidado</div>
+<div class='card'>
+<div class='ctit'>📅 Cuando Hacer Esquejes</div>
+<div class='alerta-verde'>🌙 El mejor momento es durante la Luna Creciente o Cuarto Creciente. Las plantas tienen mayor contenido de agua y los esquejes enraizan mas rapido.</div>
+<div class='g2'>
+<div class='bloque'><h4>✅ Momento Ideal</h4><p>Planta en vegetativo activo, nudo 4 al 6. Ultima semana sin nitrogeno alto antes del corte.</p></div>
+<div class='bloque'><h4>❌ Evitar</h4><p>Planta en estres, con plagas o deficiencias. Nunca en floracion (hormonal incorrecto).</p></div>
+<div class='bloque'><h4>🌡️ Temperatura</h4><p>22-26°C ambiente. Sustrato a 24°C optimo. Frio retrasa el enraizamiento.</p></div>
+<div class='bloque'><h4>💡 Cantidad</h4><p>Sacar 20-30% mas de los que necesitas. Tasa de exito promedio 70-85% en principiantes.</p></div>
+</div></div>
+<div class='card'>
+<div class='ctit'>✂️ Proceso Completo Paso a Paso</div>
+<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Preparar todo antes de cortar</div><div class='paso-sub'>Esterilizar tijera o bisturi con alcohol 70°. Preparar vasos con agua pH 5.8. Tener gel enraizante (Clonex o Rhizotonic) listo. Sustrato 50% perlita + 50% coco pre-humedecido.</div></div></div>
+<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Elegir la rama correcta</div><div class='paso-sub'>Rama lateral con 2 o 3 nudos, de 8 a 15cm de largo. Que sea vigorosa y sana. Las ramas del tercio inferior de la planta enraizan mejor.</div></div></div>
+<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Hacer el corte correcto</div><div class='paso-sub'>Corte en bisel de 45 grados justo por debajo de un nudo. Sumergir el tallo en agua INMEDIATAMENTE para evitar que entre aire y forme embolia.</div></div></div>
+<div class='paso'><div class='paso-num'>4</div><div><div class='paso-tit'>Limpiar y preparar el esqueje</div><div class='paso-sub'>Quitar todas las hojas de abajo. Dejar solo 1 o 2 pares de hojas arriba. Cortar las hojas grandes por la mitad para reducir transpiracion.</div></div></div>
+<div class='paso'><div class='paso-num'>5</div><div><div class='paso-tit'>Aplicar gel o polvo enraizante</div><div class='paso-sub'>Secar levemente el extremo del tallo. Cubrir los 2-3cm inferiores con gel enraizante. Introducir en el sustrato con un palillo previamente para no limpiar el gel.</div></div></div>
+<div class='paso'><div class='paso-num'>6</div><div><div class='paso-tit'>Crear el ambiente de domo</div><div class='paso-sub'>Colocar bajo domo o bolsa plastica transparente. 22-26°C, 80-90% HR. Luz tenue 18h (T5 o LED 50W a 50cm). NO sol directo. Rociar hojas 2 veces por dia sin mojar el sustrato.</div></div></div>
+<div class='paso'><div class='paso-num'>7</div><div><div class='paso-tit'>Dias 3 al 7 - Vigilancia</div><div class='paso-sub'>Las hojas pueden caer un poco. Normal. Si hay pudricion en el tallo o moho, retirar inmediatamente. Abrir el domo 10 minutos por dia para renovar el aire.</div></div></div>
+<div class='paso'><div class='paso-num'>8</div><div><div class='paso-tit'>Dias 10 al 14 - Trasplante</div><div class='paso-sub'>Cuando las raices asoman por los agujeros del sustrato. Trasplantar con cuidado sin romper el cepallon. Primer riego con Rhizotonic 1ml/L. No fertilizar la primera semana.</div></div></div>
+</div>
+<div class='card'>
+<div class='ctit'>📊 Medios de Enraizamiento</div>
+<div class='metodo'><h4>🌴 Coco + Perlita 50/50 — Recomendado para principiantes</h4><p>Economico y muy efectivo. Tasa de exito 80-90%. Humedecer con agua + Rhizotonic 0.5ml/L antes de plantar. Muy buena aireacion de raices.</p></div>
+<div class='metodo'><h4>🪨 Lana de Roca — Para sistemas hidro</h4><p>Tasa de exito 85-95%. Ajustar pH del agua a 5.5 antes de remojar. Ideal si despues vas a hidroponizar. Retiene HR perfectamente.</p></div>
+<div class='metodo' style='background:rgba(251,191,36,.06);border-color:rgba(251,191,36,.2)'><h4 style='color:var(--gold)'>💧 Clonador Aeroponico — Mas rapido</h4><p>Raices visibles en 5-7 dias. Tasa de exito mayor al 95%. Nebulizadores con agua oxigenada 0.5ml/L. Inversion inicial mayor pero resultados excepcionales.</p></div>
+<div class='metodo' style='background:rgba(167,139,250,.06);border-color:rgba(167,139,250,.2)'><h4 style='color:var(--pur)'>🫧 Cubos Oasis / Jiffy — Lo mas simple</h4><p>Practicos y limpios. Vienen listos para usar. Facil transicion a tierra o hidro sin estres de raices. Ideal para cantidades pequenas.</p></div>
+<div class='metodo' style='background:rgba(74,222,128,.06);border-color:rgba(74,222,128,.2)'><h4 style='color:var(--acc)'>💧 Solo en Agua — Metodo minimalista</h4><p>Colocar el tallo en vaso oscuro con agua pH 5.8. Cambiar agua cada 2 dias. Raices en 7-14 dias. Sin gel enraizante. Muy visual, se ven crecer las raices. Tasa de exito 60-75%.</p></div>
+</div>
+<div class='card'>
+<div class='ctit'>🧪 Productos Enraizantes Comparados</div>
+<table class='tabla'>
+<tr><th>Producto</th><th>Tipo</th><th>Dosis</th><th>Velocidad</th></tr>
+<tr><td>🟢 Clonex</td><td>Gel hormonal</td><td>Directo en corte</td><td>10-14 dias</td></tr>
+<tr><td>🟢 Rhizotonic</td><td>Liquido organico</td><td>1-2ml/L en riego</td><td>10-12 dias</td></tr>
+<tr><td>🟡 RootTech</td><td>Gel sintetico</td><td>Directo en corte</td><td>8-12 dias</td></tr>
+<tr><td>🟠 Indole Butirico</td><td>Hormona AIB</td><td>Polvo en corte humedo</td><td>10-14 dias</td></tr>
+<tr><td>🟣 Miel pura</td><td>Natural organico</td><td>Fina capa en corte</td><td>14-18 dias</td></tr>
+<tr><td>🔵 Aloe vera</td><td>Natural organico</td><td>Gel directo en corte</td><td>14-18 dias</td></tr>
+</table>
+<div class='alerta-verde'>🌿 El aloe vera y la miel son excelentes alternativas naturales y economicas. El aloe contiene auxinas naturales que estimulan el enraizamiento.</div>
+</div>
+<div class='card'>
+<div class='ctit'>🔍 Problemas Comunes y Soluciones</div>
+<div class='item'>
+<div class='item-ico'>🍃</div>
+<div class='item-txt'><h4>Hojas caen o se ponen amarillas</h4>
+<p>Normal en los primeros 3-5 dias. La planta redistribuye nutrientes hacia las raices nuevas.</p>
+<span class='badge bv'>Normal</span></div></div>
+<div class='item'>
+<div class='item-ico'>💧</div>
+<div class='item-txt'><h4>Esqueje se marchita</h4>
+<p>Falta de humedad relativa. Aumentar HR al 85-90% con domo. Rociar hojas mas seguido. Evitar corrientes de aire directas.</p>
+<span class='badge ba'>Aumentar HR</span></div></div>
+<div class='item'>
+<div class='item-ico'>🟫</div>
+<div class='item-txt'><h4>Moho o pudricion en el tallo</h4>
+<p>HR demasiado alta o herramienta contaminada. Retirar esquejes afectados. Desinfectar todo. Bajar HR al 75-80% y airear el domo mas seguido.</p>
+<span class='badge br'>Retirar inmediatamente</span></div></div>
+<div class='item'>
+<div class='item-ico'>⏰</div>
+<div class='item-txt'><h4>No enraizan despues de 21 dias</h4>
+<p>Temperatura del sustrato muy baja (menos de 20°C). Usar manta termica bajo las bandejas. Probar gel enraizante diferente. Cambiar el medio de enraizamiento.</p>
+<span class='badge ba'>Temperatura baja</span></div></div>
+<div class='item'>
+<div class='item-ico'>🌳</div>
+<div class='item-txt'><h4>Raices marrones o poco saludables</h4>
+<p>Pythium o pudricion de raices. Agregar agua oxigenada 1ml/L al riego. Mejorar drenaje. Bajar frecuencia de riego. Aplicar Trichoderma preventivo.</p>
+<span class='badge br'>Pythium</span></div></div>
+</div>
+<div class='card'>
+<div class='ctit'>🌿 Mantener una Planta Madre</div>
+<div class='alerta-verde'>💡 Una buena planta madre te da esquejes geneticamente identicos de forma indefinida. Siempre en vegetativo bajo 18/6.</div>
+<div class='g2'>
+<div class='bloque'><h4>💡 Luz</h4><p>18h luz constante. Nunca bajar de 16h o puede iniciar floracion. LED o T5 de bajo consumo.</p></div>
+<div class='bloque'><h4>🧪 Nutricion</h4><p>N moderado todo el tiempo. Magnesio y calcio regulares. Sin exceso de P y K que induzcan flora.</p></div>
+<div class='bloque'><h4>📦 Maceta</h4><p>10-15L suficiente para madre pequeña. Trasplantar cuando las raices salen por abajo.</p></div>
+<div class='bloque'><h4>✂️ Poda</h4><p>Podar la madre despues de sacar esquejes. Le da forma y estimula nuevas ramas donadoras.</p></div>
+</div>
+<div class='nutri' style='margin-top:12px'><h4>Cuantos esquejes puede dar una madre</h4><p>Una planta madre bien cuidada en maceta de 15L puede dar 10-20 esquejes cada 3-4 semanas. Con topping constante se pueden conseguir hasta 40 esquejes por ciclo en plantas grandes.</p></div>
+</div>
 </section>
 <section class='sec' id='sec-remedios'>
 <div class='stit'>REMEDIOS</div><div class='ssub'>Medicina natural con cannabis</div>
-<div class='alerta-roja'>⚠️ Informacion educativa. Consultar medico. Legalidad variable segun pais.</div>
+<div class='alerta-roja'>⚠️ Esta informacion es educativa. Consultar con un medico antes de usar cannabis medicinal. La legalidad varia segun el pais.</div>
 <div class='card'><div class='ctit'>🧬 Cannabinoides Principales</div>
-<div class='g2'><div class='bloque'><h4>🟢 THC</h4><p>Analgesico, antiemetico. Dolor cronico, nauseas, insomnio.</p></div><div class='bloque'><h4>🔵 CBD</h4><p>No psicoactivo. Ansiedad, epilepsia, inflamacion.</p></div><div class='bloque'><h4>🟣 CBN</h4><p>Sedante suave. Insomnio, espasmos.</p></div><div class='bloque'><h4>🟡 CBG</h4><p>Antibacteriano, glaucoma, intestino.</p></div></div></div>
-<div class='card'><div class='ctit'>🧈 Aceite de Cannabis</div>
-<div class='metodo'><h4>🧈 Aceite en Aceite de Coco</h4><p>1g flores por 10ml aceite de coco. Descarboxilar 110C x 45min. Infusionar 2-3h a 60C. Colar. Dosis: 2-5 gotas bajo la lengua.</p></div>
-<div class='metodo'><h4>🧉 Tintura Alcoholica</h4><p>5g flores descarboxiladas + 100ml alcohol 90. Macerar 30 dias agitando. Colar. Dosis: 5-15 gotas en agua.</p></div></div>
-</section>
+<div class='g2'>
+<div class='bloque'><h4>🟢 THC</h4><p>Psicoactivo. Analgesico, antiemetico, estimula apetito. Util en dolor cronico, nauseas por quimio, insomnio.</p></div>
+<div class='bloque'><h4>🔵 CBD</h4><p>No psicoactivo. Antiinflamatorio, ansilitico, anticonvulsivo. Epilepsia, ansiedad, inflamacion, dolor.</p></div>
+<div class='bloque'><h4>🟣 CBN</h4><p>Sedante suave. THC degradado. Insomnio, espasmos musculares. Mayor en cogollos maduros.</p></div>
+<div class='bloque'><h4>🟡 CBG</h4><p>Precursor de cannabinoides. Antibacteriano, glaucoma, inflamacion intestinal.</p></div>
+</div></div>
+<div class='card'><div class='ctit'>🌿 Preparaciones Medicinales</div>
+<div class='metodo'><h4>🧈 Aceite de Cannabis (RSO / Aceite Vegetal)</h4><p>Extraccion en aceite de oliva, coco o girasol. Para uso sublingual, topico o en comidas.</p><div style='font-size:11px;color:var(--acc2);margin-top:5px;padding:6px;background:rgba(74,222,128,.06);border-radius:7px'>Metodo: 1g flores por 10ml aceite de coco. Descarboxilar flores 110°C x 45 min. Infusionar en aceite 2-3h a 60°C. Colar y guardar en frasco opaco. Dosis: 2-5 gotas debajo de la lengua.</div></div>
+<div class='metodo'><h4>🧉 Tintura Alcoholica (Tintura Madre)</h4><p>Extraccion rapida con alcohol de alta graduacion. Rapida absorcion sublingual.</p><div style='font-size:11px;color:var(--acc2);margin-top:5px;padding:6px;background:rgba(74,222,128,.06);border-radius:7px'>Metodo: 5g flores descarboxiladas + 100ml alcohol 90°. Macerar 30 dias en oscuridad agitando a diario. Colar con tela. Dosis: 5-15 gotas en agua o debajo de lengua.</div></div>
+<div class='metodo'><h4>🧴 Te y Decoccion de Cannabis</h4><p>Preparacion acuosa. Efecto suave y prolongado. Util para inflamacion y relajacion.</p><div style='font-size:11px;color:var(--acc2);margin-top:5px;padding:6px;background:rgba(74,222,128,.06);border-radius:7px'>Metodo: 0.5g flores + 1 cucharadita de aceite de coco + 250ml agua. Hervir 15 min. El aceite actua de portador para los cannabinoides. Colar y beber caliente.</div></div>
+<div class='metodo'><h4>🧵 Crema Topica con Cannabis</h4><p>Para dolor localizado, inflamacion articular, eczema y psoriasis. Sin efecto psicoactivo.</p><div style='font-size:11px;color:var(--acc2);margin-top:5px;padding:6px;background:rgba(74,222,128,.06);border-radius:7px'>Metodo: 2g flores + 100ml aceite de coco. Infusionar 2h a 60°C. Colar. Mezclar con 50g manteca de karite y 10 gotas aceite esencial de lavanda. Envasar y refrigerar.</div></div></div>
+<div class='card'><div class='ctit'>💊 Condiciones y Aplicaciones</div>
+<table class='tabla'><tr><th>Condicion</th><th>Cannabinoide</th><th>Forma de Uso</th></tr>
+<tr><td>Dolor cronico</td><td>THC + CBD</td><td>Aceite sublingual, vaporizacion</td></tr>
+<tr><td>Ansiedad</td><td>CBD alto</td><td>Aceite CBD, te sin THC</td></tr>
+<tr><td>Insomnio</td><td>THC + CBN</td><td>Comestibles, aceite nocturno</td></tr>
+<tr><td>Inflamacion</td><td>CBD + CBG</td><td>Topico, aceite oral</td></tr>
+<tr><td>Nauseas</td><td>THC</td><td>Vaporizacion, tintura</td></tr>
+<tr><td>Epilepsia</td><td>CBD alto</td><td>Aceite CBD (consultar medico)</td></tr>
+<tr><td>Apetito</td><td>THC</td><td>Vaporizacion, comestibles</td></tr>
+<tr><td>Dolor muscular</td><td>CBD + THC</td><td>Crema topica</td></tr></table></div></section>
 <section class='sec' id='sec-concentrados'>
-<div class='stit'>EXTRACTOS</div><div class='ssub'>Concentrados y extraccion</div>
-<div class='alerta-roja'>⚠️ Algunos procesos son inflamables. Siempre al aire libre. Verificar legalidad.</div>
-<div class='card'><div class='ctit'>🧪 Sin Solventes</div>
-<div class='concentrado-card'><h4>🧁 Rosin - El Mas Recomendado</h4><p>Calor y presion. Sin solventes, limpio y aromatico.</p><div class='proc'>Envolver cogollos en papel de hornear. Plancha de pelo a 80-100C, 5-10 segundos. El aceite que sale es el Rosin. Potencia: 60-80% THC</div></div>
-<div class='concentrado-card'><h4>🟤 Hachis Casero</h4><p>Tricomas separados y prensados. Muy facil.</p><div class='proc'>Flores congeladas por mallas de diferente micronaje con agua helada. 73-120 micras es la calidad premium. Prensar a 60-70C. Potencia: 30-60% THC</div></div>
-<div class='concentrado-card'><h4>🟢 RSO - Extraccion con Alcohol</h4><p>Rick Simpson Oil. Medicinal. Mas seguro que butano.</p><div class='proc'>30g flores descarboxiladas + 500ml alcohol etilico 95%. Agitar 3 min. Filtrar. Evaporar en bano maria a 80C al aire libre. Potencia: 60-90%</div></div></div>
-</section>
+<div class='stit'>EXTRACTOS</div><div class='ssub'>Concentrados y metodos de extraccion</div>
+<div class='alerta-roja'>⚠️ Algunos procesos implican solventes inflamables. Siempre trabajar al aire libre y con maxima precaucion. Verificar legalidad en tu pais.</div>
+<div class='card'><div class='ctit'>🧪 Metodos sin Solventes</div>
+<div class='concentrado-card'><h4>🟤 Hachis / Resina Prensada</h4><p>El mas antiguo. Tricomas separados mecnicamente y prensados. Muy facil de hacer.</p><div class='proc'>Metodo: Pasar las flores congeladas (-18°C) por mallas de diferente micronaje (220u, 160u, 120u, 73u) con agua helada y hielo. El tamano 73-120 micras es el de mayor calidad. Prensar el kief obtenido con calor suave (60-70°C) hasta compactar. Potencia: 30-60% THC</div></div>
+<div class='concentrado-card'><h4>🟡 Kief / Polen</h4><p>Los tricomas separados por friccion. El mas simple. Se recolecta con grinder de 3 pisos.</p><div class='proc'>Metodo: Moler flores en grinder de 3 compartimentos. En el tercer compartimento se acumula el kief. Recolectar con brocha. Usar en vaporizador o prensar para hacer hachis casero. Potencia: 40-60% THC</div></div>
+<div class='concentrado-card'><h4>🧁 Rosin</h4><p>Extraccion por calor y presion. Sin solventes, resultado muy limpio y aromatico.</p><div class='proc'>Metodo: Envolver cogollos en papel de hornear. Prensar con plancha de pelo a 80-100°C durante 5-10 segundos con presion maxima. El aceite que sale es el Rosin. Para mayor calidad usar plancha hidraulica. Potencia: 60-80% THC</div></div>
+<div class='concentrado-card'><h4>❄️ Ice Water Hash / Bubble Hash</h4><p>Separacion de tricomas con agua helada y bolsas de diferentes micronajes.</p><div class='proc'>Metodo: Flores congeladas + agua helada + hielo en bolsa extractora (bubble bag). Agitar 15-20 min. Filtrar por bolsas de diferente micronaje. Secar el hash obtenido 24-48h. Potencia: 50-80% THC</div></div></div>
+<div class='card'><div class='ctit'>🧪 Metodos con Solventes</div>
+<div class='alerta-roja'>🔥 Trabajar SIEMPRE al aire libre lejos de fuentes de calor e ignicion. Usar equipo de proteccion personal.</div>
+<div class='concentrado-card'><h4>🟠 BHO - Butane Hash Oil</h4><p>Extraccion con butano. Resultado muy potente. Riesgo de explosion si no se hace correctamente.</p><div class='proc'>Metodo profesional: Tubo extractor de acero + gas butano alimentario. Purgar completamente el solvente en placa de vacio a 40°C durante 24-48h hasta que no haya burbujas. NUNCA hacer en interior ni cerca de llamas. Potencia: 70-90% THC</div></div>
+<div class='concentrado-card'><h4>🟢 FECO / RSO - Extraccion con Alcohol</h4><p>Rick Simpson Oil. Alcohol etilico de alta graduacion. Mas seguro que butano. Muy medicinal.</p><div class='proc'>Metodo: 30g flores descarboxiladas + 500ml alcohol isopropilico 99% o etanol 95%. Mezclar y agitar 3 min. Filtrar con tela de nylon. Evaporar el alcohol en bano maria a 80°C al aire libre. Resultado: aceite oscuro espeso. Potencia: 60-90% cannabinoides totales</div></div>
+<div class='concentrado-card'><h4>🔵 Aceite CO2 (Supercritico)</h4><p>El mas limpio y seguro. Requiere maquina de CO2 supercritico. Calidad farmaceutica.</p><div class='proc'>Proceso industrial. El CO2 a alta presion y temperatura actua como solvente sin dejar residuos. Resultado: aceite claro y limpio. Usado en cartuchos de vaporizador premium. Potencia: 70-90% THC/CBD</div></div></div>
+<div class='card'><div class='ctit'>📊 Tabla Comparativa de Concentrados</div>
+<table class='tabla'><tr><th>Concentrado</th><th>Potencia</th><th>Dificultad</th><th>Seguridad</th></tr>
+<tr><td>🟤 Hachis</td><td>30-60%</td><td>Facil</td><td>Alta</td></tr>
+<tr><td>🟡 Kief</td><td>40-60%</td><td>Muy facil</td><td>Alta</td></tr>
+<tr><td>🧁 Rosin</td><td>60-80%</td><td>Facil</td><td>Alta</td></tr>
+<tr><td>❄️ Bubble Hash</td><td>50-80%</td><td>Media</td><td>Alta</td></tr>
+<tr><td>🟢 RSO/FECO</td><td>60-90%</td><td>Media</td><td>Media</td></tr>
+<tr><td>🟠 BHO</td><td>70-90%</td><td>Avanzada</td><td>Baja</td></tr>
+<tr><td>🔵 CO2</td><td>70-90%</td><td>Industrial</td><td>Alta</td></tr></table></div></section>
 <section class='sec' id='sec-recetas'>
-<div class='stit'>RECETARIO</div><div class='ssub'>Comidas y preparaciones</div>
-<div class='alerta-roja'>⚠️ Comestibles tardan 1-2h en hacer efecto. Empezar con dosis bajas.</div>
-<div class='card'><div class='ctit'>🧈 Cannabutter Base</div>
+<div class='stit'>RECETARIO</div><div class='ssub'>Comidas y preparaciones con cannabis</div>
+<div class='alerta-roja'>⚠️ Los comestibles tardan 1 a 2 horas en hacer efecto. Empezar con dosis bajas y esperar. No consumir mas antes de sentir el efecto.</div>
+<div class='card'><div class='ctit'>🧈 Cannabutter - La Base de Todo</div>
+<div class='alerta-verde'>💡 La manteca cannabica es la base de la mayoria de recetas. Dominar esta preparacion es el primer paso.</div>
 <div class='receta-card'><h4>🧈 Cannabutter Clasico</h4>
-<div class='ingredientes'>7g flores descarboxiladas + 250g manteca + 250ml agua + pizca lecitina de soya</div>
-<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Descarboxilar</div><div class='paso-sub'>Flores al horno 110C x 45 min en papel aluminio.</div></div></div>
-<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Infusionar</div><div class='paso-sub'>Manteca + agua + flores en olla a fuego minimo 3-4h. No hervir.</div></div></div>
-<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Colar y refrigerar</div><div class='paso-sub'>Colar y enfriar. Descartar agua de abajo.</div></div></div>
-<div class='dosis'>Dosis estimada: 7g 15% THC en 250g manteca = 420mg totales. Por 10g manteca: ~16mg THC. Principiante: 5-10mg.</div></div></div>
+<p>La grasa de la manteca absorbe perfectamente los cannabinoides. Necesitas descarboxilar primero para activar el THC/CBD.</p>
+<div class='ingredientes'>Ingredientes:
+- 7g flores descarboxiladas (o 14g de trim)
+- 250g manteca sin sal
+- 250ml agua
+- 1 pizca de lecitina de soya (mejora absorcion)</div>
+<div class='paso' style='margin-top:8px'><div class='paso-num'>1</div><div><div class='paso-tit'>Descarboxilar</div><div class='paso-sub'>Flores al horno 110°C x 45 min en bandeja cubierta con papel aluminio. Esto activa el THC.</div></div></div>
+<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Infusionar</div><div class='paso-sub'>Manteca + agua + flores en olla a fuego minimo 3-4 horas. Revolver cada 30 min. No hervir.</div></div></div>
+<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Colar y solidificar</div><div class='paso-sub'>Colar con tela fina exprimiendo bien. Refrigerar hasta solidificar. Descartar el agua de abajo.</div></div></div>
+<div class='dosis'>Dosis estimada: 7g de flores con ~15% THC en 250g de manteca = ~420mg THC total. Por cada 10g de manteca hay aproximadamente 16mg THC. Dosis recreativa principiante: 5-10mg THC.</div></div></div>
+<div class='card'><div class='ctit'>🍪 Recetas con Cannabutter</div>
+<div class='receta-card'><h4>🍪 Brownies de Cannabis</h4>
+<div class='ingredientes'>Ingredientes (16 porciones):
+- 100g cannabutter
+- 200g chocolate negro
+- 3 huevos
+- 200g azucar
+- 80g harina
+- 30g cacao en polvo
+- 1 cdta vainilla
+- Pizca de sal</div>
+<p style='font-size:11px;color:var(--mut);margin-top:6px;line-height:1.5'>Derretir chocolate con cannabutter. Batir huevos con azucar. Mezclar todo. Hornear en molde 180°C x 25 min. No sobrecocinar.</p>
+<div class='dosis'>📊 Dosis por brownie: Con 100g cannabutter (preparado con 7g de 15% THC) cada brownie tiene aprox 26mg THC. Dosis recomendada: medio brownie para principiantes.</div></div>
+<div class='receta-card'><h4>🍫 Chocolates Medicados</h4>
+<div class='ingredientes'>Ingredientes (20 unidades):
+- 200g chocolate para derretir
+- 2g aceite de cannabis (aprox 40mg THC)
+- Moldes de silicona
+- Opcional: frutos secos, menta</div>
+<p style='font-size:11px;color:var(--mut);margin-top:6px;line-height:1.5'>Derretir chocolate a bano maria. Mezclar aceite de cannabis cuando el chocolate este a 40°C (no mas caliente). Verter en moldes. Refrigerar hasta solidificar.</p>
+<div class='dosis'>📊 Dosis por chocolate: 2mg THC por unidad. Ideal para microdosing y uso medicinal controlado.</div></div>
+<div class='receta-card'><h4>🍬 Caramelos de Miel Medicados</h4>
+<div class='ingredientes'>Ingredientes (30 caramelos):
+- 200g miel
+- 50ml agua
+- 3g aceite de cannabis
+- Jugo de medio limon
+- Moldes de silicona pequenos</div>
+<p style='font-size:11px;color:var(--mut);margin-top:6px;line-height:1.5'>Calentar miel con agua y limon hasta 150°C (punto de caramelo duro). Retirar del fuego. Esperar a que baje a 70°C y agregar el aceite. Mezclar rapidamente y verter en moldes. Enfriar completamente.</p>
+<div class='dosis'>📊 Dosis: aprox 3mg THC por caramelo. Excelente para dosis controladas.</div></div></div>
+<div class='card'><div class='ctit'>🧃 Bebidas Medicadas</div>
+<div class='receta-card'><h4>🍵 Te Medicado con Leche</h4>
+<div class='ingredientes'>Ingredientes:
+- 0.5g flores
+- 200ml leche entera
+- 1 bolsita de te negro o camomila
+- Miel al gusto
+- Canela opcional</div>
+<p style='font-size:11px;color:var(--mut);margin-top:6px;line-height:1.5'>Calentar la leche sin hervir. Agregar las flores molidas. Mantener a 70°C por 20 min revolviendo. La grasa de la leche extrae los cannabinoides. Colar, agregar el te y la miel. Efecto suave en 30-60 minutos.</p>
+<div class='dosis'>📊 Dosis: con 0.5g de flores al 15% THC, la bebida contiene aprox 20-30mg THC (no toda la extraccion es eficiente). Empezar con media taza.</div></div>
+<div class='receta-card'><h4>🧈 Golden Milk con Cannabis</h4>
+<div class='ingredientes'>Ingredientes:
+- 250ml leche de coco
+- 5 gotas aceite de cannabis
+- 1 cdta curcuma
+- 1/4 cdta canela
+- 1/4 cdta jengibre
+- Miel al gusto
+- Pimienta negra (activa la curcuma)</div>
+<p style='font-size:11px;color:var(--mut);margin-top:6px;line-height:1.5'>Calentar leche de coco. Agregar todas las especias y revolver bien. A 60°C agregar el aceite de cannabis. Mezclar con batidor. Servir caliente con miel. Antiinflamatorio y relajante.</p>
+<div class='dosis'>📊 Ideal para antes de dormir. Dosis segun la concentracion de tu aceite. Empezar con 2-3 gotas.</div></div></div>
+<div class='card'><div class='ctit'>🍳 Comidas Saladas</div>
+<div class='receta-card'><h4>🧆 Pesto Medicado</h4>
+<div class='ingredientes'>Ingredientes:
+- 50g albahaca fresca
+- 2 dientes de ajo
+- 30g parmesano rallado
+- 30g pinos o nueces
+- 80ml aceite de cannabis
+- Sal y pimienta</div>
+<p style='font-size:11px;color:var(--mut);margin-top:6px;line-height:1.5'>Procesar todos los ingredientes excepto el aceite. Ir agregando el aceite de cannabis de a poco hasta emulsionar. Guardar en frasco en heladera. Usar sobre pasta, tostadas o como aderezo.</p>
+<div class='dosis'>📊 No calentar el pesto una vez preparado. El calor degrada los cannabinoides. Usar frio o tibio. Dosis: 1-2 cucharadas por porcion.</div></div>
+<div class='receta-card'><h4>🧅 Vinagreta Medicada</h4>
+<div class='ingredientes'>Ingredientes:
+- 60ml aceite de cannabis
+- 30ml vinagre de manzana
+- 1 cdta mostaza
+- 1 cdta miel
+- Sal, pimienta, oregano</div>
+<p style='font-size:11px;color:var(--mut);margin-top:6px;line-height:1.5'>Mezclar todos los ingredientes en frasco con tapa y agitar hasta emulsionar. Usar sobre ensaladas, carnes frias o vegetales. No calentar.</p>
+<div class='dosis'>📊 Dosis: 2 cucharadas de vinagreta por porcion. Efecto suave, ideal para uso diario medicinal.</div></div></div>
 <div class='card'><div class='ctit'>📐 Tabla de Dosificacion</div>
+<div class='alerta-gold'>💡 Empieza siempre con la dosis mas baja. Espera 2 horas antes de consumir mas. Los efectos de comestibles son mas fuertes y duran mas que inhalados.</div>
 <table class='tabla'><tr><th>Perfil</th><th>Dosis THC</th><th>Efecto</th></tr>
-<tr><td>🟢 Principiante</td><td>2.5-5mg</td><td>Leve relajacion</td></tr>
-<tr><td>🟡 Casual</td><td>5-10mg</td><td>Relajacion clara</td></tr>
-<tr><td>🟠 Intermedio</td><td>10-20mg</td><td>Efecto marcado</td></tr>
-<tr><td>🔴 Avanzado</td><td>20-50mg</td><td>Efecto intenso</td></tr></table>
-<div class='alerta' style='margin-top:10px'>⏰ Inicio: 30-90 min. Pico: 2-3h. Duracion total: 4-8h.</div></div>
-</section>
+<tr><td>🟢 Principiante</td><td>2.5 - 5mg</td><td>Leve relajacion, bienestar</td></tr>
+<tr><td>🟡 Casual</td><td>5 - 10mg</td><td>Relajacion clara, euforia leve</td></tr>
+<tr><td>🟠 Intermedio</td><td>10 - 20mg</td><td>Efecto marcado, introspectivo</td></tr>
+<tr><td>🔴 Avanzado</td><td>20 - 50mg</td><td>Efecto intenso, medicinal</td></tr>
+<tr><td>🟣 Medicinal</td><td>50mg+</td><td>Solo uso terapeutico supervisado</td></tr></table>
+<div class='alerta' style='margin-top:10px'>⏰ Tiempo de inicio: 30 a 90 minutos. Pico: 2 a 3 horas. Duracion total: 4 a 8 horas. Mucho mas prolongado que inhalacion.</div></div></section>
 <section class='sec' id='sec-camara'>
-<div class='stit'>IA SCAN</div>
-<div class='ssub'>Escaneá tu planta para diagnóstico completo</div>
+<div class='stit'>IA SCAN</div><div class='ssub'>Diagnostico completo de tu planta</div>
 <div class='card'>
-<div class='ctit'>📷 Escanear Planta</div>
-<input type='file' id='fotoInput' accept='image/*' style='display:none'>
-<div id='estadoInicial'>
-  <div style='text-align:center;padding:18px 0 14px'>
-    <div style='font-size:64px;margin-bottom:10px'>🌿</div>
-    <p style='font-size:13px;color:var(--mut);line-height:1.6'>Toma una foto de tu planta y la IA detecta<br>plagas, carencias, excesos y da el tratamiento</p>
-  </div>
-  <div style='display:flex;gap:10px;margin-top:4px'>
-    <button id='btnCamara' style='flex:1;padding:14px 8px;border-radius:14px;border:none;background:linear-gradient(135deg,#16a34a,#4ade80);color:#000;font-family:Space Grotesk;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(74,222,128,.3)'>📷 Camara</button>
-    <button id='btnGaleria' style='flex:1;padding:14px 8px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#e8fce8;font-family:Space Grotesk;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px'>🖼️ Galeria</button>
-  </div>
+<div class='ctit'>🔍 Escanear Planta</div>
+<input type='file' id='inp-cam' accept='image/*' capture='environment' style='display:none'>
+<input type='file' id='inp-gal' accept='image/*' style='display:none'>
+<div id='zona-ini' style='text-align:center;padding:10px 0'>
+<div style='font-size:64px;margin-bottom:12px;filter:drop-shadow(0 0 10px rgba(74,222,128,.4))'>📷</div>
+<div style='font-size:14px;font-weight:600;color:var(--txt);margin-bottom:6px'>Fotografiá tu planta</div>
+<div style='font-size:11px;color:var(--mut);margin-bottom:18px'>La IA detecta plagas, carencias, excesos y da el tratamiento completo</div>
+<button class='btn btn-completo' id='btn-cam' style='margin-bottom:10px;font-size:15px;letter-spacing:.5px'>📷  Abrir Camara</button>
+<button class='btn btn-completo' id='btn-gal' style='background:rgba(255,255,255,.07);color:var(--txt);border:1px solid var(--gbor);box-shadow:none;font-size:15px'>🖼️  Elegir de Galeria</button>
 </div>
-<div id='estadoVisor' style='display:none'>
-  <div style='position:relative;border-radius:14px;overflow:hidden;margin-bottom:12px'>
-    <video id='videoStream' autoplay playsinline muted style='width:100%;max-height:320px;object-fit:cover;display:block;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.6)'></video>
-    <div style='position:absolute;inset:0;border:2px solid rgba(74,222,128,.4);border-radius:14px;pointer-events:none'></div>
-    <div style='position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:11px;color:#e8fce8;white-space:nowrap'>Apunta a tu planta</div>
-    <div id='indicadorCamara' style='position:absolute;bottom:14px;left:50%;transform:translateX(-50%);width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#16a34a,#4ade80);display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;box-shadow:0 4px 20px rgba(74,222,128,.5);border:3px solid rgba(255,255,255,.3)'>📷</div>
-  </div>
-  <div style='display:flex;gap:10px'>
-    <button id='btnCerrarCamara' style='flex:1;padding:11px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#e8fce8;font-family:Space Grotesk;font-size:13px;font-weight:600;cursor:pointer'>X Cancelar</button>
-    <button id='btnFlip' style='flex:1;padding:11px;border-radius:12px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.08);color:var(--acc);font-family:Space Grotesk;font-size:13px;font-weight:600;cursor:pointer'>Voltear</button>
-  </div>
-  <canvas id='canvasCaptura' style='display:none'></canvas>
+<div id='zona-prev' style='display:none'>
+<img id='prev-img' style='width:100%;max-height:320px;object-fit:cover;border-radius:14px;display:block;margin-bottom:12px' alt=''>
+<button class='btn btn-completo' id='btn-analizar' style='margin-bottom:8px;font-size:15px'>🧬 Analizar con IA</button>
+<button class='btn btn-completo' id='btn-reset' style='background:rgba(255,255,255,.07);color:var(--txt);border:1px solid var(--gbor);box-shadow:none;font-size:13px'>🔄 Nueva Foto</button>
 </div>
-<div id='estadoFoto' style='display:none'>
-  <img id='fotoPreview' alt='' style='width:100%;max-height:300px;object-fit:cover;border-radius:14px;display:block;margin-bottom:12px;box-shadow:0 6px 24px rgba(0,0,0,.5)'>
-  <div style='display:flex;gap:10px'>
-    <button id='btnAnalizar' style='flex:2;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,#16a34a,#4ade80);color:#000;font-family:Space Grotesk;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(74,222,128,.3)'>🧬 Analizar con IA</button>
-    <button id='btnNueva' style='flex:1;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#e8fce8;font-family:Space Grotesk;font-size:13px;font-weight:600;cursor:pointer'>Nueva</button>
-  </div>
+<div id='zona-scan' style='display:none;margin-top:14px'>
+<div style='display:flex;justify-content:space-between;font-size:11px;color:var(--mut);margin-bottom:5px'><span id='scan-txt'>Iniciando...</span><span id='scan-num'>0%</span></div>
+<div style='width:100%;background:rgba(255,255,255,.07);border-radius:4px;height:5px;margin-bottom:12px'><div id='scan-bar' style='width:0%;height:5px;background:linear-gradient(90deg,var(--acc3),var(--acc));border-radius:4px;transition:width .4s'></div></div>
+<div style='text-align:center;padding:8px 0;font-size:12px;color:var(--mut)'>🌿 Analizando con IA... puede tardar unos segundos</div>
 </div>
-<div id='estadoCargando' style='display:none;padding:20px 0;text-align:center'>
-  <div style='font-size:13px;color:var(--mut);margin-bottom:12px' id='textoScan'>🌿 Analizando tu planta...</div>
-  <div style='width:100%;background:rgba(255,255,255,.07);border-radius:4px;height:6px'>
-    <div id='barraScan' style='width:0%;height:6px;background:linear-gradient(90deg,#16a34a,#4ade80);border-radius:4px;transition:width .5s'></div>
-  </div>
+<div id='zona-resultado' style='display:none;margin-top:12px;background:rgba(255,255,255,.04);border:1px solid var(--gbor);border-radius:var(--r);padding:14px;font-size:12px;line-height:1.8'></div>
 </div>
-<div id='estadoResultado' style='display:none;margin-top:14px;padding:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;font-size:12px;line-height:1.8;white-space:pre-wrap'></div>
+<div class='card'><div class='ctit'>💡 Que Detecta el Analisis</div>
+<div class='g2'>
+<div class='bloque'><h4>🦟 Plagas</h4><p>Insectos, acariosis y enfermedades visibles en la foto</p></div>
+<div class='bloque'><h4>🟡 Carencias</h4><p>Falta de N, P, K, Ca, Mg, Fe y otros nutrientes</p></div>
+<div class='bloque'><h4>🔴 Excesos</h4><p>Sobre-fertilizacion y toxicidades detectables</p></div>
+<div class='bloque'><h4>🧪 Tratamiento</h4><p>Plan de accion y mezcla de abono recomendada</p></div>
 </div>
-<div class='card'>
-<div class='ctit'>💡 Consejos para mejor diagnostico</div>
-<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Buena iluminacion</div><div class='paso-sub'>Luz natural o LED blanca neutra. El flash tapa los colores reales.</div></div></div>
-<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Enfocar el problema</div><div class='paso-sub'>Acercate a las hojas afectadas. Fotografiar el enves si hay manchas.</div></div></div>
-<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Foto general</div><div class='paso-sub'>Ayuda a ver si el problema es generalizado o localizado.</div></div></div>
-</div>
-</section>
+<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Buena iluminacion</div><div class='paso-sub'>Luz natural o LED blanca. El flash tapa los colores reales de la planta.</div></div></div>
+<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Enfocar el problema</div><div class='paso-sub'>Acercar a hojas afectadas. Fotografiar tambien el enves si hay manchas o puntos.</div></div></div>
+<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Foto general tambien</div><div class='paso-sub'>Una imagen de la planta entera ayuda a ver si el problema es generalizado.</div></div></div>
+</div></section>
 <section class='sec' id='sec-bot'>
 <div class='stit'>CANNABOT</div><div class='ssub'>Tu experto cultivador con IA</div>
 <div class='card'><div class='ctit'>🤖 Chat con CannaBot</div>
 <div class='chat-mensajes' id='chat-mensajes'>
-<div class='msg msg-bot'>Hola! Soy <strong>CannaBot</strong> 🌿. Preguntame sobre cultivo, plagas, cosecha, curado, concentrados, recetas o medicina con cannabis.</div>
+<div class='msg msg-bot'>¡Hola! Soy <strong>CannaBot</strong> 🌿. Preguntame sobre cultivo, plagas, cosecha, curado, concentrados, recetas, medicina con cannabis... lo que necesites.</div>
 </div>
 <div class='chat-fila'><input type='text' class='chat-input' id='chat-input' placeholder='Escribe tu pregunta...' onkeydown="if(event.key==='Enter')enviarMensaje()"><button class='btn' onclick='enviarMensaje()' id='btn-enviar'>➤</button></div>
 <div class='pills' style='margin-top:9px'>
@@ -433,14 +768,9 @@ body::after{width:260px;height:260px;bottom:80px;right:-80px;background:radial-g
 <button class='nb' onclick="cambiarTab('bot',this)"><span class='ico'>🤖</span>CannaBot</button>
 </nav>
 <script>
-function cambiarTab(n,b){
-  document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('activo');});
-  document.querySelectorAll('.nb').forEach(function(x){x.classList.remove('activo');});
-  document.getElementById('sec-'+n).classList.add('activo');
-  b.classList.add('activo');
-  if(n!=='camara'){detenerStream();}
-}
+function cambiarTab(n,b){document.querySelectorAll('.sec').forEach(function(s){s.classList.remove('activo');});document.querySelectorAll('.nb').forEach(function(x){x.classList.remove('activo');});document.getElementById('sec-'+n).classList.add('activo');b.classList.add('activo');}
 
+// LUNA
 async function cargarLuna(){
   try{
     var r=await fetch('/api/moon');var d=await r.json();
@@ -454,6 +784,7 @@ async function cargarLuna(){
 }
 cargarLuna();
 
+// CALENDARIO
 var calAnio=new Date().getFullYear();
 var calMes=new Date().getMonth()+1;
 var datosMes=null;
@@ -494,10 +825,12 @@ function renderCal(dias){
 }
 
 function mostrarDetalle(info){
+  document.querySelectorAll('.cal-dia').forEach(function(d){d.classList.remove('sel');});
   var det=document.getElementById('cal-detalle');
   var html='<div class="cal-detalle-fecha">'+info.dia+' de '+MESES[calMes-1]+' '+calAnio+'</div>';
   html+='<div style="font-size:13px;color:var(--acc);font-weight:600;margin-bottom:4px">'+info.emoji+' '+info.nombre+'</div>';
   html+='<div style="font-size:11px;color:var(--acc2);margin-bottom:8px">'+info.rec+'</div>';
+  html+='<div style="font-size:11px;color:var(--mut);margin-bottom:6px">Actividades recomendadas:</div>';
   html+='<div class="cal-act-grid">';
   info.actividades.forEach(function(act){
     var a=ACT_INFO[act]||{e:'o',l:act};
@@ -512,17 +845,21 @@ function mesAnterior(){calMes--;if(calMes<1){calMes=12;calAnio--;}cargarCalendar
 function mesSiguiente(){calMes++;if(calMes>12){calMes=1;calAnio++;}cargarCalendario();}
 cargarCalendario();
 
+// FOTOPERIODO AUTOMATICO POR ZONA HORARIA
 function calcularFotoperiodo(){
   var cargando=document.getElementById('foto-auto-cargando');
   var resultado=document.getElementById('foto-auto-resultado');
-  cargando.style.display='block';cargando.textContent='Obteniendo ubicacion...';
+  cargando.style.display='block';
+  cargando.textContent='Obteniendo ubicacion...';
   resultado.style.display='none';
-  if(!navigator.geolocation){cargando.textContent='Geolocalozacion no disponible.';return;}
+  if(!navigator.geolocation){cargando.textContent='Geolocalozacion no disponible. Activar GPS.';return;}
   navigator.geolocation.getCurrentPosition(function(pos){
-    var lat=pos.coords.latitude;var lon=pos.coords.longitude;
-    cargando.textContent='Calculando horas de luz...';
+    var lat=pos.coords.latitude;
+    var lon=pos.coords.longitude;
+    cargando.textContent='Calculando horas de luz para tu ubicacion...';
     var tiempos=calcularSolNacientePoniente(lat,lon,new Date());
-    var horasLuz=tiempos.horas;var horasOsc=24-horasLuz;
+    var horasLuz=tiempos.horas;
+    var horasOsc=24-horasLuz;
     document.getElementById('foto-ciudad').textContent='Lat '+lat.toFixed(2)+' Lon '+lon.toFixed(2);
     document.getElementById('foto-amanecer').textContent=tiempos.amanecer;
     document.getElementById('foto-atardecer').textContent=tiempos.atardecer;
@@ -532,14 +869,15 @@ function calcularFotoperiodo(){
     document.getElementById('barra-luz-val').textContent=horasLuz.toFixed(1)+'h';
     document.getElementById('barra-osc-val').textContent=horasOsc.toFixed(1)+'h';
     var rec='';
-    if(horasLuz>=16)rec='🌱 Con '+horasLuz.toFixed(1)+'h tus plantas estan en VEGETATIVO.';
-    else if(horasLuz>=14)rec='⚠️ Con '+horasLuz.toFixed(1)+'h zona de transicion vegetativo/floracion.';
-    else if(horasLuz>=12)rec='🌸 Con '+horasLuz.toFixed(1)+'h tus plantas estan en FLORACION natural.';
-    else rec='🌙 Solo '+horasLuz.toFixed(1)+'h. Complementar con iluminacion artificial.';
+    if(horasLuz>=16)rec='🌱 Con '+horasLuz.toFixed(1)+'h de luz natural tus plantas estan en VEGETATIVO. Ideal para crecimiento sin luces artificiales adicionales.';
+    else if(horasLuz>=14)rec='⚠️ Con '+horasLuz.toFixed(1)+'h algunas variedades pueden comenzar a pre-florecer. Zona de transicion vegetativo/floracion.';
+    else if(horasLuz>=12)rec='🌸 Con '+horasLuz.toFixed(1)+'h tus plantas estan entrando en FLORACION natural. Complementar con luz artificial si queres mantener vegetativo.';
+    else rec='🌙 Con solo '+horasLuz.toFixed(1)+'h de luz natural es necesario complementar con iluminacion artificial para mantener vegetativo.';
     document.getElementById('foto-recomendacion').textContent=rec;
-    cargando.style.display='none';resultado.style.display='block';
+    cargando.style.display='none';
+    resultado.style.display='block';
   },function(err){
-    cargando.textContent='No se pudo obtener ubicacion. Verificar GPS y permisos.';
+    cargando.textContent='No se pudo obtener ubicacion. Verificar que el GPS y permisos esten activados.';
   },{timeout:10000});
 }
 
@@ -554,179 +892,129 @@ function calcularSolNacientePoniente(lat,lon,fecha){
   var Jtransit=2451545+Jstar+(0.0053*Math.sin(Mr)-0.0069*Math.sin(2*lam*Math.PI/180));
   var delta=Math.asin(Math.sin(lam*Math.PI/180)*Math.sin(23.4397*Math.PI/180));
   var omega0=Math.acos((Math.sin(-0.8333*Math.PI/180)-Math.sin(lat*Math.PI/180)*Math.sin(delta))/(Math.cos(lat*Math.PI/180)*Math.cos(delta)))*180/Math.PI;
-  var Jrise=Jtransit-omega0/360;var Jset=Jtransit+omega0/360;
-  function jdToTime(jd){var d=new Date((jd-2440587.5)*86400000);var h=d.getUTCHours();var m=d.getUTCMinutes();var offset=new Date().getTimezoneOffset()/60;h=((h-offset)%24+24)%24;return(h<10?'0':'')+h+':'+(m<10?'0':'')+m;}
+  var Jrise=Jtransit-omega0/360;
+  var Jset=Jtransit+omega0/360;
+  function jdToTime(jd){
+    var d=new Date((jd-2440587.5)*86400000);
+    var h=d.getUTCHours();
+    var m=d.getUTCMinutes();
+    var offset=new Date().getTimezoneOffset()/60;
+    h=((h-offset)%24+24)%24;
+    return (h<10?'0':'')+h+':'+(m<10?'0':'')+m;
+  }
   return{amanecer:jdToTime(Jrise),atardecer:jdToTime(Jset),horas:omega0*2/15};
 }
 
+// Calcular fotoperiodo automaticamente al abrir la seccion luz
+document.querySelectorAll('.nb').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    if(btn.onclick.toString().indexOf('luz')>-1){calcularFotoperiodo();}
+  });
+});
+
+// TABS SUSTRATOS
 function sustTab(btn,id){document.querySelectorAll('.stab').forEach(function(b){b.classList.remove('on');});document.querySelectorAll('.sust-panel').forEach(function(p){p.classList.remove('on');});btn.classList.add('on');document.getElementById('sp-'+id).classList.add('on');}
+
 function indoorTab(btn,id){var sec=btn.closest('.card');sec.querySelectorAll('.stab').forEach(function(b){b.classList.remove('on');});sec.querySelectorAll('.sust-panel').forEach(function(p){p.classList.remove('on');});btn.classList.add('on');document.getElementById('ip-'+id).classList.add('on');}
 
 function calcularConsumo(){
   var w=parseFloat(document.getElementById('calc-watts').value)||0;
   var h=parseFloat(document.getElementById('calc-horas').value)||0;
   var t=parseFloat(document.getElementById('calc-tarifa').value)||0;
-  var kwhDia=(w/1000)*h;var kwhMes=kwhDia*30;var costoMes=kwhMes*t;
+  var kwhDia=(w/1000)*h;
+  var kwhMes=kwhDia*30;
+  var costoMes=kwhMes*t;
   var res=document.getElementById('calc-resultado');
-  res.innerHTML='<div class="g2"><div class="bloque"><h4>kWh dia</h4><p style="font-size:16px;font-weight:700;color:var(--acc)">'+kwhDia.toFixed(2)+'</p></div><div class="bloque"><h4>kWh mes</h4><p style="font-size:16px;font-weight:700;color:var(--acc)">'+kwhMes.toFixed(1)+'</p></div><div class="bloque"><h4>Costo mes</h4><p style="font-size:16px;font-weight:700;color:var(--gold)">'+(costoMes>=1000?'$'+Math.round(costoMes/1000)+'k':'$'+Math.round(costoMes))+'</p></div></div>';
+  res.innerHTML='<div style="font-size:12px;color:var(--mut);margin-bottom:8px">Resultado de tu cultivo:</div>'+
+    '<div class="g2">'+
+    '<div class="bloque"><h4>kWh por dia</h4><p style="font-size:16px;font-weight:700;color:var(--acc)">'+kwhDia.toFixed(2)+'</p></div>'+
+    '<div class="bloque"><h4>kWh por mes</h4><p style="font-size:16px;font-weight:700;color:var(--acc)">'+kwhMes.toFixed(1)+'</p></div>'+
+    '<div class="bloque"><h4>Costo mensual</h4><p style="font-size:16px;font-weight:700;color:var(--gold)">'+(costoMes>=1000?'$'+Math.round(costoMes/1000)+'k':'$'+Math.round(costoMes))+'</p></div>'+
+    '<div class="bloque"><h4>Costo por ciclo</h4><p style="font-size:14px;font-weight:700;color:var(--gold)">'+(costoMes*3>=1000?'$'+Math.round(costoMes*3/1000)+'k':'$'+Math.round(costoMes*3))+'</p></div>'+
+    '</div>';
   res.style.display='block';
 }
 
-// === CAMARA v2 getUserMedia con permisos ===
-var fotoB64=null;
-var fotoMime='image/jpeg';
-var streamActivo=null;
-var camaraFrontal=false;
+// CAMARA - BIOHUERTA STYLE
+var imgB64=null,imgMime='image/jpeg';
 
-function mostrarEstado(id){
-  ['estadoInicial','estadoVisor','estadoFoto','estadoCargando'].forEach(function(s){
-    var el=document.getElementById(s);
-    if(el)el.style.display=(s===id)?'block':'none';
-  });
-}
-
-function detenerStream(){
-  if(streamActivo){
-    streamActivo.getTracks().forEach(function(t){t.stop();});
-    streamActivo=null;
-  }
-}
-
-async function iniciarCamara(){
-  detenerStream();
-  var constraints={video:{facingMode:camaraFrontal?'user':'environment',width:{ideal:1280},height:{ideal:720}},audio:false};
-  try{
-    var stream=await navigator.mediaDevices.getUserMedia(constraints);
-    streamActivo=stream;
-    var video=document.getElementById('videoStream');
-    video.srcObject=stream;
-    mostrarEstado('estadoVisor');
-  }catch(err){
-    if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError'){
-      alert('Permiso de camara denegado. Habilita el permiso en Configuracion del navegador y recarga la pagina.');
-    }else if(err.name==='NotFoundError'){
-      alert('No se encontro camara en este dispositivo.');
-    }else{
-      alert('No se pudo acceder a la camara: '+err.message);
-    }
-    mostrarEstado('estadoInicial');
-  }
-}
-
-function capturarFoto(){
-  var video=document.getElementById('videoStream');
-  var canvas=document.getElementById('canvasCaptura');
-  canvas.width=video.videoWidth||1280;
-  canvas.height=video.videoHeight||720;
-  var ctx=canvas.getContext('2d');
-  ctx.drawImage(video,0,0);
-  var dataURL=canvas.toDataURL('image/jpeg',0.92);
-  fotoB64=dataURL.split(',')[1];
-  fotoMime='image/jpeg';
-  document.getElementById('fotoPreview').src=dataURL;
-  detenerStream();
-  document.getElementById('estadoResultado').style.display='none';
-  document.getElementById('estadoResultado').innerHTML='';
-  mostrarEstado('estadoFoto');
-}
-
-document.getElementById('btnCamara').addEventListener('click',function(){
-  camaraFrontal=false;
-  iniciarCamara();
-});
-
-document.getElementById('indicadorCamara').addEventListener('click',function(){
-  capturarFoto();
-});
-
-document.getElementById('btnFlip').addEventListener('click',function(){
-  camaraFrontal=!camaraFrontal;
-  iniciarCamara();
-});
-
-document.getElementById('btnCerrarCamara').addEventListener('click',function(){
-  detenerStream();
-  mostrarEstado('estadoInicial');
-});
-
-document.getElementById('btnGaleria').addEventListener('click',function(){
-  var inp=document.getElementById('fotoInput');
-  inp.removeAttribute('capture');
-  inp.click();
-});
-
-document.getElementById('fotoInput').addEventListener('change',function(e){
-  var archivo=e.target.files[0];
-  if(!archivo)return;
-  fotoMime=archivo.type||'image/jpeg';
-  var lector=new FileReader();
-  lector.onload=function(ev){
-    fotoB64=ev.target.result.split(',')[1];
-    document.getElementById('fotoPreview').src=ev.target.result;
-    document.getElementById('estadoResultado').style.display='none';
-    document.getElementById('estadoResultado').innerHTML='';
-    mostrarEstado('estadoFoto');
+function cargarFoto(file){
+  if(!file)return;
+  imgMime=file.type||'image/jpeg';
+  var rd=new FileReader();
+  rd.onload=function(e){
+    imgB64=e.target.result.split(',')[1];
+    document.getElementById('prev-img').src=e.target.result;
+    document.getElementById('zona-ini').style.display='none';
+    document.getElementById('zona-prev').style.display='block';
+    document.getElementById('zona-resultado').style.display='none';
+    document.getElementById('zona-resultado').innerHTML='';
+    document.getElementById('zona-scan').style.display='none';
   };
-  lector.readAsDataURL(archivo);
-  this.value='';
+  rd.readAsDataURL(file);
+}
+
+document.getElementById('btn-cam').addEventListener('click',function(){document.getElementById('inp-cam').click();});
+document.getElementById('btn-gal').addEventListener('click',function(){document.getElementById('inp-gal').click();});
+document.getElementById('inp-cam').addEventListener('change',function(){cargarFoto(this.files[0]);this.value='';});
+document.getElementById('inp-gal').addEventListener('change',function(){cargarFoto(this.files[0]);this.value='';});
+document.getElementById('btn-reset').addEventListener('click',function(){
+  imgB64=null;
+  document.getElementById('zona-prev').style.display='none';
+  document.getElementById('zona-ini').style.display='block';
+  document.getElementById('zona-resultado').style.display='none';
+  document.getElementById('zona-resultado').innerHTML='';
+  document.getElementById('zona-scan').style.display='none';
 });
 
-document.getElementById('btnNueva').addEventListener('click',function(){
-  fotoB64=null;
-  document.getElementById('estadoResultado').style.display='none';
-  document.getElementById('estadoResultado').innerHTML='';
-  mostrarEstado('estadoInicial');
-});
+document.getElementById('btn-analizar').addEventListener('click',function(){analizarFoto();});
 
-document.getElementById('btnAnalizar').addEventListener('click',function(){
-  if(!fotoB64)return;
-  var pasos=[
-    {p:15,t:'🔍 Analizando estructura de la planta...'},
-    {p:35,t:'🟡 Evaluando coloracion y patron de hojas...'},
-    {p:55,t:'🦟 Buscando plagas y enfermedades...'},
-    {p:75,t:'🧪 Evaluando estado nutricional...'},
-    {p:90,t:'📝 Generando diagnostico y tratamiento...'}
-  ];
-  mostrarEstado('estadoCargando');
-  document.getElementById('estadoResultado').style.display='none';
-  var idx=0;
-  var timer=setInterval(function(){
-    if(idx<pasos.length){document.getElementById('textoScan').textContent=pasos[idx].t;document.getElementById('barraScan').style.width=pasos[idx].p+'%';idx++;}
-  },1200);
-  fetch('/api/analyze',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({image:fotoB64,media_type:fotoMime})
-  })
-  .then(function(r){return r.json();})
-  .then(function(datos){
-    clearInterval(timer);
-    document.getElementById('barraScan').style.width='100%';
-    document.getElementById('textoScan').textContent='✅ Analisis completado';
-    setTimeout(function(){
-      mostrarEstado('estadoFoto');
-      var res=document.getElementById('estadoResultado');
-      res.innerHTML=formatearAnalisis(datos.analysis||'No se pudo obtener el analisis.');
+async function analizarFoto(){
+  if(!imgB64)return;
+  var btn=document.getElementById('btn-analizar');
+  var carg=document.getElementById('zona-scan');
+  var res=document.getElementById('zona-resultado');
+  var scanInfo=document.getElementById('zona-scan');
+  var scanBarra=document.getElementById('scan-bar');
+  var scanEstado=document.getElementById('scan-txt');
+  var scanPct=document.getElementById('scan-num');
+  btn.disabled=true;
+  scanInfo.style.display='block';
+  carg.style.display='block';
+  res.style.display='none';
+  var pasos=[{p:15,t:'Detectando estructura...'},{p:35,t:'Analizando coloracion...'},{p:55,t:'Buscando plagas...'},{p:75,t:'Evaluando nutricion...'},{p:90,t:'Generando diagnostico...'}];
+  var pi=0;
+  var iv=setInterval(function(){if(pi<pasos.length){scanBarra.style.width=pasos[pi].p+'%';scanEstado.textContent=pasos[pi].t;scanPct.textContent=pasos[pi].p+'%';pi++;}},1200);
+  try{
+    var resp=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:imagenB64,media_type:tipoImg})});
+    var datos=await resp.json();
+    clearInterval(iv);
+    scanBarra.style.width='100%';scanEstado.textContent='Completado';scanPct.textContent='100%';
+    if(datos.analysis){
+      res.innerHTML=formatearAnalisis(datos.analysis);
       res.style.display='block';
-    },600);
-  })
-  .catch(function(){
-    clearInterval(timer);
-    mostrarEstado('estadoFoto');
-    var res=document.getElementById('estadoResultado');
-    res.textContent='Error al analizar. Verificar la API key en Render.';
+    }else{
+      res.textContent='No se pudo obtener el analisis.';
+      res.style.display='block';
+    }
+  }catch(e){
+    clearInterval(iv);
+    res.textContent='Error. Verificar API key en Render.';
     res.style.display='block';
-  });
-});
+  }
+  carg.style.display='none';
+  btn.disabled=false;
+}
 
 function formatearAnalisis(texto){
   var secs=['ESTADO GENERAL','PROBLEMAS DETECTADOS','DIAGNOSTICO','PLAGAS O ENFERMEDADES','CARENCIAS NUTRICIONALES','EXCESOS','TRATAMIENTO PASO A PASO','MEZCLA DE ABONO RECOMENDADA'];
   var icos={'ESTADO GENERAL':'🌱','PROBLEMAS DETECTADOS':'🔍','DIAGNOSTICO':'🧬','PLAGAS O ENFERMEDADES':'🦟','CARENCIAS NUTRICIONALES':'🟡','EXCESOS':'🔴','TRATAMIENTO PASO A PASO':'💊','MEZCLA DE ABONO RECOMENDADA':'🧪'};
   var html=texto;
-  secs.forEach(function(s){var ico=icos[s]||'';html=html.replace(s+':','<span style="display:block;font-weight:700;color:#4ade80;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-top:12px;margin-bottom:4px">'+ico+' '+s+'</span>');});
+  secs.forEach(function(s){var ico=icos[s]||'';html=html.replace(s+':','<span class="stit-r">'+ico+' '+s+'</span>');});
   return html;
 }
 
+// CHAT
 var historialChat=[];
 async function enviarMensaje(){
   var inp=document.getElementById('chat-input');
