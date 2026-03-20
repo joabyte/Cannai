@@ -700,45 +700,96 @@ body::after{width:260px;height:260px;bottom:80px;right:-80px;background:radial-g
 <div class='alerta' style='margin-top:10px'>⏰ Tiempo de inicio: 30 a 90 minutos. Pico: 2 a 3 horas. Duracion total: 4 a 8 horas. Mucho mas prolongado que inhalacion.</div></div></section>
 <section class='sec' id='sec-camara'>
 <div class='stit'>IA SCAN</div>
-<div class='ssub'>EscaneÃ¡ tu planta para diagnÃ³stico completo</div>
+<div class='ssub'>Diagnostico completo de tu planta</div>
+<style>
+#camE0{text-align:center;padding:8px 0}
+.copts{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.copt{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:13px 15px;cursor:pointer;transition:all .15s}
+.copt:active{border-color:var(--acc);background:rgba(74,222,128,.1)}
+.copt-ic{font-size:1.4rem;flex-shrink:0}
+.copt-tit{font-size:.9rem;font-weight:700;color:var(--txt)}
+.copt-sub{font-size:.72rem;color:var(--mut);margin-top:1px}
+#camE1{display:none}
+.cvid-wrap{position:relative;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:4/3}
+#camVid{width:100%;height:100%;object-fit:cover;display:block}
+.cov{position:absolute;inset:0;pointer-events:none}
+.cc{position:absolute;width:22px;height:22px;border-color:var(--acc);border-style:solid}
+.cc.tl{top:10px;left:10px;border-width:2px 0 0 2px}.cc.tr{top:10px;right:10px;border-width:2px 2px 0 0}
+.cc.bl{bottom:10px;left:10px;border-width:0 0 2px 2px}.cc.br{bottom:10px;right:10px;border-width:0 2px 2px 0}
+.cbar{display:flex;align-items:center;justify-content:center;padding:14px 0 4px;gap:20px}
+.ccap{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--acc3),var(--acc));border:3px solid rgba(255,255,255,.3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:#000;box-shadow:0 0 20px rgba(74,222,128,.4);flex-shrink:0}
+.ccap:active{opacity:.8;transform:scale(.95)}
+.cmini{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:var(--txt);padding:8px 14px;border-radius:20px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:Space Grotesk,sans-serif}
+.cmini:active{background:rgba(255,255,255,.14)}
+.cmini.dng{background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.3);color:var(--red)}
+#camE2{display:none}
+.cck{font-size:.7rem;color:var(--mut);text-align:center;margin:8px 0 5px;letter-spacing:.06em;text-transform:uppercase}
+#camCanvas{width:100%;display:block;border-radius:10px}
+.brow{display:flex;gap:8px;margin-top:10px}
+.bp2{flex:1;padding:12px;border-radius:10px;border:none;font-family:Space Grotesk,sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--acc3),var(--acc));color:#000;box-shadow:0 4px 14px rgba(74,222,128,.25)}
+.bp2:active{opacity:.85}.bp2:disabled{opacity:.4;cursor:default}
+.bs2{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:var(--txt);font-family:Space Grotesk,sans-serif;font-size:.9rem;font-weight:600;cursor:pointer}
+.bd2{flex:0;padding:12px 14px;border-radius:10px;border:1px solid rgba(248,113,113,.3);background:rgba(248,113,113,.1);color:var(--red);font-family:Space Grotesk,sans-serif;font-size:.9rem;font-weight:600;cursor:pointer}
+.rbox{margin-top:14px;display:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px;font-size:.82rem;line-height:1.6;color:var(--txt)}
+.rtit{font-weight:700;color:var(--acc);font-size:.85rem;margin-bottom:4px}
+.ritem{background:rgba(255,255,255,.04);border-radius:9px;padding:9px 11px;border:1px solid rgba(255,255,255,.08);margin-bottom:5px}
+.ritem.car{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.2)}
+.ritem.exc{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.2)}
+.rnut{font-size:.82rem;font-weight:700;margin-bottom:2px}
+.ritem.car .rnut{color:var(--gold)}.ritem.exc .rnut{color:var(--red)}
+.rsint{font-size:.78rem;color:var(--mut);line-height:1.4;margin-bottom:3px}
+.rsol{font-size:.74rem;color:var(--acc2);line-height:1.4}
+.rrec{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);border-radius:9px;padding:10px 12px;font-size:.85rem;color:var(--acc2);line-height:1.5;margin-top:6px;font-weight:600}
+.rok{text-align:center;padding:14px;color:var(--acc);font-size:.88rem;font-weight:600}
+#fileGal{display:none}
+</style>
 <div class='card'>
-<div class='ctit'>📷 Escanear Planta</div>
-<input type='file' id='inputCamara' accept='image/*' capture='environment' style='display:none'>
-<input type='file' id='inputGaleria' accept='image/*' style='display:none'>
-<div id='estadoInicial'>
-  <div style='text-align:center;padding:20px 0 16px'>
-    <div style='font-size:68px;margin-bottom:12px'>🌿</div>
-    <p style='font-size:13px;color:var(--mut);line-height:1.5;margin-bottom:18px'>TomÃ¡ una foto de tu planta y la IA detecta plagas, carencias, excesos y te da el tratamiento</p>
+<div class='ctit'>📷 Analizar mi Planta</div>
+<div id='camE0'>
+  <div style='text-align:center;padding:4px 0 14px'>
+    <div style='font-size:2.2rem;margin-bottom:10px;opacity:.8'>🔍</div>
+    <div style='font-size:.85rem;color:var(--acc);font-weight:700;margin-bottom:3px'>Diagnostico con IA</div>
+    <div style='font-size:.78rem;color:var(--mut);line-height:1.5'>Identifica plagas, carencias nutricionales, excesos y da el tratamiento</div>
   </div>
-  <div style='display:flex;gap:10px'>
-    <label for='inputCamara' style='flex:1;padding:15px 8px;border-radius:14px;background:linear-gradient(135deg,#16a34a,#4ade80);color:#000;font-family:Space Grotesk,sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(74,222,128,.35);text-align:center'>
-      📷 CÃ¡mara
-    </label>
-    <label for='inputGaleria' style='flex:1;padding:15px 8px;border-radius:14px;background:rgba(255,255,255,.07);color:#e8fce8;font-family:Space Grotesk,sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(255,255,255,.15);text-align:center'>
-      🖼️ GalerÃ­a
-    </label>
+  <div class='copts'>
+    <div class='copt' id='btnUsarCamara'>
+      <span class='copt-ic'>📷</span>
+      <div><div class='copt-tit'>Usar camara</div><div class='copt-sub'>Sacar foto en vivo</div></div>
+    </div>
+    <div class='copt' onclick="document.getElementById('fileGal').click()">
+      <span class='copt-ic'>🖼️</span>
+      <div><div class='copt-tit'>Elegir de galeria</div><div class='copt-sub'>Foto existente</div></div>
+    </div>
+  </div>
+  <input type='file' id='fileGal' accept='image/*'>
+</div>
+<div id='camE1'>
+  <div class='cvid-wrap'>
+    <video id='camVid' autoplay playsinline muted></video>
+    <div class='cov'><div class='cc tl'></div><div class='cc tr'></div><div class='cc bl'></div><div class='cc br'></div></div>
+  </div>
+  <div class='cbar'>
+    <button class='cmini' onclick="document.getElementById('fileGal').click()">🖼️ Galeria</button>
+    <button class='ccap' id='btnCapturar'>&#9679;</button>
+    <button class='cmini dng' id='btnCerrarCam'>&#10005; Cerrar</button>
   </div>
 </div>
-<div id='estadoFoto' style='display:none'>
-  <img id='fotoPreview' alt='' style='width:100%;max-height:300px;object-fit:cover;border-radius:14px;display:block;margin-bottom:12px;box-shadow:0 6px 24px rgba(0,0,0,.5)'>
-  <div style='display:flex;gap:10px;margin-bottom:12px'>
-    <button id='btnAnalizar' style='flex:2;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,#16a34a,#4ade80);color:#000;font-family:Space Grotesk,sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(74,222,128,.3)'>🧬 Analizar con IA</button>
-    <button id='btnNueva' style='flex:1;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:#e8fce8;font-family:Space Grotesk,sans-serif;font-size:13px;font-weight:600;cursor:pointer'>🔄 Nueva</button>
+<div id='camE2'>
+  <div class='cck'>&#10003; RevisÃ¡ antes de analizar</div>
+  <canvas id='camCanvas'></canvas>
+  <div class='brow'>
+    <button class='bp2' id='btnAnalizar'>🔍 Analizar</button>
+    <button class='bs2' id='btnReintentar'>&#8635; Repetir</button>
+    <button class='bd2' id='btnVolver'>&#10005;</button>
   </div>
 </div>
-<div id='estadoCargando' style='display:none;padding:20px 0;text-align:center'>
-  <div id='textoScan' style='font-size:13px;color:var(--mut);margin-bottom:14px'>🌿 Analizando tu planta...</div>
-  <div style='width:100%;background:rgba(255,255,255,.07);border-radius:4px;height:6px'>
-    <div id='barraScan' style='width:0%;height:6px;background:linear-gradient(90deg,#16a34a,#4ade80);border-radius:4px;transition:width .5s'></div>
-  </div>
-</div>
-<div id='estadoResultado' style='display:none;margin-top:12px;padding:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;font-size:12px;line-height:1.8'></div>
+<div class='rbox' id='resultBox'></div>
 </div>
 <div class='card'>
-<div class='ctit'>💡 Consejos para mejor diagnÃ³stico</div>
-<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Buena iluminaciÃ³n</div><div class='paso-sub'>Luz natural o LED blanca. Sin flash directo que tape los colores reales.</div></div></div>
-<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Enfocar el problema</div><div class='paso-sub'>Acercate a las hojas afectadas. FotografiÃ¡ tambiÃ©n el envÃ©s si hay manchas.</div></div></div>
-<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Foto general tambiÃ©n</div><div class='paso-sub'>Una imagen de toda la planta ayuda a ver si el problema es generalizado.</div></div></div>
+<div class='ctit'>💡 Tips para mejor diagnostico</div>
+<div class='paso'><div class='paso-num'>1</div><div><div class='paso-tit'>Buena iluminacion</div><div class='paso-sub'>Luz natural o LED blanca. El flash directo tapa los colores reales.</div></div></div>
+<div class='paso'><div class='paso-num'>2</div><div><div class='paso-tit'>Enfocar el problema</div><div class='paso-sub'>Acercate a las hojas afectadas. FotografiÃ¡ tambiÃ©n el envÃ©s.</div></div></div>
+<div class='paso'><div class='paso-num'>3</div><div><div class='paso-tit'>Foto general de la planta</div><div class='paso-sub'>Una imagen completa ayuda a ver si el problema es generalizado.</div></div></div>
 </div></section>
 <section class='sec' id='sec-bot'>
 <div class='stit'>CANNABOT</div><div class='ssub'>Tu experto cultivador con IA</div>
@@ -941,94 +992,137 @@ function calcularConsumo(){
   res.style.display='block';
 }
 
-// === CAMARA - DOS INPUTS SEPARADOS ===
-var fotoB64 = null;
-var fotoMime = 'image/jpeg';
+// === CAMARA REPLICA BIOHUERTA ===
+var streamActivo=null, imgB64=null, imgMime='image/jpeg';
 
-document.getElementById('inputCamara').addEventListener('change', function(e) {
-  cargarFoto(e.target.files[0]);
-  this.value = '';
-});
-
-document.getElementById('inputGaleria').addEventListener('change', function(e) {
-  cargarFoto(e.target.files[0]);
-  this.value = '';
-});
-
-function cargarFoto(archivo) {
-  if (!archivo) return;
-  fotoMime = archivo.type || 'image/jpeg';
-  var lector = new FileReader();
-  lector.onload = function(ev) {
-    fotoB64 = ev.target.result.split(',')[1];
-    document.getElementById('fotoPreview').src = ev.target.result;
-    document.getElementById('estadoInicial').style.display = 'none';
-    document.getElementById('estadoFoto').style.display = 'block';
-    document.getElementById('estadoResultado').style.display = 'none';
-    document.getElementById('estadoResultado').innerHTML = '';
-    document.getElementById('estadoCargando').style.display = 'none';
-  };
-  lector.readAsDataURL(archivo);
+function irEstado(n){
+  document.getElementById('camE0').style.display = n===0 ? 'block' : 'none';
+  document.getElementById('camE1').style.display = n===1 ? 'block' : 'none';
+  document.getElementById('camE2').style.display = n===2 ? 'block' : 'none';
 }
 
-document.getElementById('btnNueva').addEventListener('click', function() {
-  fotoB64 = null;
-  document.getElementById('estadoFoto').style.display = 'none';
-  document.getElementById('estadoInicial').style.display = 'block';
-  document.getElementById('estadoResultado').style.display = 'none';
-  document.getElementById('estadoResultado').innerHTML = '';
-  document.getElementById('estadoCargando').style.display = 'none';
+document.getElementById('btnUsarCamara').addEventListener('click', async function() {
+  try {
+    var s = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: {ideal:1280}, height: {ideal:960} },
+      audio: false
+    });
+    streamActivo = s;
+    var v = document.getElementById('camVid');
+    v.srcObject = s;
+    v.play();
+    irEstado(1);
+  } catch(e) {
+    var msg = e.name==='NotAllowedError' ? 'Permiso denegado. Habilitalo en la configuracion del navegador.' :
+             e.name==='NotFoundError' ? 'No se encontro camara en este dispositivo.' : 'Error: '+e.message;
+    alert(msg);
+  }
 });
 
-document.getElementById('btnAnalizar').addEventListener('click', function() {
-  if (!fotoB64) return;
-  var pasos = [
-    {p:15, t:'🔍 Analizando estructura...'},
-    {p:35, t:'🟡 Evaluando coloracion y hojas...'},
-    {p:55, t:'🦟 Buscando plagas y enfermedades...'},
-    {p:75, t:'🧪 Evaluando nutricion...'},
-    {p:90, t:'📝 Generando diagnostico...'}
-  ];
-  document.getElementById('estadoFoto').style.display = 'none';
-  document.getElementById('estadoCargando').style.display = 'block';
-  document.getElementById('estadoResultado').style.display = 'none';
-  var idx = 0;
-  var timer = setInterval(function() {
-    if (idx < pasos.length) {
-      document.getElementById('textoScan').textContent = pasos[idx].t;
-      document.getElementById('barraScan').style.width = pasos[idx].p + '%';
-      idx++;
+function detenerStream() {
+  if (streamActivo) { streamActivo.getTracks().forEach(function(t){t.stop();}); streamActivo=null; }
+  var v = document.getElementById('camVid'); if(v) v.srcObject=null;
+}
+
+document.getElementById('btnCerrarCam').addEventListener('click', function(){
+  detenerStream(); irEstado(0);
+});
+
+document.getElementById('btnCapturar').addEventListener('click', function(){
+  var v = document.getElementById('camVid');
+  var c = document.getElementById('camCanvas');
+  c.width = v.videoWidth || 640;
+  c.height = v.videoHeight || 480;
+  c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+  imgB64 = c.toDataURL('image/jpeg', 0.92).split(',')[1];
+  imgMime = 'image/jpeg';
+  detenerStream();
+  irEstado(2);
+  resetResultado();
+});
+
+document.getElementById('fileGal').addEventListener('change', function(e){
+  var f = e.target.files[0]; if(!f) return;
+  imgMime = f.type || 'image/jpeg';
+  var r = new FileReader();
+  r.onload = function(ev){
+    var img = new Image();
+    img.onload = function(){
+      var c = document.getElementById('camCanvas');
+      c.width = img.width; c.height = img.height;
+      c.getContext('2d').drawImage(img, 0, 0);
+      imgB64 = ev.target.result.split(',')[1];
+      detenerStream();
+      irEstado(2);
+      resetResultado();
+    };
+    img.src = ev.target.result;
+  };
+  r.readAsDataURL(f);
+  this.value = '';
+});
+
+function resetResultado() {
+  var rb = document.getElementById('resultBox');
+  rb.style.display = 'none'; rb.innerHTML = '';
+  var btn = document.getElementById('btnAnalizar');
+  if(btn){ btn.disabled=false; btn.innerHTML='🔍 Analizar'; }
+}
+
+document.getElementById('btnReintentar').addEventListener('click', function(){
+  imgB64 = null; irEstado(0); resetResultado();
+});
+
+document.getElementById('btnVolver').addEventListener('click', function(){
+  imgB64 = null; irEstado(0); resetResultado();
+});
+
+document.getElementById('btnAnalizar').addEventListener('click', async function(){
+  if(!imgB64) return;
+  var btn = this;
+  var rb = document.getElementById('resultBox');
+  btn.disabled = true;
+  rb.style.display = 'block';
+  var msgs = ['Identificando la planta...','Analizando el color de las hojas...','Revisando signos de carencias...','Evaluando el estado general...','Preparando el diagnostico...'];
+  var mIdx = 0;
+  rb.innerHTML = '<div style='text-align:center;padding:16px'>' +
+    '<div id='amsg' style='color:var(--mut);font-size:.82rem;margin-bottom:10px'>'+msgs[0]+'</div>' +
+    '<div style='background:rgba(74,222,128,.1);border-radius:4px;height:4px;overflow:hidden'>' +
+    '<div id='abar' style='height:100%;background:var(--acc);width:5%;border-radius:4px;transition:width 1s'></div></div></div>';
+  btn.innerHTML = 'Analizando...';
+  var pct = 5;
+  var intv = setInterval(function(){
+    mIdx = (mIdx+1) % msgs.length;
+    var el = document.getElementById('amsg');
+    var bar = document.getElementById('abar');
+    if(el) el.textContent = msgs[mIdx];
+    pct = Math.min(pct+18, 90);
+    if(bar) bar.style.width = pct+'%';
+  }, 2800);
+  try {
+    var res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({image: imgB64, media_type: imgMime})
+    });
+    clearInterval(intv);
+    var bar = document.getElementById('abar');
+    if(bar) bar.style.width = '100%';
+    var datos = await res.json();
+    if(datos.analysis) {
+      rb.innerHTML = renderResultado(datos.analysis);
+    } else {
+      rb.innerHTML = '<div style='color:var(--red);font-size:.82rem'>Error: No se obtuvo respuesta. Verificar API key en Render.</div>';
     }
-  }, 1200);
-  fetch('/api/analyze', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({image: fotoB64, media_type: fotoMime})
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(d) {
-    clearInterval(timer);
-    document.getElementById('barraScan').style.width = '100%';
-    document.getElementById('textoScan').textContent = '✅ Analisis completado';
-    setTimeout(function() {
-      document.getElementById('estadoCargando').style.display = 'none';
-      document.getElementById('estadoFoto').style.display = 'block';
-      var res = document.getElementById('estadoResultado');
-      res.innerHTML = formatearAnalisis(d.analysis || 'No se pudo obtener el analisis.');
-      res.style.display = 'block';
-    }, 500);
-  })
-  .catch(function() {
-    clearInterval(timer);
-    document.getElementById('estadoCargando').style.display = 'none';
-    document.getElementById('estadoFoto').style.display = 'block';
-    var res = document.getElementById('estadoResultado');
-    res.textContent = 'Error al analizar. Verificar la API key en Render.';
-    res.style.display = 'block';
-  });
+  } catch(e) {
+    clearInterval(intv);
+    rb.innerHTML = '<div style='color:var(--red);font-size:.82rem'>Error de red: '+e.message+'</div>';
+  }
+  btn.disabled = false;
+  btn.innerHTML = '🔍 Analizar de nuevo';
 });
 
-function formatearAnalisis(texto) {
+function renderResultado(texto) {
   var secs = ['ESTADO GENERAL','PROBLEMAS DETECTADOS','DIAGNOSTICO',
     'PLAGAS O ENFERMEDADES','CARENCIAS NUTRICIONALES','EXCESOS',
     'TRATAMIENTO PASO A PASO','MEZCLA DE ABONO RECOMENDADA'];
@@ -1036,13 +1130,16 @@ function formatearAnalisis(texto) {
     'DIAGNOSTICO':'🧬','PLAGAS O ENFERMEDADES':'🦟',
     'CARENCIAS NUTRICIONALES':'🟡','EXCESOS':'🔴',
     'TRATAMIENTO PASO A PASO':'💊','MEZCLA DE ABONO RECOMENDADA':'🧪'};
-  secs.forEach(function(s) {
-    var t = '<span style="display:block;font-weight:700;color:#4ade80;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-top:12px;margin-bottom:3px">' + (icos[s]||'') + ' ' + s + '</span>';
+  secs.forEach(function(s){
+    var t = '<span style='display:block;font-weight:700;color:var(--acc);font-size:.78rem;' +
+      'text-transform:uppercase;letter-spacing:.08em;margin-top:12px;margin-bottom:4px'>' +
       (icos[s]||'') + ' ' + s + '</span>';
-    texto = texto.replace(s + ':', t);
+    texto = texto.replace(s+':', t);
   });
   return texto;
 }
+
+irEstado(0);
 
 // CHAT
 var historialChat=[];
