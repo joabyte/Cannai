@@ -785,6 +785,7 @@ function cambiarTab(n,b){
   b.classList.add('activo');
   if(n!=='camara'){detenerStream();}
   if(n!=='bot'){if(typeof botDetenerStream==='function')botDetenerStream();if(typeof botMicReset==='function')botMicReset();}
+  if(n==='bot'){botPedirPermisoMic();}
 }
 
 // LUNA
@@ -1156,6 +1157,21 @@ document.getElementById('botGaleriaInput').addEventListener('change',function(e)
 // --- MIC BOT - mantener apretado = grabar, soltar = enviar ---
 var botFinalTranscript='';
 var botMicSoportado=('webkitSpeechRecognition' in window||'SpeechRecognition' in window);
+var botPermisoMicOk=false;
+function botPedirPermisoMic(){
+  if(botPermisoMicOk)return;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return;
+  navigator.mediaDevices.getUserMedia({audio:true,video:false})
+    .then(function(stream){
+      botPermisoMicOk=true;
+      stream.getTracks().forEach(function(t){t.stop();});
+      var bm=document.getElementById('btn-mic');
+      if(bm)bm.title='Mantener apretado para hablar';
+    })
+    .catch(function(err){
+      botPermisoMicOk=false;
+    });
+}
 function botCrearReconocedor(){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   var rec=new SR();
