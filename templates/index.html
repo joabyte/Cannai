@@ -1156,24 +1156,22 @@ document.getElementById('botGaleriaInput').addEventListener('change',function(e)
 // --- MIC BOT - tap para activar, tap para parar ---
 function botToggleMic(){
   if(botMicActivo){
-    if(botRecognition){try{botRecognition.abort();}catch(e){}}
+    if(botRecognition)botRecognition.stop();
     botMicReset();
     return;
   }
   if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
-    alert('Tu navegador no soporta voz. Usa Chrome.');
+    alert('Tu navegador no soporta voz. Usa Chrome o Brave.');
     return;
   }
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   botRecognition=new SR();
   botRecognition.lang='es-AR';
-  botRecognition.interimResults=true;
-  botRecognition.continuous=true;
+  botRecognition.interimResults=false;
+  botRecognition.continuous=false;
   botRecognition.maxAlternatives=1;
-  var botTextoFinal='';
   botRecognition.onstart=function(){
     botMicActivo=true;
-    botTextoFinal='';
     var bm=document.getElementById('btn-mic');
     bm.style.background='rgba(248,113,113,.3)';
     bm.style.borderColor='rgba(248,113,113,.8)';
@@ -1181,22 +1179,16 @@ function botToggleMic(){
     document.getElementById('botMicStatus').style.display='block';
   };
   botRecognition.onresult=function(e){
-    var interim='';
-    for(var i=e.resultIndex;i<e.results.length;i++){
-      if(e.results[i].isFinal){botTextoFinal+=e.results[i][0].transcript;}
-      else{interim+=e.results[i][0].transcript;}
-    }
-    document.getElementById('chat-input').value=botTextoFinal+interim;
+    var texto=e.results[0][0].transcript;
+    document.getElementById('chat-input').value=texto;
+    botMicReset();
+    setTimeout(function(){enviarMensaje();},100);
   };
   botRecognition.onerror=function(e){
     botMicReset();
-    if(e.error==='not-allowed')alert('Permiso de microfono denegado. Habilitalo en Configuracion > Permisos del sitio y recarga.');
+    if(e.error==='not-allowed')alert('Permiso de microfono denegado. Habilitalo en Configuracion del navegador y recarga la pagina.');
   };
-  botRecognition.onend=function(){
-    var texto=document.getElementById('chat-input').value.trim();
-    botMicReset();
-    if(texto){enviarMensaje();}
-  };
+  botRecognition.onend=function(){botMicReset();};
   botRecognition.start();
 }
 function botMicReset(){
