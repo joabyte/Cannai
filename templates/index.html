@@ -1153,17 +1153,17 @@ document.getElementById('botGaleriaInput').addEventListener('change',function(e)
   this.value='';
 });
 
-// --- MIC BOT - mantener apretado graba, soltar envia ---
+// --- MIC BOT - patron exacto de la app de referencia ---
 var botFinalTranscript='';
-var botMicSoportado=('webkitSpeechRecognition' in window||'SpeechRecognition' in window);
-function botCrearReconocedor(){
-  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  var rec=new SR();
-  rec.lang='es-AR';
-  rec.interimResults=false;
-  rec.continuous=false;
-  rec.maxAlternatives=1;
-  rec.onstart=function(){
+var botRecognitionReady=false;
+if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+  var SR2=window.SpeechRecognition||window.webkitSpeechRecognition;
+  botRecognition=new SR2();
+  botRecognition.lang='es-AR';
+  botRecognition.interimResults=false;
+  botRecognition.continuous=false;
+  botRecognitionReady=true;
+  botRecognition.onstart=function(){
     botMicActivo=true;
     var bm=document.getElementById('btn-mic');
     bm.style.background='rgba(248,113,113,.35)';
@@ -1172,21 +1172,20 @@ function botCrearReconocedor(){
     bm.style.transform='scale(1.12)';
     document.getElementById('botMicStatus').style.display='block';
   };
-  rec.onresult=function(e){
+  botRecognition.onresult=function(e){
     botFinalTranscript=e.results[0][0].transcript;
   };
-  rec.onerror=function(e){
+  botRecognition.onend=function(){
     botMicReset();
-  };
-  rec.onend=function(){
-    botMicReset();
-    if(botFinalTranscript.trim()){
-      document.getElementById('chat-input').value=botFinalTranscript.trim();
+    if(botFinalTranscript){
+      document.getElementById('chat-input').value=botFinalTranscript;
       botFinalTranscript='';
       enviarMensaje();
     }
   };
-  return rec;
+  botRecognition.onerror=function(e){
+    botMicReset();
+  };
 }
 function botMicReset(){
   botMicActivo=false;
@@ -1197,43 +1196,32 @@ function botMicReset(){
   bm.style.transform='';
   document.getElementById('botMicStatus').style.display='none';
 }
-function botArrancarMic(){
-  if(!botMicSoportado||botMicActivo)return;
-  botFinalTranscript='';
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
-    botRecognition=botCrearReconocedor();
-    try{botRecognition.start();}catch(e){}
-    return;
-  }
-  navigator.mediaDevices.getUserMedia({audio:true,video:false})
-    .then(function(stream){
-      stream.getTracks().forEach(function(t){t.stop();});
-      botRecognition=botCrearReconocedor();
-      try{botRecognition.start();}catch(e){}
-    })
-    .catch(function(err){
-      alert('Para usar el microfono toca el candado en la barra del navegador y activa el permiso de microfono.');
-    });
-}
-function botPararMic(){
-  if(botRecognition&&botMicActivo){try{botRecognition.stop();}catch(e){}}
-}
 var bBtnMic=document.getElementById('btn-mic');
 bBtnMic.addEventListener('touchstart',function(e){
   e.preventDefault();
-  botArrancarMic();
+  if(!botRecognitionReady||botMicActivo)return;
+  botFinalTranscript='';
+  try{botRecognition.start();}catch(err){}
 },{passive:false});
 bBtnMic.addEventListener('touchend',function(e){
   e.preventDefault();
-  botPararMic();
+  if(botMicActivo){try{botRecognition.stop();}catch(err){}}
 },{passive:false});
 bBtnMic.addEventListener('touchcancel',function(e){
   e.preventDefault();
-  botPararMic();
+  if(botMicActivo){try{botRecognition.stop();}catch(err){}}
 },{passive:false});
-bBtnMic.addEventListener('mousedown',function(e){botArrancarMic();});
-bBtnMic.addEventListener('mouseup',function(e){botPararMic();});
-bBtnMic.addEventListener('mouseleave',function(e){botPararMic();});
+bBtnMic.addEventListener('mousedown',function(e){
+  if(!botRecognitionReady||botMicActivo)return;
+  botFinalTranscript='';
+  try{botRecognition.start();}catch(err){}
+});
+bBtnMic.addEventListener('mouseup',function(e){
+  if(botMicActivo){try{botRecognition.stop();}catch(err){}}
+});
+bBtnMic.addEventListener('mouseleave',function(e){
+  if(botMicActivo){try{botRecognition.stop();}catch(err){}}
+});
 
 async function enviarMensaje(){
   var inp=document.getElementById('chat-input');
