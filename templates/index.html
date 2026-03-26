@@ -1153,40 +1153,43 @@ document.getElementById('botGaleriaInput').addEventListener('change',function(e)
   this.value='';
 });
 
-// --- MIC BOT - push to talk como la app referencia ---
+// --- MIC BOT - mantener apretado = grabar, soltar = enviar ---
 var botFinalTranscript='';
-if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+var botMicSoportado=('webkitSpeechRecognition' in window||'SpeechRecognition' in window);
+function botCrearReconocedor(){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  botRecognition=new SR();
-  botRecognition.lang='es-AR';
-  botRecognition.interimResults=false;
-  botRecognition.continuous=false;
-  botRecognition.onstart=function(){
+  var rec=new SR();
+  rec.lang='es-AR';
+  rec.interimResults=false;
+  rec.continuous=false;
+  rec.maxAlternatives=1;
+  rec.onstart=function(){
     botMicActivo=true;
-    botFinalTranscript='';
     var bm=document.getElementById('btn-mic');
-    bm.style.background='rgba(248,113,113,.3)';
-    bm.style.borderColor='rgba(248,113,113,.8)';
+    bm.style.background='rgba(248,113,113,.35)';
+    bm.style.borderColor='rgba(248,113,113,.9)';
     bm.style.color='var(--red)';
+    bm.style.transform='scale(1.12)';
     document.getElementById('botMicStatus').style.display='block';
   };
-  botRecognition.onresult=function(e){
+  rec.onresult=function(e){
     botFinalTranscript=e.results[0][0].transcript;
   };
-  botRecognition.onend=function(){
+  rec.onerror=function(e){
     botMicReset();
-    if(botFinalTranscript){
-      document.getElementById('chat-input').value=botFinalTranscript;
+    if(e.error==='not-allowed'||e.error==='permission-denied'){
+      alert('Permiso de microfono denegado. Ve a Configuracion > Permisos del sitio, activa el microfono y recarga la pagina.');
+    }
+  };
+  rec.onend=function(){
+    botMicReset();
+    if(botFinalTranscript.trim()){
+      document.getElementById('chat-input').value=botFinalTranscript.trim();
       botFinalTranscript='';
       enviarMensaje();
     }
   };
-  botRecognition.onerror=function(e){
-    botMicReset();
-    if(e.error==='not-allowed')alert('Permiso de microfono denegado. Habilitalo en Configuracion > Permisos del sitio y recarga.');
-  };
-}else{
-  document.getElementById('btn-mic').title='Microfono no soportado. Usa Chrome.';
+  return rec;
 }
 function botMicReset(){
   botMicActivo=false;
@@ -1194,31 +1197,38 @@ function botMicReset(){
   bm.style.background='rgba(74,222,128,.07)';
   bm.style.borderColor='rgba(74,222,128,.3)';
   bm.style.color='var(--acc)';
+  bm.style.transform='';
   document.getElementById('botMicStatus').style.display='none';
 }
 var bBtnMic=document.getElementById('btn-mic');
 bBtnMic.addEventListener('touchstart',function(e){
   e.preventDefault();
-  if(!botRecognition)return;
+  if(!botMicSoportado){alert('Microfono no soportado. Usa Chrome.');return;}
+  if(botMicActivo)return;
   botFinalTranscript='';
+  botRecognition=botCrearReconocedor();
   try{botRecognition.start();}catch(err){}
 },{passive:false});
 bBtnMic.addEventListener('touchend',function(e){
   e.preventDefault();
-  if(!botRecognition)return;
-  try{botRecognition.stop();}catch(err){}
+  if(botRecognition&&botMicActivo){try{botRecognition.stop();}catch(err){}}
+},{passive:false});
+bBtnMic.addEventListener('touchcancel',function(e){
+  e.preventDefault();
+  if(botRecognition&&botMicActivo){try{botRecognition.stop();}catch(err){}}
 },{passive:false});
 bBtnMic.addEventListener('mousedown',function(e){
-  if(!botRecognition)return;
+  if(!botMicSoportado){alert('Microfono no soportado. Usa Chrome.');return;}
+  if(botMicActivo)return;
   botFinalTranscript='';
+  botRecognition=botCrearReconocedor();
   try{botRecognition.start();}catch(err){}
 });
 bBtnMic.addEventListener('mouseup',function(e){
-  if(!botRecognition)return;
-  try{botRecognition.stop();}catch(err){}
+  if(botRecognition&&botMicActivo){try{botRecognition.stop();}catch(err){}}
 });
 bBtnMic.addEventListener('mouseleave',function(e){
-  if(botMicActivo&&botRecognition){try{botRecognition.stop();}catch(err){}}
+  if(botRecognition&&botMicActivo){try{botRecognition.stop();}catch(err){}}
 });
 
 async function enviarMensaje(){
