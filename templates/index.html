@@ -715,31 +715,40 @@ body::after{width:260px;height:260px;bottom:80px;right:-80px;background:radial-g
 <div class='stit'>CANNABOT</div><div class='ssub'>Tu experto cultivador con IA</div>
 <div class='card'><div class='ctit'>🤖 Chat con CannaBot</div>
 <div class='chat-mensajes' id='chat-mensajes'>
-<div class='msg msg-bot'>¡Hola! Soy <strong>CannaBot</strong> 🌿. Preguntame de cultivo, plagas, cosecha... Podes escribir, mantener apretado el mic 🎤 para hablar, o adjuntar una foto 📸.</div>
+<div class='msg msg-bot'>¡Hola! Soy <strong>CannaBot</strong> 🌿. Podes escribir, tocar el mic 🎤 para hablar, o mandarme una foto 📸 de tu planta.</div>
 </div>
-<input type='file' id='botFotoGaleriaInput' accept='image/*' style='display:none'>
-<input type='file' id='botFotoCamaraInput' accept='image/*' capture='environment' style='display:none'>
-<canvas id='botCanvas' style='display:none'></canvas>
-<div id='botFotoModalOverlay' style='display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;align-items:flex-end;justify-content:center'>
-  <div style='background:#0d1f0d;border:1px solid rgba(74,222,128,.25);border-radius:18px 18px 0 0;padding:20px 16px 32px;width:100%;max-width:480px'>
-    <div style='font-size:13px;font-weight:700;color:var(--acc2);margin-bottom:16px;text-align:center'>Adjuntar foto a CannaBot</div>
-    <div style='display:flex;gap:10px'>
-      <button onclick='botUsarCamara()' style='flex:1;padding:14px 8px;border-radius:14px;border:none;background:linear-gradient(135deg,#16a34a,#4ade80);color:#000;font-family:Space Grotesk;font-size:13px;font-weight:700;cursor:pointer'>📷 Camara</button>
-      <button onclick='botUsarGaleria()' style='flex:1;padding:14px 8px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#e8fce8;font-family:Space Grotesk;font-size:13px;font-weight:700;cursor:pointer'>🖼️ Galeria</button>
-    </div>
-    <button onclick='botCerrarModal()' style='width:100%;margin-top:10px;padding:11px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:none;color:var(--mut);font-family:Space Grotesk;font-size:13px;cursor:pointer'>Cancelar</button>
+<input type='file' id='botGaleriaInput' accept='image/*' style='display:none'>
+<canvas id='botCapCanvas' style='display:none'></canvas>
+<div id='botEstadoInicial' style='display:none'>
+  <div style='display:flex;gap:10px;margin-top:8px'>
+    <button id='botBtnCamara' style='flex:1;padding:12px 8px;border-radius:14px;border:none;background:linear-gradient(135deg,#16a34a,#4ade80);color:#000;font-family:Space Grotesk;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px'>📷 Camara</button>
+    <button id='botBtnGaleria' style='flex:1;padding:12px 8px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#e8fce8;font-family:Space Grotesk;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px'>🖼️ Galeria</button>
   </div>
 </div>
-<div id='botFotoPreviewWrap' style='display:none;margin-top:8px;position:relative'>
-  <img id='botFotoPreview' alt='' style='width:100%;max-height:160px;object-fit:cover;border-radius:10px;border:1px solid rgba(74,222,128,.3)'>
-  <button onclick='botQuitarFoto()' style='position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);border:none;border-radius:50%;width:26px;height:26px;color:#fff;font-size:14px;cursor:pointer;line-height:1'>x</button>
-  <div style='font-size:10px;color:var(--acc2);padding:4px 2px'>📸 Foto lista. Escribe una pregunta o envia directo.</div>
+<div id='botEstadoVisor' style='display:none;margin-top:8px'>
+  <div style='position:relative;border-radius:14px;overflow:hidden;margin-bottom:10px'>
+    <video id='botVideo' autoplay playsinline muted style='width:100%;max-height:260px;object-fit:cover;display:block;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.6)'></video>
+    <div style='position:absolute;inset:0;border:2px solid rgba(74,222,128,.4);border-radius:14px;pointer-events:none'></div>
+    <div style='position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:3px 12px;font-size:11px;color:#e8fce8;white-space:nowrap'>Apunta a tu planta</div>
+    <div id='botIndicadorCap' style='position:absolute;bottom:12px;left:50%;transform:translateX(-50%);width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#16a34a,#4ade80);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;box-shadow:0 4px 20px rgba(74,222,128,.5);border:3px solid rgba(255,255,255,.3)'>📷</div>
+  </div>
+  <div style='display:flex;gap:8px'>
+    <button id='botBtnCerrarCam' style='flex:1;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#e8fce8;font-family:Space Grotesk;font-size:12px;font-weight:600;cursor:pointer'>X Cancelar</button>
+    <button id='botBtnFlip' style='flex:1;padding:10px;border-radius:12px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.08);color:var(--acc);font-family:Space Grotesk;font-size:12px;font-weight:600;cursor:pointer'>Voltear</button>
+  </div>
 </div>
-<div id='botMicStatus' style='display:none;font-size:11px;color:var(--red);padding:5px 2px;text-align:center;animation:micpulse 1s ease-in-out infinite'>🔴 Grabando... solta para enviar</div>
+<div id='botEstadoFoto' style='display:none;margin-top:8px'>
+  <div style='position:relative'>
+    <img id='botFotoPreview' alt='' style='width:100%;max-height:200px;object-fit:cover;border-radius:12px;display:block;border:1px solid rgba(74,222,128,.3)'>
+    <button onclick='botQuitarFoto()' style='position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);border:none;border-radius:50%;width:26px;height:26px;color:#fff;font-size:14px;cursor:pointer;line-height:1'>x</button>
+  </div>
+  <div style='font-size:10px;color:var(--acc2);padding:4px 2px'>📸 Foto lista. Escribe tu pregunta y envia.</div>
+</div>
+<div id='botMicStatus' style='display:none;font-size:11px;color:var(--red);padding:5px 2px;text-align:center;animation:micpulse 1s ease-in-out infinite'>🔴 Escuchando... toca el mic para parar</div>
 <div class='chat-fila' style='align-items:center;gap:6px'>
-  <button id='btn-foto-bot' onclick='botAbrirModal()' title='Adjuntar foto' style='flex-shrink:0;width:40px;height:40px;border-radius:11px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.07);color:var(--acc);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center'>📸</button>
-  <input type='text' class='chat-input' id='chat-input' placeholder='Escribe o manten mic...' onkeydown="if(event.key==='Enter')enviarMensaje()">
-  <button id='btn-mic' title='Mantener para hablar' style='flex-shrink:0;width:40px;height:40px;border-radius:11px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.07);color:var(--acc);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;user-select:none;-webkit-user-select:none'>🎤</button>
+  <button id='btn-foto-bot' onclick='botToggleFoto()' title='Foto' style='flex-shrink:0;width:40px;height:40px;border-radius:11px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.07);color:var(--acc);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center'>📸</button>
+  <input type='text' class='chat-input' id='chat-input' placeholder='Escribe o toca el mic...' onkeydown="if(event.key==='Enter')enviarMensaje()">
+  <button id='btn-mic' onclick='botToggleMic()' title='Hablar' style='flex-shrink:0;width:40px;height:40px;border-radius:11px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.07);color:var(--acc);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center'>🎤</button>
   <button class='btn' onclick='enviarMensaje()' id='btn-enviar' style='flex-shrink:0;width:40px;height:40px;padding:0;border-radius:11px'>➤</button>
 </div>
 <div class='pills' style='margin-top:9px'>
@@ -775,6 +784,7 @@ function cambiarTab(n,b){
   document.getElementById('sec-'+n).classList.add('activo');
   b.classList.add('activo');
   if(n!=='camara'){detenerStream();}
+  if(n!=='bot'){if(typeof botDetenerStream==='function')botDetenerStream();if(typeof botMicReset==='function')botMicReset();}
 }
 
 // LUNA
@@ -1062,94 +1072,133 @@ var botFotoB64=null;
 var botFotoMime='image/jpeg';
 var botMicActivo=false;
 var botRecognition=null;
+var botStreamActivo=null;
+var botCamaraFrontal=false;
 
-// --- MODAL FOTO ---
-function botAbrirModal(){
-  document.getElementById('botFotoModalOverlay').style.display='flex';
+// --- CAMARA BOT - igual que IA Scan ---
+function botMostrarEstadoCam(id){
+  ['botEstadoInicial','botEstadoVisor','botEstadoFoto'].forEach(function(s){
+    var el=document.getElementById(s);
+    if(el)el.style.display=(s===id)?'block':'none';
+  });
 }
-function botCerrarModal(){
-  document.getElementById('botFotoModalOverlay').style.display='none';
+function botDetenerStream(){
+  if(botStreamActivo){
+    botStreamActivo.getTracks().forEach(function(t){t.stop();});
+    botStreamActivo=null;
+  }
 }
-function botUsarCamara(){
-  botCerrarModal();
-  document.getElementById('botFotoCamaraInput').click();
+function botToggleFoto(){
+  var ini=document.getElementById('botEstadoInicial');
+  if(ini.style.display==='block'||ini.style.display===''){
+    botMostrarEstadoCam('none');
+  } else {
+    botMostrarEstadoCam('botEstadoInicial');
+  }
 }
-function botUsarGaleria(){
-  botCerrarModal();
-  document.getElementById('botFotoGaleriaInput').click();
+async function botIniciarCamara(){
+  botDetenerStream();
+  var constraints={video:{facingMode:botCamaraFrontal?'user':'environment',width:{ideal:1280},height:{ideal:720}},audio:false};
+  try{
+    var stream=await navigator.mediaDevices.getUserMedia(constraints);
+    botStreamActivo=stream;
+    var video=document.getElementById('botVideo');
+    video.srcObject=stream;
+    botMostrarEstadoCam('botEstadoVisor');
+  }catch(err){
+    if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError'){
+      alert('Permiso de camara denegado. Habilita el permiso en Configuracion del navegador.');
+    }else if(err.name==='NotFoundError'){
+      alert('No se encontro camara en este dispositivo.');
+    }else{
+      alert('No se pudo acceder a la camara: '+err.message);
+    }
+    botMostrarEstadoCam('botEstadoInicial');
+  }
 }
-function botProcesarArchivo(archivo){
+function botCapturarFoto(){
+  var video=document.getElementById('botVideo');
+  var canvas=document.getElementById('botCapCanvas');
+  canvas.width=video.videoWidth||1280;
+  canvas.height=video.videoHeight||720;
+  canvas.getContext('2d').drawImage(video,0,0);
+  var dataURL=canvas.toDataURL('image/jpeg',0.92);
+  botFotoB64=dataURL.split(',')[1];
+  botFotoMime='image/jpeg';
+  document.getElementById('botFotoPreview').src=dataURL;
+  botDetenerStream();
+  botMostrarEstadoCam('botEstadoFoto');
+}
+function botQuitarFoto(){
+  botFotoB64=null;
+  botMostrarEstadoCam('botEstadoInicial');
+  document.getElementById('botGaleriaInput').value='';
+}
+document.getElementById('botBtnCamara').addEventListener('click',function(){botCamaraFrontal=false;botIniciarCamara();});
+document.getElementById('botBtnGaleria').addEventListener('click',function(){document.getElementById('botGaleriaInput').click();});
+document.getElementById('botIndicadorCap').addEventListener('click',function(){botCapturarFoto();});
+document.getElementById('botBtnFlip').addEventListener('click',function(){botCamaraFrontal=!botCamaraFrontal;botIniciarCamara();});
+document.getElementById('botBtnCerrarCam').addEventListener('click',function(){botDetenerStream();botMostrarEstadoCam('none');});
+document.getElementById('botGaleriaInput').addEventListener('change',function(e){
+  var archivo=e.target.files[0];
   if(!archivo)return;
   botFotoMime=archivo.type||'image/jpeg';
   var lector=new FileReader();
   lector.onload=function(ev){
     botFotoB64=ev.target.result.split(',')[1];
     document.getElementById('botFotoPreview').src=ev.target.result;
-    document.getElementById('botFotoPreviewWrap').style.display='block';
+    botMostrarEstadoCam('botEstadoFoto');
   };
   lector.readAsDataURL(archivo);
-}
-function botQuitarFoto(){
-  botFotoB64=null;
-  document.getElementById('botFotoPreviewWrap').style.display='none';
-  document.getElementById('botFotoGaleriaInput').value='';
-  document.getElementById('botFotoCamaraInput').value='';
-}
-document.getElementById('botFotoGaleriaInput').addEventListener('change',function(e){botProcesarArchivo(e.target.files[0]);this.value='';});
-document.getElementById('botFotoCamaraInput').addEventListener('change',function(e){botProcesarArchivo(e.target.files[0]);this.value='';});
+  this.value='';
+});
 
-// --- MIC HOLD-TO-TALK ---
-function botMicIniciar(){
+// --- MIC BOT - tap para activar, tap para parar ---
+function botToggleMic(){
+  if(botMicActivo){
+    if(botRecognition)botRecognition.stop();
+    botMicReset();
+    return;
+  }
   if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
     alert('Tu navegador no soporta voz. Usa Chrome o Brave.');
     return;
   }
-  if(botMicActivo)return;
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   botRecognition=new SR();
   botRecognition.lang='es-AR';
   botRecognition.interimResults=false;
+  botRecognition.continuous=false;
   botRecognition.maxAlternatives=1;
   botRecognition.onstart=function(){
     botMicActivo=true;
     var bm=document.getElementById('btn-mic');
     bm.style.background='rgba(248,113,113,.3)';
     bm.style.borderColor='rgba(248,113,113,.8)';
-    bm.style.transform='scale(1.1)';
+    bm.style.color='var(--red)';
     document.getElementById('botMicStatus').style.display='block';
   };
   botRecognition.onresult=function(e){
     var texto=e.results[0][0].transcript;
     document.getElementById('chat-input').value=texto;
     botMicReset();
-    enviarMensaje();
+    setTimeout(function(){enviarMensaje();},100);
   };
   botRecognition.onerror=function(e){
     botMicReset();
-    if(e.error==='not-allowed')alert('Permiso de microfono denegado. Habilitalo en Configuracion del navegador.');
+    if(e.error==='not-allowed')alert('Permiso de microfono denegado. Habilitalo en Configuracion del navegador y recarga la pagina.');
   };
   botRecognition.onend=function(){botMicReset();};
   botRecognition.start();
-}
-function botMicDetener(){
-  if(botRecognition&&botMicActivo){botRecognition.stop();}
-  botMicReset();
 }
 function botMicReset(){
   botMicActivo=false;
   var bm=document.getElementById('btn-mic');
   bm.style.background='rgba(74,222,128,.07)';
   bm.style.borderColor='rgba(74,222,128,.3)';
-  bm.style.transform='';
+  bm.style.color='var(--acc)';
   document.getElementById('botMicStatus').style.display='none';
 }
-var btnMic=document.getElementById('btn-mic');
-btnMic.addEventListener('mousedown',function(e){e.preventDefault();botMicIniciar();});
-btnMic.addEventListener('mouseup',function(e){e.preventDefault();botMicDetener();});
-btnMic.addEventListener('mouseleave',function(e){if(botMicActivo)botMicDetener();});
-btnMic.addEventListener('touchstart',function(e){e.preventDefault();botMicIniciar();},{passive:false});
-btnMic.addEventListener('touchend',function(e){e.preventDefault();botMicDetener();},{passive:false});
-btnMic.addEventListener('touchcancel',function(e){e.preventDefault();botMicDetener();},{passive:false});
 
 async function enviarMensaje(){
   var inp=document.getElementById('chat-input');
@@ -1158,7 +1207,8 @@ async function enviarMensaje(){
   inp.value='';
   var textoMostrar=msg?(botFotoB64?'📸 '+msg:msg):'[Foto adjunta - diagnostico]';
   agregarMensaje(textoMostrar,'user');
-  document.getElementById('botFotoPreviewWrap').style.display='none';
+  botMostrarEstadoCam('none');
+  botDetenerStream();
   var btn=document.getElementById('btn-enviar');btn.disabled=true;
   var msgContent;
   if(botFotoB64){
