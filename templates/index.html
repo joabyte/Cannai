@@ -714,9 +714,22 @@ body::after{width:260px;height:260px;bottom:80px;right:-80px;background:radial-g
 <div class='stit'>CANNABOT</div><div class='ssub'>Tu experto cultivador con IA</div>
 <div class='card'><div class='ctit'>🤖 Chat con CannaBot</div>
 <div class='chat-mensajes' id='chat-mensajes'>
-<div class='msg msg-bot'>¡Hola! Soy <strong>CannaBot</strong> 🌿. Preguntame sobre cultivo, plagas, cosecha, curado, concentrados, recetas, medicina con cannabis... lo que necesites.</div>
+<div class='msg msg-bot'>¡Hola! Soy <strong>CannaBot</strong> 🌿. Preguntame sobre cultivo, plagas, cosecha, curado, concentrados, recetas, medicina... Podes escribir, hablar 🎤 o mandarme una foto 📸.</div>
 </div>
-<div class='chat-fila'><input type='text' class='chat-input' id='chat-input' placeholder='Escribe tu pregunta...' onkeydown="if(event.key==='Enter')enviarMensaje()"><button class='btn' onclick='enviarMensaje()' id='btn-enviar'>➤</button></div>
+<input type='file' id='botFotoInput' accept='image/*' style='display:none'>
+<canvas id='botCanvas' style='display:none'></canvas>
+<div id='botFotoPreviewWrap' style='display:none;margin-top:8px;position:relative'>
+  <img id='botFotoPreview' alt='' style='width:100%;max-height:160px;object-fit:cover;border-radius:10px;border:1px solid rgba(74,222,128,.3)'>
+  <button onclick='botQuitarFoto()' style='position:absolute;top:6px;right:6px;background:rgba(0,0,0,.6);border:none;border-radius:50%;width:24px;height:24px;color:#fff;font-size:13px;cursor:pointer;line-height:1'>x</button>
+  <div style='font-size:10px;color:var(--acc2);padding:4px 2px'>Foto lista. Escribe tu pregunta y envia.</div>
+</div>
+<div id='botMicStatus' style='display:none;font-size:11px;color:var(--acc);padding:5px 2px;text-align:center'>🔴 Escuchando... hablame</div>
+<div class='chat-fila' style='align-items:center'>
+  <button id='btn-foto-bot' onclick='botAbrirFoto()' title='Adjuntar foto' style='flex-shrink:0;width:38px;height:38px;border-radius:10px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.07);color:var(--acc);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center'>📸</button>
+  <input type='text' class='chat-input' id='chat-input' placeholder='Escribe o usa el mic...' onkeydown="if(event.key==='Enter')enviarMensaje()">
+  <button id='btn-mic' onclick='botToggleMic()' title='Hablar' style='flex-shrink:0;width:38px;height:38px;border-radius:10px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.07);color:var(--acc);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center'>🎤</button>
+  <button class='btn' onclick='enviarMensaje()' id='btn-enviar' style='flex-shrink:0;width:38px;height:38px;padding:0;border-radius:10px'>➤</button>
+</div>
 <div class='pills' style='margin-top:9px'>
 <span class='pill' onclick='preguntaRapida(this)'>Cuando cosechar</span>
 <span class='pill' onclick='preguntaRapida(this)'>Como curar flores</span>
@@ -1033,20 +1046,116 @@ function formatearAnalisis(texto){
 
 // CHAT
 var historialChat=[];
+var botFotoB64=null;
+var botFotoMime='image/jpeg';
+var botMicActivo=false;
+var botRecognition=null;
+
+// --- FOTO BOT ---
+function botAbrirFoto(){
+  document.getElementById('botFotoInput').click();
+}
+function botQuitarFoto(){
+  botFotoB64=null;
+  document.getElementById('botFotoPreviewWrap').style.display='none';
+  document.getElementById('botFotoInput').value='';
+}
+document.getElementById('botFotoInput').addEventListener('change',function(e){
+  var archivo=e.target.files[0];
+  if(!archivo)return;
+  botFotoMime=archivo.type||'image/jpeg';
+  var lector=new FileReader();
+  lector.onload=function(ev){
+    botFotoB64=ev.target.result.split(',')[1];
+    document.getElementById('botFotoPreview').src=ev.target.result;
+    document.getElementById('botFotoPreviewWrap').style.display='block';
+  };
+  lector.readAsDataURL(archivo);
+  this.value='';
+});
+
+// --- MIC BOT ---
+function botToggleMic(){
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
+    alert('Tu navegador no soporta reconocimiento de voz. Proba con Chrome.');
+    return;
+  }
+  if(botMicActivo){
+    if(botRecognition)botRecognition.stop();
+    return;
+  }
+  var SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  botRecognition=new SpeechRecognition();
+  botRecognition.lang='es-AR';
+  botRecognition.interimResults=false;
+  botRecognition.maxAlternatives=1;
+  botRecognition.onstart=function(){
+    botMicActivo=true;
+    document.getElementById('btn-mic').style.background='rgba(248,113,113,.25)';
+    document.getElementById('btn-mic').style.borderColor='rgba(248,113,113,.6)';
+    document.getElementById('botMicStatus').style.display='block';
+  };
+  botRecognition.onresult=function(e){
+    var texto=e.results[0][0].transcript;
+    document.getElementById('chat-input').value=texto;
+    botMicActivo=false;
+    document.getElementById('btn-mic').style.background='rgba(74,222,128,.07)';
+    document.getElementById('btn-mic').style.borderColor='rgba(74,222,128,.3)';
+    document.getElementById('botMicStatus').style.display='none';
+    enviarMensaje();
+  };
+  botRecognition.onerror=function(e){
+    botMicActivo=false;
+    document.getElementById('btn-mic').style.background='rgba(74,222,128,.07)';
+    document.getElementById('btn-mic').style.borderColor='rgba(74,222,128,.3)';
+    document.getElementById('botMicStatus').style.display='none';
+    if(e.error==='not-allowed')alert('Permiso de microfono denegado. Habilita el microfono en tu navegador.');
+  };
+  botRecognition.onend=function(){
+    botMicActivo=false;
+    document.getElementById('btn-mic').style.background='rgba(74,222,128,.07)';
+    document.getElementById('btn-mic').style.borderColor='rgba(74,222,128,.3)';
+    document.getElementById('botMicStatus').style.display='none';
+  };
+  botRecognition.start();
+}
+
 async function enviarMensaje(){
   var inp=document.getElementById('chat-input');
   var msg=inp.value.trim();
-  if(!msg)return;
+  if(!msg && !botFotoB64)return;
   inp.value='';
-  agregarMensaje(msg,'user');
-  historialChat.push({role:'user',content:msg});
+  var textoMostrar=msg||(botFotoB64?'[Foto adjunta]':'');
+  agregarMensaje(textoMostrar,'user');
+  if(botFotoB64){
+    document.getElementById('botFotoPreviewWrap').style.display='none';
+  }
   var btn=document.getElementById('btn-enviar');btn.disabled=true;
+  var msgContent;
+  if(botFotoB64){
+    msgContent=[{type:'image',source:{type:'base64',media_type:botFotoMime,data:botFotoB64}}];
+    if(msg)msgContent.push({type:'text',text:msg});
+    else msgContent.push({type:'text',text:'Analiza esta imagen de mi planta de cannabis y dame tu diagnostico completo.'});
+  }else{
+    msgContent=msg;
+  }
+  historialChat.push({role:'user',content:msgContent});
+  botFotoB64=null;
+  agregarMensaje('🌿 Pensando...','bot');
   try{
     var r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:historialChat})});
     var d=await r.json();
+    var chatDiv=document.getElementById('chat-mensajes');
+    var ultimo=chatDiv.lastElementChild;
+    if(ultimo&&ultimo.textContent.includes('Pensando'))chatDiv.removeChild(ultimo);
     if(d.reply){agregarMensaje(d.reply,'bot');historialChat.push({role:'assistant',content:d.reply});}
     else{agregarMensaje('Error. Intentalo de nuevo.','bot');}
-  }catch(e){agregarMensaje('Error de conexion.','bot');}
+  }catch(e){
+    var chatDiv2=document.getElementById('chat-mensajes');
+    var ul2=chatDiv2.lastElementChild;
+    if(ul2&&ul2.textContent.includes('Pensando'))chatDiv2.removeChild(ul2);
+    agregarMensaje('Error de conexion.','bot');
+  }
   btn.disabled=false;inp.focus();
 }
 function agregarMensaje(t,q){var d=document.createElement('div');d.className=q==='bot'?'msg msg-bot':'msg msg-user';d.textContent=t;var c=document.getElementById('chat-mensajes');c.appendChild(d);c.scrollTop=c.scrollHeight;}
