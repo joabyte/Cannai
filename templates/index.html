@@ -1156,22 +1156,24 @@ document.getElementById('botGaleriaInput').addEventListener('change',function(e)
 // --- MIC BOT - tap para activar, tap para parar ---
 function botToggleMic(){
   if(botMicActivo){
-    if(botRecognition)botRecognition.stop();
+    if(botRecognition){try{botRecognition.abort();}catch(e){}}
     botMicReset();
     return;
   }
   if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
-    alert('Tu navegador no soporta voz. Usa Chrome o Brave.');
+    alert('Tu navegador no soporta voz. Usa Chrome.');
     return;
   }
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   botRecognition=new SR();
   botRecognition.lang='es-AR';
-  botRecognition.interimResults=false;
-  botRecognition.continuous=false;
+  botRecognition.interimResults=true;
+  botRecognition.continuous=true;
   botRecognition.maxAlternatives=1;
+  var botTextoFinal='';
   botRecognition.onstart=function(){
     botMicActivo=true;
+    botTextoFinal='';
     var bm=document.getElementById('btn-mic');
     bm.style.background='rgba(248,113,113,.3)';
     bm.style.borderColor='rgba(248,113,113,.8)';
@@ -1179,16 +1181,22 @@ function botToggleMic(){
     document.getElementById('botMicStatus').style.display='block';
   };
   botRecognition.onresult=function(e){
-    var texto=e.results[0][0].transcript;
-    document.getElementById('chat-input').value=texto;
-    botMicReset();
-    setTimeout(function(){enviarMensaje();},100);
+    var interim='';
+    for(var i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal){botTextoFinal+=e.results[i][0].transcript;}
+      else{interim+=e.results[i][0].transcript;}
+    }
+    document.getElementById('chat-input').value=botTextoFinal+interim;
   };
   botRecognition.onerror=function(e){
     botMicReset();
-    if(e.error==='not-allowed')alert('Permiso de microfono denegado. Habilitalo en Configuracion del navegador y recarga la pagina.');
+    if(e.error==='not-allowed')alert('Permiso de microfono denegado. Habilitalo en Configuracion > Permisos del sitio y recarga.');
   };
-  botRecognition.onend=function(){botMicReset();};
+  botRecognition.onend=function(){
+    var texto=document.getElementById('chat-input').value.trim();
+    botMicReset();
+    if(texto){enviarMensaje();}
+  };
   botRecognition.start();
 }
 function botMicReset(){
