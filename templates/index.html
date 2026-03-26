@@ -748,7 +748,7 @@ body::after{width:260px;height:260px;bottom:80px;right:-80px;background:radial-g
 <div class='chat-fila' style='align-items:center;gap:6px'>
   <button id='btn-foto-bot' onclick='botToggleFoto()' title='Foto' style='flex-shrink:0;width:40px;height:40px;border-radius:11px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.07);color:var(--acc);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center'>📸</button>
   <input type='text' class='chat-input' id='chat-input' placeholder='Escribe o toca el mic...' onkeydown="if(event.key==='Enter')enviarMensaje()">
-  <button id='btn-mic' onclick='botToggleMic()' title='Hablar' style='flex-shrink:0;width:40px;height:40px;border-radius:11px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.07);color:var(--acc);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center'>🎤</button>
+  <button id='btn-mic' title='Mantener para hablar' style='flex-shrink:0;width:40px;height:40px;border-radius:11px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.07);color:var(--acc);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center'>🎤</button>
   <button class='btn' onclick='enviarMensaje()' id='btn-enviar' style='flex-shrink:0;width:40px;height:40px;padding:0;border-radius:11px'>➤</button>
 </div>
 <div class='pills' style='margin-top:9px'>
@@ -1153,25 +1153,17 @@ document.getElementById('botGaleriaInput').addEventListener('change',function(e)
   this.value='';
 });
 
-// --- MIC BOT - tap para activar, tap para parar ---
-function botToggleMic(){
-  if(botMicActivo){
-    if(botRecognition)botRecognition.stop();
-    botMicReset();
-    return;
-  }
-  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
-    alert('Tu navegador no soporta voz. Usa Chrome o Brave.');
-    return;
-  }
+// --- MIC BOT - push to talk como la app referencia ---
+var botFinalTranscript='';
+if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   botRecognition=new SR();
   botRecognition.lang='es-AR';
   botRecognition.interimResults=false;
   botRecognition.continuous=false;
-  botRecognition.maxAlternatives=1;
   botRecognition.onstart=function(){
     botMicActivo=true;
+    botFinalTranscript='';
     var bm=document.getElementById('btn-mic');
     bm.style.background='rgba(248,113,113,.3)';
     bm.style.borderColor='rgba(248,113,113,.8)';
@@ -1179,17 +1171,22 @@ function botToggleMic(){
     document.getElementById('botMicStatus').style.display='block';
   };
   botRecognition.onresult=function(e){
-    var texto=e.results[0][0].transcript;
-    document.getElementById('chat-input').value=texto;
+    botFinalTranscript=e.results[0][0].transcript;
+  };
+  botRecognition.onend=function(){
     botMicReset();
-    setTimeout(function(){enviarMensaje();},100);
+    if(botFinalTranscript){
+      document.getElementById('chat-input').value=botFinalTranscript;
+      botFinalTranscript='';
+      enviarMensaje();
+    }
   };
   botRecognition.onerror=function(e){
     botMicReset();
-    if(e.error==='not-allowed')alert('Permiso de microfono denegado. Habilitalo en Configuracion del navegador y recarga la pagina.');
+    if(e.error==='not-allowed')alert('Permiso de microfono denegado. Habilitalo en Configuracion > Permisos del sitio y recarga.');
   };
-  botRecognition.onend=function(){botMicReset();};
-  botRecognition.start();
+}else{
+  document.getElementById('btn-mic').title='Microfono no soportado. Usa Chrome.';
 }
 function botMicReset(){
   botMicActivo=false;
@@ -1199,6 +1196,30 @@ function botMicReset(){
   bm.style.color='var(--acc)';
   document.getElementById('botMicStatus').style.display='none';
 }
+var bBtnMic=document.getElementById('btn-mic');
+bBtnMic.addEventListener('touchstart',function(e){
+  e.preventDefault();
+  if(!botRecognition)return;
+  botFinalTranscript='';
+  try{botRecognition.start();}catch(err){}
+},{passive:false});
+bBtnMic.addEventListener('touchend',function(e){
+  e.preventDefault();
+  if(!botRecognition)return;
+  try{botRecognition.stop();}catch(err){}
+},{passive:false});
+bBtnMic.addEventListener('mousedown',function(e){
+  if(!botRecognition)return;
+  botFinalTranscript='';
+  try{botRecognition.start();}catch(err){}
+});
+bBtnMic.addEventListener('mouseup',function(e){
+  if(!botRecognition)return;
+  try{botRecognition.stop();}catch(err){}
+});
+bBtnMic.addEventListener('mouseleave',function(e){
+  if(botMicActivo&&botRecognition){try{botRecognition.stop();}catch(err){}}
+});
 
 async function enviarMensaje(){
   var inp=document.getElementById('chat-input');
