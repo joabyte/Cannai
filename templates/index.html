@@ -785,7 +785,6 @@ function cambiarTab(n,b){
   b.classList.add('activo');
   if(n!=='camara'){detenerStream();}
   if(n!=='bot'){if(typeof botDetenerStream==='function')botDetenerStream();if(typeof botMicReset==='function')botMicReset();}
-  if(n==='bot'){botPedirPermisoMic();}
 }
 
 // LUNA
@@ -1154,24 +1153,9 @@ document.getElementById('botGaleriaInput').addEventListener('change',function(e)
   this.value='';
 });
 
-// --- MIC BOT - mantener apretado = grabar, soltar = enviar ---
+// --- MIC BOT - mantener apretado graba, soltar envia ---
 var botFinalTranscript='';
 var botMicSoportado=('webkitSpeechRecognition' in window||'SpeechRecognition' in window);
-var botPermisoMicOk=false;
-function botPedirPermisoMic(){
-  if(botPermisoMicOk)return;
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return;
-  navigator.mediaDevices.getUserMedia({audio:true,video:false})
-    .then(function(stream){
-      botPermisoMicOk=true;
-      stream.getTracks().forEach(function(t){t.stop();});
-      var bm=document.getElementById('btn-mic');
-      if(bm)bm.title='Mantener apretado para hablar';
-    })
-    .catch(function(err){
-      botPermisoMicOk=false;
-    });
-}
 function botCrearReconocedor(){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   var rec=new SR();
@@ -1193,9 +1177,6 @@ function botCrearReconocedor(){
   };
   rec.onerror=function(e){
     botMicReset();
-    if(e.error==='not-allowed'||e.error==='permission-denied'){
-      alert('Permiso de microfono denegado. Ve a Configuracion > Permisos del sitio, activa el microfono y recarga la pagina.');
-    }
   };
   rec.onend=function(){
     botMicReset();
@@ -1216,36 +1197,43 @@ function botMicReset(){
   bm.style.transform='';
   document.getElementById('botMicStatus').style.display='none';
 }
+function botArrancarMic(){
+  if(!botMicSoportado||botMicActivo)return;
+  botFinalTranscript='';
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    botRecognition=botCrearReconocedor();
+    try{botRecognition.start();}catch(e){}
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({audio:true,video:false})
+    .then(function(stream){
+      stream.getTracks().forEach(function(t){t.stop();});
+      botRecognition=botCrearReconocedor();
+      try{botRecognition.start();}catch(e){}
+    })
+    .catch(function(err){
+      alert('Para usar el microfono toca el candado en la barra del navegador y activa el permiso de microfono.');
+    });
+}
+function botPararMic(){
+  if(botRecognition&&botMicActivo){try{botRecognition.stop();}catch(e){}}
+}
 var bBtnMic=document.getElementById('btn-mic');
 bBtnMic.addEventListener('touchstart',function(e){
   e.preventDefault();
-  if(!botMicSoportado){alert('Microfono no soportado. Usa Chrome.');return;}
-  if(botMicActivo)return;
-  botFinalTranscript='';
-  botRecognition=botCrearReconocedor();
-  try{botRecognition.start();}catch(err){}
+  botArrancarMic();
 },{passive:false});
 bBtnMic.addEventListener('touchend',function(e){
   e.preventDefault();
-  if(botRecognition&&botMicActivo){try{botRecognition.stop();}catch(err){}}
+  botPararMic();
 },{passive:false});
 bBtnMic.addEventListener('touchcancel',function(e){
   e.preventDefault();
-  if(botRecognition&&botMicActivo){try{botRecognition.stop();}catch(err){}}
+  botPararMic();
 },{passive:false});
-bBtnMic.addEventListener('mousedown',function(e){
-  if(!botMicSoportado){alert('Microfono no soportado. Usa Chrome.');return;}
-  if(botMicActivo)return;
-  botFinalTranscript='';
-  botRecognition=botCrearReconocedor();
-  try{botRecognition.start();}catch(err){}
-});
-bBtnMic.addEventListener('mouseup',function(e){
-  if(botRecognition&&botMicActivo){try{botRecognition.stop();}catch(err){}}
-});
-bBtnMic.addEventListener('mouseleave',function(e){
-  if(botRecognition&&botMicActivo){try{botRecognition.stop();}catch(err){}}
-});
+bBtnMic.addEventListener('mousedown',function(e){botArrancarMic();});
+bBtnMic.addEventListener('mouseup',function(e){botPararMic();});
+bBtnMic.addEventListener('mouseleave',function(e){botPararMic();});
 
 async function enviarMensaje(){
   var inp=document.getElementById('chat-input');
