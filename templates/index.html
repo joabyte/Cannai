@@ -1,11 +1,6 @@
 <!DOCTYPE html><html lang='es'><head>
 <meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0'>
 <title>CannaGuia Pro</title>
-<link rel='manifest' href='/manifest.json'>
-<meta name='theme-color' content='#4ade80'>
-<meta name='mobile-web-app-capable' content='yes'>
-<meta name='apple-mobile-web-app-capable' content='yes'>
-<meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'>
 <link href='https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&display=swap' rel='stylesheet'>
 <style>
 :root{--acc:#4ade80;--acc2:#86efac;--acc3:#16a34a;--gold:#fbbf24;--sky:#38bdf8;--pur:#a78bfa;--red:#f87171;--txt:#e8fce8;--mut:#7db87d;--glass:rgba(255,255,255,0.05);--gbor:rgba(255,255,255,0.12);--blur:blur(20px);--shadow:0 8px 32px rgba(0,0,0,0.4),0 1px 0 rgba(255,255,255,0.08) inset;--r:16px}
@@ -1267,5 +1262,4 @@ async function enviarMensaje(){
 }
 function agregarMensaje(t,q){var d=document.createElement('div');d.className=q==='bot'?'msg msg-bot':'msg msg-user';d.textContent=t;var c=document.getElementById('chat-mensajes');c.appendChild(d);c.scrollTop=c.scrollHeight;}
 function preguntaRapida(el){document.getElementById('chat-input').value=el.textContent;enviarMensaje();}
-if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js');}
 </script></body></html>
