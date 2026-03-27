@@ -1155,6 +1155,7 @@ document.getElementById('botGaleriaInput').addEventListener('change',function(e)
 
 // CHAT
 async function enviarMensaje(){
+  var inp=document.getElementById('chat-input');
   var msg=inp.value.trim();
   if(!msg && !botFotoB64)return;
   inp.value='';
