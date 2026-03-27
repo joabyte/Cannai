@@ -1,11 +1,6 @@
 <!DOCTYPE html><html lang='es'><head>
 <meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1.0,maximum-scale=1.0'>
 <title>CannaGuia Pro</title>
-<link rel='manifest' href='/manifest.json'>
-<meta name='theme-color' content='#4ade80'>
-<meta name='mobile-web-app-capable' content='yes'>
-<meta name='apple-mobile-web-app-capable' content='yes'>
-<meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'>
 <link href='https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&display=swap' rel='stylesheet'>
 <style>
 :root{--acc:#4ade80;--acc2:#86efac;--acc3:#16a34a;--gold:#fbbf24;--sky:#38bdf8;--pur:#a78bfa;--red:#f87171;--txt:#e8fce8;--mut:#7db87d;--glass:rgba(255,255,255,0.05);--gbor:rgba(255,255,255,0.12);--blur:blur(20px);--shadow:0 8px 32px rgba(0,0,0,0.4),0 1px 0 rgba(255,255,255,0.08) inset;--r:16px}
@@ -144,6 +139,7 @@ body::after{width:260px;height:260px;bottom:80px;right:-80px;background:radial-g
 .sec.activo .card:nth-child(4){animation-delay:.15s}
 .sec.activo .card:nth-child(5){animation-delay:.2s}
 @keyframes lunaglow{0%,100%{filter:drop-shadow(0 0 16px rgba(251,191,36,.4))}50%{filter:drop-shadow(0 0 34px rgba(251,191,36,.9))}}
+@keyframes micpulse{0%,100%{opacity:1}50%{opacity:.35}}
 </style></head><body>
 <header class='hdr'><div class='hdr-logo'>🌿</div><div><div class='hdr-title'>CannaGuia Pro</div><div class='hdr-sub'>Tu asistente de cultivo</div></div></header>
 <section class='sec activo' id='sec-luna'>
@@ -748,9 +744,11 @@ body::after{width:260px;height:260px;bottom:80px;right:-80px;background:radial-g
   </div>
   <div style='font-size:10px;color:var(--acc2);padding:4px 2px'>📸 Foto lista. Escribe tu pregunta y envia.</div>
 </div>
+<div id='botMicStatus' style='display:none;font-size:11px;color:var(--red);padding:5px 2px;text-align:center;animation:micpulse 1s ease-in-out infinite'>🔴 Escuchando... toca el mic para parar</div>
 <div class='chat-fila' style='align-items:center;gap:6px'>
   <button id='btn-foto-bot' onclick='botToggleFoto()' title='Foto' style='flex-shrink:0;width:40px;height:40px;border-radius:11px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.07);color:var(--acc);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center'>📸</button>
   <input type='text' class='chat-input' id='chat-input' placeholder='Escribe o toca el mic...' onkeydown="if(event.key==='Enter')enviarMensaje()">
+  <button id='btn-mic' title='Mantener para hablar' style='flex-shrink:0;width:40px;height:40px;border-radius:11px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.07);color:var(--acc);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center'>🎤</button>
   <button class='btn' onclick='enviarMensaje()' id='btn-enviar' style='flex-shrink:0;width:40px;height:40px;padding:0;border-radius:11px'>➤</button>
 </div>
 <div class='pills' style='margin-top:9px'>
@@ -1072,6 +1070,8 @@ function formatearAnalisis(texto){
 var historialChat=[];
 var botFotoB64=null;
 var botFotoMime='image/jpeg';
+var botMicActivo=false;
+var botRecognition=null;
 var botStreamActivo=null;
 var botCamaraFrontal=false;
 
@@ -1154,14 +1154,73 @@ document.getElementById('botGaleriaInput').addEventListener('change',function(e)
 });
 
 // --- MIC BOT - patron exacto de la app de referencia ---
+var botFinalTranscript='';
+var botRecognitionReady=false;
+if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+  var SR2=window.SpeechRecognition||window.webkitSpeechRecognition;
+  botRecognition=new SR2();
+  botRecognition.lang='es-AR';
+  botRecognition.interimResults=false;
+  botRecognition.continuous=false;
+  botRecognitionReady=true;
+  botRecognition.onstart=function(){
+    botMicActivo=true;
+    var bm=document.getElementById('btn-mic');
+    bm.style.background='rgba(248,113,113,.35)';
+    bm.style.borderColor='rgba(248,113,113,.9)';
+    bm.style.color='var(--red)';
+    bm.style.transform='scale(1.12)';
+    document.getElementById('botMicStatus').style.display='block';
+  };
+  botRecognition.onresult=function(e){
+    botFinalTranscript=e.results[0][0].transcript;
+  };
+  botRecognition.onend=function(){
+    botMicReset();
+    if(botFinalTranscript){
+      document.getElementById('chat-input').value=botFinalTranscript;
+      botFinalTranscript='';
+      enviarMensaje();
+    }
+  };
+  botRecognition.onerror=function(e){
+    botMicReset();
+  };
+}
+function botMicReset(){
+  botMicActivo=false;
+  var bm=document.getElementById('btn-mic');
+  bm.style.background='rgba(74,222,128,.07)';
+  bm.style.borderColor='rgba(74,222,128,.3)';
+  bm.style.color='var(--acc)';
+  bm.style.transform='';
+  document.getElementById('botMicStatus').style.display='none';
+}
+var bBtnMic=document.getElementById('btn-mic');
+bBtnMic.addEventListener('touchstart',function(e){
   e.preventDefault();
+  if(!botRecognitionReady||botMicActivo)return;
+  botFinalTranscript='';
+  try{botRecognition.start();}catch(err){}
 },{passive:false});
+bBtnMic.addEventListener('touchend',function(e){
   e.preventDefault();
+  if(botMicActivo){try{botRecognition.stop();}catch(err){}}
 },{passive:false});
+bBtnMic.addEventListener('touchcancel',function(e){
   e.preventDefault();
+  if(botMicActivo){try{botRecognition.stop();}catch(err){}}
 },{passive:false});
+bBtnMic.addEventListener('mousedown',function(e){
+  if(!botRecognitionReady||botMicActivo)return;
+  botFinalTranscript='';
+  try{botRecognition.start();}catch(err){}
 });
+bBtnMic.addEventListener('mouseup',function(e){
+  if(botMicActivo){try{botRecognition.stop();}catch(err){}}
 });
+bBtnMic.addEventListener('mouseleave',function(e){
+  if(botMicActivo){try{botRecognition.stop();}catch(err){}}
 });
 
 async function enviarMensaje(){
@@ -1203,5 +1262,4 @@ async function enviarMensaje(){
 }
 function agregarMensaje(t,q){var d=document.createElement('div');d.className=q==='bot'?'msg msg-bot':'msg msg-user';d.textContent=t;var c=document.getElementById('chat-mensajes');c.appendChild(d);c.scrollTop=c.scrollHeight;}
 function preguntaRapida(el){document.getElementById('chat-input').value=el.textContent;enviarMensaje();}
-if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js');}
 </script></body></html>
