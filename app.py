@@ -7,14 +7,21 @@ client = anthropic.Anthropic(api_key=os.environ.get('ANTHROPIC_API_KEY'))
 
 def get_luna_dia(fecha):
     moon = ephem.Moon(fecha)
+    sun  = ephem.Sun(fecha)
+    moon.compute(fecha)
+    sun.compute(fecha)
     p = moon.phase
-    if p < 7:    return {'fase':'nueva',    'emoji':chr(0x1F311),'pct':round(p,1)}
-    elif p < 30: return {'fase':'creciente', 'emoji':chr(0x1F312),'pct':round(p,1)}
-    elif p < 55: return {'fase':'cuarto_c',  'emoji':chr(0x1F313),'pct':round(p,1)}
-    elif p < 80: return {'fase':'gibosa_c',  'emoji':chr(0x1F314),'pct':round(p,1)}
-    elif p < 93: return {'fase':'llena',     'emoji':chr(0x1F315),'pct':round(p,1)}
-    elif p < 107:return {'fase':'gibosa_m',  'emoji':chr(0x1F316),'pct':round(p,1)}
-    elif p < 130:return {'fase':'cuarto_m',  'emoji':chr(0x1F317),'pct':round(p,1)}
+    # Elongacion: angulo entre luna y sol en el cielo
+    # Usamos la diferencia de ascension recta para saber si crece o mengua
+    elong = float(moon.elong) * 180.0 / 3.141592653589793
+    creciendo = elong >= 0  # positivo = luna al este del sol = creciente
+    if p < 2:    return {'fase':'nueva',    'emoji':chr(0x1F311),'pct':round(p,1)}
+    elif p < 45 and creciendo:  return {'fase':'creciente', 'emoji':chr(0x1F312),'pct':round(p,1)}
+    elif p < 55 and creciendo:  return {'fase':'cuarto_c',  'emoji':chr(0x1F313),'pct':round(p,1)}
+    elif p < 98 and creciendo:  return {'fase':'gibosa_c',  'emoji':chr(0x1F314),'pct':round(p,1)}
+    elif p >= 98: return {'fase':'llena',     'emoji':chr(0x1F315),'pct':round(p,1)}
+    elif p >= 55 and not creciendo: return {'fase':'gibosa_m',  'emoji':chr(0x1F316),'pct':round(p,1)}
+    elif p >= 45 and not creciendo: return {'fase':'cuarto_m',  'emoji':chr(0x1F317),'pct':round(p,1)}
     else:        return {'fase':'menguante', 'emoji':chr(0x1F318),'pct':round(p,1)}
 
 ACTIVIDADES = {
